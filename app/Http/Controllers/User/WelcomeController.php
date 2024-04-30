@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
+use App\Models\Admin\Banner;
+use App\Models\Admin\Lottery;
 use App\Models\Admin\Promotion;
+use App\Models\Admin\TwoDigit;
 use App\Models\User;
 use GuzzleHttp\Client;
-use App\Models\Admin\Banner;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
-use App\Models\Admin\Lottery;
-use App\Models\Admin\TwoDigit;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use GuzzleHttp\Exception\RequestException;
 
 class WelcomeController extends Controller
 {
     private const USER_ROLE = 5;
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -58,11 +58,11 @@ class WelcomeController extends Controller
     //     return view('welcome', compact('twoDigits', 'data', 'latestResultToday'));
     // }
 
-
     public function index()
     {
         $banners = Banner::latest()->take(3)->get();
-        $client = new Client();
+        $client = new Client;
+
         return view('welcome', compact('banners'));
     }
 
@@ -73,9 +73,9 @@ class WelcomeController extends Controller
 
     public function userLogin()
     {
-        if(Auth::check()){
-            return redirect()->back()->with('error', "Already Logged In.");
-        }else{
+        if (Auth::check()) {
+            return redirect()->back()->with('error', 'Already Logged In.');
+        } else {
             return view('frontend.login');
         }
     }
@@ -102,7 +102,6 @@ class WelcomeController extends Controller
         }
     }
 
-
     public function register(Request $request)
     {
         $request->validate([
@@ -121,21 +120,20 @@ class WelcomeController extends Controller
         ]);
         $user->roles()->sync(self::USER_ROLE);
 
-
         if ($user) {
             Auth::login($user);
+
             return redirect('/home')->with('success', 'Logged In Successful.');
         } else {
             return redirect()->back()->with('error', 'Registration failed. Please try again.');
         }
     }
 
-
     public function userRegister()
     {
-        if(Auth::check()){
-            return redirect()->back()->with('error', "Already Logged In.");
-        }else{
+        if (Auth::check()) {
+            return redirect()->back()->with('error', 'Already Logged In.');
+        } else {
             return view('frontend.register');
         }
     }
@@ -150,7 +148,6 @@ class WelcomeController extends Controller
         return view('frontend.topUpSubmit');
     }
 
-
     public function withDraw()
     {
         return view('frontend.withdraw');
@@ -159,6 +156,7 @@ class WelcomeController extends Controller
     public function promotion()
     {
         $promotions = Promotion::latest()->get();
+
         return view('frontend.promotion', compact('promotions'));
     }
 
@@ -166,6 +164,7 @@ class WelcomeController extends Controller
     public function promotionDetail($id)
     {
         $promotion = Promotion::find($id);
+
         return view('frontend.promotion-detail', compact('promotion'));
     }
 
@@ -194,8 +193,6 @@ class WelcomeController extends Controller
         return view('frontend.myDigit');
     }
 
-
-
     public function myBank()
     {
         return view('frontend.myBank');
@@ -205,7 +202,6 @@ class WelcomeController extends Controller
     {
         return view('frontend.new-password-change');
     }
-
 
     public function twoD()
     {
@@ -307,7 +303,6 @@ class WelcomeController extends Controller
         return view('frontend.evening-history-record');
     }
 
-
     public function twodHistory()
     {
         return view('frontend.twod-history');
@@ -337,7 +332,6 @@ class WelcomeController extends Controller
     {
         return view('frontend.threed-result');
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -415,7 +409,6 @@ class WelcomeController extends Controller
     //     //     ]);
     //     // }
     // }
-
 
     /**
      * Display the specified resource.

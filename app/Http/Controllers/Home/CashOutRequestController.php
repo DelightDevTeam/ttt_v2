@@ -16,6 +16,7 @@ class CashOutRequestController extends Controller
     public function index()
     {
         $cashes = CashOutRequest::latest()->get();
+
         return view('admin.cash_requests.cash_out', compact('cashes'));
     }
 
@@ -38,8 +39,7 @@ class CashOutRequestController extends Controller
             'phone' => 'required|numeric',
         ]);
 
-
-        if($request->amount > auth()->user()->balance){
+        if ($request->amount > auth()->user()->balance) {
             return redirect()->back()->with('error', 'Insufficient balance');
         }
         CashOutRequest::create([
@@ -51,13 +51,14 @@ class CashOutRequestController extends Controller
         $user = User::find(auth()->id());
         $user->balance -= $request->amount;
         $user->save();
-        
+
         TransferLog::create([
             'user_id' => auth()->user()->id,
             'amount' => $request->amount,
             'type' => 'Withdraw',
-            'created_by' => null
+            'created_by' => null,
         ]);
+
         return redirect()->back()->with('success', 'Withdraw request submitted successfully');
     }
 
@@ -67,6 +68,7 @@ class CashOutRequestController extends Controller
     public function show($id)
     {
         $cash = CashOutRequest::find($id);
+
         return view('admin.cash_requests.cash_out_detail', compact('cash'));
     }
 
@@ -77,8 +79,8 @@ class CashOutRequestController extends Controller
         $cash->save();
 
         $log = TransferLog::where('user_id', $cash->user_id)
-        ->where('created_at', $cash->created_at)
-        ->first();
+            ->where('created_at', $cash->created_at)
+            ->first();
 
         $log->update([
             'status' => 1,
@@ -99,8 +101,8 @@ class CashOutRequestController extends Controller
         $cash->save();
 
         $log = TransferLog::where('user_id', $cash->user_id)
-        ->where('created_at', $cash->created_at)
-        ->first();
+            ->where('created_at', $cash->created_at)
+            ->first();
 
         $log->update([
             'status' => 2,
@@ -109,8 +111,6 @@ class CashOutRequestController extends Controller
 
         return redirect()->back()->with('toast_success', 'Filled the cash into user successfully');
     }
-
-    
 
     // public function withdraw(Request $request, $id)
     // {

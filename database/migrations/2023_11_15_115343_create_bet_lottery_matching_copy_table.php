@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('matching_id');
             $table->unsignedBigInteger('bet_lottery_id');
-            $table->string('digit_entry', 3); 
+            $table->string('digit_entry', 3);
             $table->integer('sub_amount')->default(0);
             $table->boolean('prize_sent')->default(false);
             $table->timestamps();
             $table->foreign('matching_id')->references('id')->on('matchings')->onDelete('cascade');
             $table->foreign('bet_lottery_id')->references('id')->on('bet_lotteries')->onDelete('cascade');
-            
+
         });
     }
 

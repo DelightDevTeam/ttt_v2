@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\User\Threed;
 
-use Illuminate\Http\Request;
-use App\Models\ThreeDigit\Lotto;
 use App\Http\Controllers\Controller;
+use App\Models\ThreeDigit\Lotto;
 use App\Models\ThreeDigit\ThreeWinner;
+use Illuminate\Http\Request;
 
 class ThreedWinnerHistoryController extends Controller
 {

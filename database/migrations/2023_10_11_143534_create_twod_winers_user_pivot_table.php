@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-     public function up()
+    public function up()
     {
         Schema::create('twod_winers_user_pivot', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('twod_winer_id');
             $table->unsignedBigInteger('user_id');
-            
+
             $table->foreign('twod_winer_id')
                 ->references('id')
                 ->on('twod_winers')
@@ -26,8 +26,6 @@ return new class extends Migration
                 ->onDelete('cascade');
         });
     }
-
-
 
     /**
      * Reverse the migrations.

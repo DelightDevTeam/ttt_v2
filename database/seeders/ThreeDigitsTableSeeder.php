@@ -5,12 +5,13 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+
 class ThreeDigitsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-     public function run()
+    public function run()
     {
         // Empty the table before seeding
         DB::table('three_digits')->truncate();
@@ -36,7 +37,7 @@ class ThreeDigitsTableSeeder extends Seeder
         }
 
         // Insert any remaining digits
-        if (!empty($digits)) {
+        if (! empty($digits)) {
             DB::table('three_digits')->insert($digits);
         }
     }

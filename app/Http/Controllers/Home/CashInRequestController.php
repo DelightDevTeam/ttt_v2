@@ -16,6 +16,7 @@ class CashInRequestController extends Controller
     public function index()
     {
         $cashes = CashInRequest::latest()->get();
+
         return view('admin.cash_requests.cash_in', compact('cashes'));
     }
 
@@ -49,14 +50,16 @@ class CashInRequestController extends Controller
             'user_id' => auth()->user()->id,
             'amount' => $request->amount,
             'type' => 'Deposit',
-            'created_by' => null
+            'created_by' => null,
         ]);
+
         return redirect()->back()->with('success', 'Cash In Request Submitted Successfully');
     }
 
     public function show($id)
     {
         $cash = CashInRequest::find($id);
+
         return view('admin.cash_requests.cash_in_detail', compact('cash'));
     }
 
@@ -65,18 +68,19 @@ class CashInRequestController extends Controller
         $cash = CashInRequest::find($id);
         $amount = $cash->amount;
         User::where('id', $cash->user_id)->increment('balance', $amount);
-        
+
         $cash->status = 1;
         $cash->save();
 
         $log = TransferLog::where('user_id', $cash->user_id)
-        ->where('created_at', $cash->created_at)
-        ->first();
+            ->where('created_at', $cash->created_at)
+            ->first();
 
         $log->update([
             'status' => 1,
             'created_by' => auth()->user()->id,
         ]);
+
         return redirect()->back()->with('success', 'Filled the cash into user successfully');
     }
 
@@ -87,13 +91,14 @@ class CashInRequestController extends Controller
         $cash->save();
 
         $log = TransferLog::where('user_id', $cash->user_id)
-        ->where('created_at', $cash->created_at)
-        ->first();
+            ->where('created_at', $cash->created_at)
+            ->first();
 
         $log->update([
             'status' => 2,
             'created_by' => auth()->user()->id,
         ]);
+
         return redirect()->back()->with('success', 'Filled the cash into user successfully');
     }
 

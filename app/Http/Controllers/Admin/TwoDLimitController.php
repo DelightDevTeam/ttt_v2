@@ -2,36 +2,38 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use App\Models\Admin\TwoDLimit;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\TwoDLimit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class TwoDLimitController extends Controller
 {
     public function index()
     {
-       $limits = TwoDLimit::all();
+        $limits = TwoDLimit::all();
+
         return view('admin.two_limit.index', compact('limits'));
     }
 
-     public function store(Request $request)
+    public function store(Request $request)
     {
-       //dd($request->all());
+        //dd($request->all());
         $validator = Validator::make($request->all(), [
-        'two_d_limit' => 'required',
+            'two_d_limit' => 'required',
 
-        //'body' => 'required|min:3'
-    ]);
+            //'body' => 'required|min:3'
+        ]);
 
-    if ($validator->fails()) {
-        return back()->with('toast_error', $validator->messages()->all()[0])->withInput();
-    }
+        if ($validator->fails()) {
+            return back()->with('toast_error', $validator->messages()->all()[0])->withInput();
+        }
 
         // store
         TwoDLimit::create([
-            'two_d_limit' => $request->two_d_limit
+            'two_d_limit' => $request->two_d_limit,
         ]);
+
         // redirect
         return redirect()->route('admin.two-digit-limit.index')->with('toast_success', 'two_d_limit created successfully.');
     }
@@ -40,7 +42,7 @@ class TwoDLimitController extends Controller
     {
         $limit = TwoDLimit::findOrFail($id);
         $limit->delete();
+
         return redirect()->route('admin.two-digit-limit.index')->with('toast_success', 'Permission deleted successfully.');
     }
-
 }

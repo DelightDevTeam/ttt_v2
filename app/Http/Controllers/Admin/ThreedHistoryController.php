@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Admin\ThreedLottery;
 use App\Models\Admin\ThreedLotteryEntry;
+use Illuminate\Http\Request;
+
 class ThreedHistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
     public function index()
     {
-    
-    }
 
+    }
 
     /**
      * Show the form for creating a new resource.

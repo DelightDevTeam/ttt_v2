@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\User\TwodQuick;
 
-use App\Models\Lottery;
-use App\Models\RoleLimit;
-use Illuminate\Http\Request;
-use App\Models\Admin\TwoDigit;
-use App\Models\TwoD\TwoDLimit;
+use App\Http\Controllers\Controller;
+use App\Models\Admin\CloseTwoDigit;
 use App\Models\Admin\HeadDigit;
 use App\Models\Admin\LotteryMatch;
-use Illuminate\Support\Facades\DB;
-use App\Models\Admin\CloseTwoDigit;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Models\LotteryTwoDigitPivot;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Admin\TwoDigit;
+use App\Models\Lottery;
 use App\Models\LotteryTwoDigitOverLimit;
+use App\Models\LotteryTwoDigitPivot;
+use App\Models\RoleLimit;
+use App\Models\TwoD\TwoDLimit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TwoDQicklyPlayController extends Controller
 {
@@ -23,36 +23,38 @@ class TwoDQicklyPlayController extends Controller
     {
         $twoDigits = TwoDigit::all();
 
-    // Calculate remaining amounts for each two-digit
-    $remainingAmounts = [];
-    foreach ($twoDigits as $digit) {
-        $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
-            ->where('two_digit_id', $digit->id)
-            ->sum('sub_amount');
+        // Calculate remaining amounts for each two-digit
+        $remainingAmounts = [];
+        foreach ($twoDigits as $digit) {
+            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
+                ->where('two_digit_id', $digit->id)
+                ->sum('sub_amount');
 
-        $remainingAmounts[$digit->id] = 50000 - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
-    }
-    $lottery_matches = LotteryMatch::where('id', 1)->whereNotNull('is_active')->first();
+            $remainingAmounts[$digit->id] = 50000 - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
+        }
+        $lottery_matches = LotteryMatch::where('id', 1)->whereNotNull('is_active')->first();
 
-    return view('two_d.quick.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+        return view('two_d.quick.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
     }
+
     public function play_confirm()
     {
         $twoDigits = TwoDigit::all();
 
-    // Calculate remaining amounts for each two-digit
-    $remainingAmounts = [];
-    foreach ($twoDigits as $digit) {
-        $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
-            ->where('two_digit_id', $digit->id)
-            ->sum('sub_amount');
+        // Calculate remaining amounts for each two-digit
+        $remainingAmounts = [];
+        foreach ($twoDigits as $digit) {
+            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
+                ->where('two_digit_id', $digit->id)
+                ->sum('sub_amount');
 
-        $remainingAmounts[$digit->id] = 50000 - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
-    }
-    $lottery_matches = LotteryMatch::where('id', 1)->whereNotNull('is_active')->first();
+            $remainingAmounts[$digit->id] = 50000 - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
+        }
+        $lottery_matches = LotteryMatch::where('id', 1)->whereNotNull('is_active')->first();
 
-    return view('two_d.quick.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+        return view('two_d.quick.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
     }
+
     public function store(Request $request)
     {
         //dd($request->all());
@@ -68,46 +70,46 @@ class TwoDQicklyPlayController extends Controller
         // Fetch all head digits not allowed
         //  $headDigitsNotAllowed = HeadDigit::pluck('digit_one', 'digit_two', 'digit_three')->flatten()->unique()->toArray();
         $headDigitsNotAllowed = HeadDigit::query()
-        ->get(['digit_one', 'digit_two', 'digit_three'])
-        ->flatMap(function ($item) {
-            return [$item->digit_one, $item->digit_two, $item->digit_three];
-        })
-        ->unique()
-        ->all();
+            ->get(['digit_one', 'digit_two', 'digit_three'])
+            ->flatMap(function ($item) {
+                return [$item->digit_one, $item->digit_two, $item->digit_three];
+            })
+            ->unique()
+            ->all();
 
-    // Check if any selected digit starts with the head digits not allowed
-    foreach ($request->amounts as $two_digit_string => $sub_amount) {
-        $headDigitOfSelected = substr($two_digit_string, 0, 1); // Extract the head digit
-        if (in_array($headDigitOfSelected, $headDigitsNotAllowed)) {
-            session()->flash('SuccessRequest', " ထိပ်ဂဏန်း - '{$headDigitOfSelected}' - ကိုပိတ်ထားသောကြောင့် ကံစမ်း၍ မရနိုင်ပါ ၊ ကျေးဇူးပြု၍ ဂဏန်းပြန်ရွှေးချယ်ပါ။");
-            // return redirect()->back()->with('error', "Bets on numbers starting with '{$headDigitOfSelected}' are not allowed.");
-            return redirect()->back();
+        // Check if any selected digit starts with the head digits not allowed
+        foreach ($request->amounts as $two_digit_string => $sub_amount) {
+            $headDigitOfSelected = substr($two_digit_string, 0, 1); // Extract the head digit
+            if (in_array($headDigitOfSelected, $headDigitsNotAllowed)) {
+                session()->flash('SuccessRequest', " ထိပ်ဂဏန်း - '{$headDigitOfSelected}' - ကိုပိတ်ထားသောကြောင့် ကံစမ်း၍ မရနိုင်ပါ ၊ ကျေးဇူးပြု၍ ဂဏန်းပြန်ရွှေးချယ်ပါ။");
+
+                // return redirect()->back()->with('error', "Bets on numbers starting with '{$headDigitOfSelected}' are not allowed.");
+                return redirect()->back();
+            }
         }
-    }
 
-         
-            $closedDigits = CloseTwoDigit::all()->pluck('digit')->map(function ($digit) {
-                return sprintf('%02d', $digit);
-            })->toArray();
+        $closedDigits = CloseTwoDigit::all()->pluck('digit')->map(function ($digit) {
+            return sprintf('%02d', $digit);
+        })->toArray();
 
-    // Iterate over submitted bets
-    foreach ($request->input('amounts') as $bet => $amount) {
-        $betDigit = sprintf('%02d', $bet); // Format the bet number
+        // Iterate over submitted bets
+        foreach ($request->input('amounts') as $bet => $amount) {
+            $betDigit = sprintf('%02d', $bet); // Format the bet number
 
-        // Check if the bet is on a closed digit
-        if (in_array($betDigit, $closedDigits)) {
-            session()->flash('SuccessRequest', "2D -'{$betDigit}' -ဂဏန်းကိုပိတ်ထားသောကြောင့် ကံစမ်း၍ မရနိုင်ပါ ၊ ကျေးဇူးပြု၍ ဂဏန်းပြန်ရွှေးချယ်ပါ။");
+            // Check if the bet is on a closed digit
+            if (in_array($betDigit, $closedDigits)) {
+                session()->flash('SuccessRequest', "2D -'{$betDigit}' -ဂဏန်းကိုပိတ်ထားသောကြောင့် ကံစမ်း၍ မရနိုင်ပါ ၊ ကျေးဇူးပြု၍ ဂဏန်းပြန်ရွှေးချယ်ပါ။");
 
-            // return redirect()->back()->with('error', "Bets on number '{$betDigit}' are not allowed.");
-            return redirect()->back();
+                // return redirect()->back()->with('error', "Bets on number '{$betDigit}' are not allowed.");
+                return redirect()->back();
+            }
         }
-    }
         $currentSession = $this->determineSession();
         $user = Auth::user();
 
         // Initialize default limit
         $defaultLimitAmount = TwoDLimit::latest()->first()->two_d_limit;
-        
+
         // Adjust limit based on the user's role
         $userRole = $user->roles()->first();
         $roleLimitAmount = optional(RoleLimit::where('role_id', $userRole->id)->first())->limit ?? $defaultLimitAmount;
@@ -132,20 +134,21 @@ class TwoDQicklyPlayController extends Controller
             // session()->flash('SuccessRequest', 'Successfully placed bet.');
             // return redirect()->route('user.two-digit-user-data.afternoon')->with('success', 'အောင်မြင်ပါသည်။');
             session()->flash('SuccessRequest', 'Successfully placed bet.');
+
             return redirect()->route('home')->with('message', 'Data stored successfully!');
             //return redirect()->back()->with('message', 'Bet placed successfully.');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Error in store method: ' . $e->getMessage());
+            Log::error('Error in store method: '.$e->getMessage());
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    
-
     private function determineSession()
     {
         $currentTime = date('H:i');
+
         return ($currentTime >= '06:30' && $currentTime < '12:00') ? 'morning' : 'evening';
     }
 
@@ -154,6 +157,7 @@ class TwoDQicklyPlayController extends Controller
         $defaultLimitAmount = TwoDLimit::latest()->first()->two_d_limit;
         $role = $user->roles()->first();
         $roleLimitAmount = optional(RoleLimit::where('role_id', $role->id)->first())->limit ?? $defaultLimitAmount;
+
         return max($defaultLimitAmount, $roleLimitAmount);
     }
 
@@ -167,115 +171,115 @@ class TwoDQicklyPlayController extends Controller
         ]);
     }
 
-    // new logic 
+    // new logic
     private function processBet($betDigit, $subAmount, $limitAmount, $lottery)
-{
-    // Assuming $betDigit comes directly from the user input and represents the two-digit number they're betting on
-    $twoDigit = TwoDigit::where('two_digit', sprintf('%02d', $betDigit))->first();
+    {
+        // Assuming $betDigit comes directly from the user input and represents the two-digit number they're betting on
+        $twoDigit = TwoDigit::where('two_digit', sprintf('%02d', $betDigit))->first();
 
-    if (!$twoDigit) {
-        // Optionally handle the case where the two-digit number doesn't exist in the database
-        throw new \Exception("Invalid bet digit: {$betDigit}");
+        if (! $twoDigit) {
+            // Optionally handle the case where the two-digit number doesn't exist in the database
+            throw new \Exception("Invalid bet digit: {$betDigit}");
+        }
+
+        $totalBetAmount = DB::table('lottery_two_digit_copy')->where('two_digit_id', $twoDigit->id)->sum('sub_amount');
+
+        if ($totalBetAmount + $subAmount > $limitAmount) {
+            throw new \Exception('The betting limit has been reached.');
+        }
+
+        LotteryTwoDigitPivot::create([
+            'lottery_id' => $lottery->id,
+            'two_digit_id' => $twoDigit->id,
+            'bet_digit' => $betDigit, // Assuming bet_digit is a string representation of the bet
+            'sub_amount' => $subAmount,
+            'prize_sent' => false,
+        ]);
     }
+    //     public function store(Request $request)
+    // {
 
-    $totalBetAmount = DB::table('lottery_two_digit_copy')->where('two_digit_id', $twoDigit->id)->sum('sub_amount');
+    //     //Log::info($request->all());
+    //     $validatedData = $request->validate([
+    //         'selected_digits' => 'required|string',
+    //         'amounts' => 'required|array',
+    //         'amounts.*' => 'required|integer|min:100|max:50000',
+    //         //'totalAmount' => 'required|integer|min:100',
+    //          'totalAmount' => 'required|numeric|min:100', // Changed from integer to numeric
+    //         'user_id' => 'required|exists:users,id',
+    //     ]);
 
-    if ($totalBetAmount + $subAmount > $limitAmount) {
-        throw new \Exception('The betting limit has been reached.');
-    }
+    //     $currentSession = date('H') < 12 ? 'morning' : 'evening';
+    //     $limitAmount = 50000; // Define the limit amount
 
-    LotteryTwoDigitPivot::create([
-        'lottery_id' => $lottery->id,
-        'two_digit_id' => $twoDigit->id,
-        'bet_digit' => $betDigit, // Assuming bet_digit is a string representation of the bet
-        'sub_amount' => $subAmount,
-        'prize_sent' => false,
-    ]);
-}
-//     public function store(Request $request)
-// {
-    
-//     //Log::info($request->all());
-//     $validatedData = $request->validate([
-//         'selected_digits' => 'required|string',
-//         'amounts' => 'required|array',
-//         'amounts.*' => 'required|integer|min:100|max:50000',
-//         //'totalAmount' => 'required|integer|min:100',
-//          'totalAmount' => 'required|numeric|min:100', // Changed from integer to numeric
-//         'user_id' => 'required|exists:users,id',
-//     ]);
+    //     DB::beginTransaction();
 
-//     $currentSession = date('H') < 12 ? 'morning' : 'evening';
-//     $limitAmount = 50000; // Define the limit amount
+    //     try {
+    //         $user = Auth::user();
+    //         $user->balance -= $request->totalAmount;
 
-//     DB::beginTransaction();
+    //         if ($user->balance < 0) {
+    //             throw new \Exception('Insufficient balance.');
+    //         }
 
-//     try {
-//         $user = Auth::user();
-//         $user->balance -= $request->totalAmount;
+    //         $user->save();
 
-//         if ($user->balance < 0) {
-//             throw new \Exception('Insufficient balance.');
-//         }
+    //         $lottery = Lottery::create([
+    //             'pay_amount' => $request->totalAmount,
+    //             'total_amount' => $request->totalAmount,
+    //             'user_id' => $request->user_id,
+    //             'session' => $currentSession
+    //         ]);
 
-//         $user->save();
+    //         foreach ($request->amounts as $two_digit_string => $sub_amount) {
+    //             $two_digit_id = $two_digit_string === '00' ? 1 : intval($two_digit_string, 10) + 1;
 
-//         $lottery = Lottery::create([
-//             'pay_amount' => $request->totalAmount,
-//             'total_amount' => $request->totalAmount,
-//             'user_id' => $request->user_id,
-//             'session' => $currentSession
-//         ]);
+    //             $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
+    //                 ->where('two_digit_id', $two_digit_id)
+    //                 ->sum('sub_amount');
 
-//         foreach ($request->amounts as $two_digit_string => $sub_amount) {
-//             $two_digit_id = $two_digit_string === '00' ? 1 : intval($two_digit_string, 10) + 1;
+    //             if ($totalBetAmountForTwoDigit + $sub_amount <= $limitAmount) {
+    //                 $pivot = new LotteryTwoDigitPivot([
+    //                     'lottery_id' => $lottery->id,
+    //                     'two_digit_id' => $two_digit_id,
+    //                     'sub_amount' => $sub_amount,
+    //                     'prize_sent' => false
+    //                 ]);
+    //                 $pivot->save();
+    //             } else {
+    //                 $withinLimit = $limitAmount - $totalBetAmountForTwoDigit;
+    //                 $overLimit = $sub_amount - $withinLimit;
 
-//             $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
-//                 ->where('two_digit_id', $two_digit_id)
-//                 ->sum('sub_amount');
+    //                 if ($withinLimit > 0) {
+    //                     $pivotWithin = new LotteryTwoDigitPivot([
+    //                         'lottery_id' => $lottery->id,
+    //                         'two_digit_id' => $two_digit_id,
+    //                         'sub_amount' => $withinLimit,
+    //                         'prize_sent' => false
+    //                     ]);
+    //                     $pivotWithin->save();
+    //                 }
 
-//             if ($totalBetAmountForTwoDigit + $sub_amount <= $limitAmount) {
-//                 $pivot = new LotteryTwoDigitPivot([
-//                     'lottery_id' => $lottery->id,
-//                     'two_digit_id' => $two_digit_id,
-//                     'sub_amount' => $sub_amount,
-//                     'prize_sent' => false
-//                 ]);
-//                 $pivot->save();
-//             } else {
-//                 $withinLimit = $limitAmount - $totalBetAmountForTwoDigit;
-//                 $overLimit = $sub_amount - $withinLimit;
+    //                 if ($overLimit > 0) {
+    //                     $pivotOver = new LotteryTwoDigitOverLimit([
+    //                         'lottery_id' => $lottery->id,
+    //                         'two_digit_id' => $two_digit_id,
+    //                         'sub_amount' => $overLimit,
+    //                         'prize_sent' => false
+    //                     ]);
+    //                     $pivotOver->save();
+    //                 }
+    //             }
+    //         }
 
-//                 if ($withinLimit > 0) {
-//                     $pivotWithin = new LotteryTwoDigitPivot([
-//                         'lottery_id' => $lottery->id,
-//                         'two_digit_id' => $two_digit_id,
-//                         'sub_amount' => $withinLimit,
-//                         'prize_sent' => false
-//                     ]);
-//                     $pivotWithin->save();
-//                 }
-
-//                 if ($overLimit > 0) {
-//                     $pivotOver = new LotteryTwoDigitOverLimit([
-//                         'lottery_id' => $lottery->id,
-//                         'two_digit_id' => $two_digit_id,
-//                         'sub_amount' => $overLimit,
-//                         'prize_sent' => false
-//                     ]);
-//                     $pivotOver->save();
-//                 }
-//             }
-//         }
-
-//         DB::commit();
-//         session()->flash('SuccessRequest', 'Successfully placed bet.');
-//         return redirect()->route('home')->with('message', 'Data stored successfully!');
-//     } catch (\Exception $e) {
-//         DB::rollback();
-//         Log::error('Error in store method: ' . $e->getMessage());
-//         return redirect()->back()->with('error', $e->getMessage());
-//     }
-// }
+    //         DB::commit();
+    //         session()->flash('SuccessRequest', 'Successfully placed bet.');
+    //         return redirect()->route('home')->with('message', 'Data stored successfully!');
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         Log::error('Error in store method: ' . $e->getMessage());
+    //         return redirect()->back()->with('error', $e->getMessage());
+    //     }
+    // }
 
 }

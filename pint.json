@@ -3,6 +3,9 @@
   "rules": {
     "simplified_null_return": true,
     "no_unused_imports": false,
+    "array_syntax": {
+      "syntax": "short"
+    },
     "braces": false,
     "new_with_braces": {
       "anonymous_class": false,

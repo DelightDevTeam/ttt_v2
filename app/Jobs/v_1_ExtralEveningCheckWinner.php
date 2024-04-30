@@ -2,15 +2,15 @@
 
 namespace App\Jobs;
 
-use Carbon\Carbon;
 use App\Models\Admin\Lottery;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class ExtralEveningCheckWinner implements ShouldQueue
 {
@@ -19,7 +19,7 @@ class ExtralEveningCheckWinner implements ShouldQueue
     /**
      * Create a new job instance.
      */
-     protected $twodWiner;
+    protected $twodWiner;
 
     public function __construct($twodWiner)
     {
@@ -57,5 +57,4 @@ class ExtralEveningCheckWinner implements ShouldQueue
             });
         }
     }
-
 }

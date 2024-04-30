@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Admin\Role;
-use Illuminate\Database\Seeder;
 use App\Models\Admin\Permission;
+use App\Models\Admin\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class PermissionRoleTableSeeder extends Seeder
 {

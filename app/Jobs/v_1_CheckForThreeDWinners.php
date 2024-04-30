@@ -2,16 +2,16 @@
 
 namespace App\Jobs;
 
-use Carbon\Carbon;
 use App\Models\Lotto;
-use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Models\ThreeDigit\ThreeDigit;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use Carbon\Carbon;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CheckForThreeDWinners implements ShouldQueue
 {
@@ -26,16 +26,17 @@ class CheckForThreeDWinners implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info('Dispatched for prize number: ' . $this->threedWinner->prize_no);
+        Log::info('Dispatched for prize number: '.$this->threedWinner->prize_no);
 
         // Convert prize_no to integer if necessary
         $prizeNo = ltrim($this->threedWinner->prize_no, '0');
-        $prizeNo = $prizeNo === '' ? 0 : (int)$prizeNo; // If empty, it was '000'
+        $prizeNo = $prizeNo === '' ? 0 : (int) $prizeNo; // If empty, it was '000'
 
         // Get the three_digit_id for the prize_no
         $threeDigit = ThreeDigit::where('three_digit', $this->threedWinner->prize_no)->first();
-        if (!$threeDigit) {
-            Log::error('ThreeDigit not found for prize number: ' . $this->threedWinner->prize_no);
+        if (! $threeDigit) {
+            Log::error('ThreeDigit not found for prize number: '.$this->threedWinner->prize_no);
+
             return;
         }
 
@@ -48,7 +49,7 @@ class CheckForThreeDWinners implements ShouldQueue
             ->select('lotto_three_digit_copy.*')
             ->get();
 
-        Log::info('Winning entries count: ' . $winningEntries->count());
+        Log::info('Winning entries count: '.$winningEntries->count());
 
         foreach ($winningEntries as $entry) {
             DB::transaction(function () use ($entry, $threeDigit) {
@@ -64,7 +65,7 @@ class CheckForThreeDWinners implements ShouldQueue
                 // Update prize_sent in pivot
                 $lottery->$methodToUpdatePivot()->updateExistingPivot($threeDigit->id, ['prize_sent' => true]);
 
-                Log::info('Updated prize_sent for entry: ' . $entry->id);
+                Log::info('Updated prize_sent for entry: '.$entry->id);
             });
         }
     }

@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\RoleLimit;
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class RoleLimitSeeder extends Seeder
 {
@@ -23,5 +23,4 @@ class RoleLimitSeeder extends Seeder
             RoleLimit::create($roleLimit);
         }
     }
-    
 }

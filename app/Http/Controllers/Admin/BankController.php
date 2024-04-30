@@ -15,6 +15,7 @@ class BankController extends Controller
     public function index()
     {
         $banks = Bank::latest()->get();
+
         return view('admin.banks.index', compact('banks'));
     }
 
@@ -41,7 +42,7 @@ class BankController extends Controller
         // image
         $image = $request->file('image');
         $ext = $image->getClientOriginalExtension();
-        $filename = uniqid('bank') . '.' . $ext; // Generate a unique filename
+        $filename = uniqid('bank').'.'.$ext; // Generate a unique filename
         $image->move(public_path('assets/img/banks/'), $filename); // Save the file
 
         Bank::create([
@@ -50,6 +51,7 @@ class BankController extends Controller
             'name' => $request->name,
             'phone' => $request->phone,
         ]);
+
         return redirect()->route('admin.banks.index')->with('success', 'Bank created successfully.');
     }
 
@@ -80,15 +82,15 @@ class BankController extends Controller
             'name' => 'required|string',
             'phone' => 'required|string',
         ]);
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             //remove bank from localstorage
-            File::delete(public_path('assets/img/banks/' . $bank->image));
+            File::delete(public_path('assets/img/banks/'.$bank->image));
             // image
             $image = $request->file('image');
             $ext = $image->getClientOriginalExtension();
-            $filename = uniqid('bank') . '.' . $ext; // Generate a unique filename
+            $filename = uniqid('bank').'.'.$ext; // Generate a unique filename
             $image->move(public_path('assets/img/banks/'), $filename); // Save the file
-        }else{
+        } else {
             $filename = $bank->image;
         }
         $bank->update([
@@ -97,6 +99,7 @@ class BankController extends Controller
             'name' => $request->name,
             'phone' => $request->phone,
         ]);
+
         return redirect()->route('admin.banks.index')->with('success', 'Bank updated successfully');
     }
 
@@ -105,8 +108,9 @@ class BankController extends Controller
      */
     public function destroy(Bank $bank)
     {
-        File::delete(public_path('assets/img/banks/' . $bank->image));
+        File::delete(public_path('assets/img/banks/'.$bank->image));
         $bank->delete();
+
         return redirect()->route('admin.banks.index')->with('success', 'Bank deleted successfully');
     }
 }

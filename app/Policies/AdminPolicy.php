@@ -9,7 +9,7 @@ class AdminPolicy
 {
     use HandlesAuthorization;
 
-    // admin only update balance 
+    // admin only update balance
     public function updateAdminBalance(User $user)
     {
         return $user->hasRole('Admin');

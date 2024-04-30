@@ -9,6 +9,7 @@ class ThreeDLimit extends Model
 {
     use HasFactory;
 
+    protected $table = 'three_d_limits';
     protected $fillable = [
         'three_d_limit',
     ];

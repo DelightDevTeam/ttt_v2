@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\TwoD;
 
-use App\Models\Admin\Lottery;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TwoD\Lottery;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PrizeSentTwoDigit extends Model
 {

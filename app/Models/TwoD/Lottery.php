@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\TwoD;
 
 use App\Models\Admin\LotteryMatch;
 use App\Models\Admin\PrizeSentTwoDigit;

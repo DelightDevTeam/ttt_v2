@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\ThreeDigit;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Permutation extends Model
+class ThreeDLimit extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['digit'];
+    protected $fillable = [
+        'three_d_limit',
+    ];
 }

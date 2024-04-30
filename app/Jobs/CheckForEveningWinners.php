@@ -2,23 +2,21 @@
 
 namespace App\Jobs;
 
-use App\Models\Admin\Lottery;
+use App\Models\Lottery;
+use App\Models\LotteryTwoDigitPivot;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CheckForEveningWinners implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     protected $twodWiner;
 
     public function __construct($twodWiner)
@@ -26,42 +24,54 @@ class CheckForEveningWinners implements ShouldQueue
         $this->twodWiner = $twodWiner;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle()
     {
-        // Check if today is a playing day
+        Log::info('CheckForMorningWinners job started');
+
         $today = Carbon::today();
-        $playDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-        if (! in_array(strtolower(date('l')), $playDays)) {
-            return; // exit if it's not a playing day
+        $playDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+        if (! in_array(strtolower($today->isoFormat('dddd')), $playDays)) {
+            Log::info('Today is not a play day: '.$today->isoFormat('dddd'));
+
+            return; // Not a play day
         }
 
-        // Find all winning entries using raw SQL
-        $winningEntries = DB::table('lottery_two_digit_copy')
-            ->join('lotteries', 'lottery_two_digit_copy.lottery_id', '=', 'lotteries.id')
-            ->join('two_digits', 'lottery_two_digit_copy.two_digit_id', '=', 'two_digits.id')
-            ->whereRaw('two_digits.two_digit = ?', [$this->twodWiner->prize_no])
-            ->whereRaw('lottery_two_digit_copy.prize_sent = 0')
-            ->whereRaw('DATE(lottery_two_digit_copy.created_at) = ?', [$today])
-            ->select('lottery_two_digit_copy.*') // Select all columns from pivot table
+        if ($this->twodWiner->session !== 'evening') {
+            Log::info('Session is not evening, exiting.');
+
+            return; // Not a morning session
+        }
+
+        // Get the correct bet digit from result number
+        $result_number = $this->twodWiner->result_number;
+
+        // Retrieve winning entries where bet_digit matches result_number
+        $winningEntries = LotteryTwoDigitPivot::where('bet_digit', $result_number)
+            ->where('match_status', 'open')
+            ->whereDate('created_at', $today)
             ->get();
 
         foreach ($winningEntries as $entry) {
             DB::transaction(function () use ($entry) {
-                // Retrieve the lottery for this entry
-                $lottery = Lottery::findOrFail($entry->lottery_id);
-                $methodToUpdatePivot = 'twoDigits'.ucfirst($lottery->session);
+                try {
+                    $lottery = Lottery::findOrFail($entry->lottery_id);
+                    $user = $lottery->user;
 
-                // Update user's balance
-                $user = $lottery->user;
-                $user->balance += $entry->sub_amount * 80;  // Update based on your prize calculation
-                $user->save();
+                    $prize = $entry->sub_amount * 85;
+                    $user->balance += $prize; // Correct, user is an Eloquent model
+                    $user->save();
 
-                // Update prize_sent in pivot
-                $lottery->$methodToUpdatePivot()->updateExistingPivot($entry->two_digit_id, ['prize_sent' => 1]);
+                    // Now the entry is also an Eloquent model, so this works
+                    $entry->prize_sent = true;
+                    $entry->save();
+                } catch (\Exception $e) {
+                    Log::error("Error during transaction for entry ID {$entry->id}: ".$e->getMessage());
+                    throw $e; // Ensure rollback if needed
+                }
             });
         }
+
+        Log::info('CheckForMorningWinners job completed.');
     }
 }

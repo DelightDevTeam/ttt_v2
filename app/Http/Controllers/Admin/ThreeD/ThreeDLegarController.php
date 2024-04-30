@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\ThreeD;
 
 use App\Http\Controllers\Controller;
 use App\Services\ThreeDigitDataService;
-use Illuminate\Http\Request;
 
 class ThreeDLegarController extends Controller
 {

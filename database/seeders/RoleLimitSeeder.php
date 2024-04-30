@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\RoleLimit;
+use App\Models\Admin\RoleLimit;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

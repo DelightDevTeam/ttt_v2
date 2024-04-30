@@ -60,15 +60,15 @@
     <div class="col-6">
         <div class="card">
             <div class="card-header">
-                <h5>2D မနက်ပိုင်းထွက်ဂဏန်းထဲ့ရန်</h5>
+                <h5>2D Morning Prize Digit Create</h5>
             </div>
             <form action="{{ route('admin.tow-d-win-number.store') }}" method="post">
                 @csrf
                 <div class="row">
                     <div class="col-12">
                         <div class="custom-form-group ms-3 mx-3">
-                            <label for="prize_no">ထွက်ဂဏန်း</label>
-                            <input type="text" name="prize_no" id="player_name" class="form-control" placeholder="ထွက်ဂဏန်းထဲ့ပါ">
+                            <label for="prize_no">Prize Number</label>
+                            <input type="text" name="prize_no" id="player_name" class="form-control" placeholder="Player Name">
                         </div>
                         {{-- <input type="hidden" name="session" value="morning"> --}}
                     </div>
@@ -87,12 +87,12 @@
             <!-- Card header -->
             <div class="card-header pb-0">
                 <div>
-                    <h5 class="mb-0">2D မနက်ပိုင်းထွက်ဂဏန်းများ</h5>
+                    <h5 class="mb-0">2D Prize Digit Create Dashboards</h5>
                 </div>
                 <div class="d-lg-flex mt-2">
                     <div class="ms-auto my-auto mt-lg-0">
                         <div class="ms-auto my-auto">
-                            {{-- <a href="{{ route('admin.users.create') }}" class="btn bg-gradient-primary btn-sm mb-0">+&nbsp; Create New</a> --}}
+                            <a href="{{ route('admin.users.create') }}" class="btn bg-gradient-primary btn-sm mb-0">+&nbsp; Create New</a>
                             <button class="btn btn-outline-primary btn-sm export mb-0 mt-sm-0 mt-1" data-type="csv" type="button" name="button">Export</button>
                         </div>
                     </div>
@@ -129,15 +129,15 @@
     <div class="col-6">
         <div class="card">
             <div class="card-header">
-                <h5>2D ညနေထွက်ဂဏန်းထဲ့ရန်</h5>
+                <h5>2D Evening Prize Digit Create</h5>
             </div>
             <form action="{{ route('admin.tow-d-win-number.store') }}" method="post">
                 @csrf
                 <div class="row">
                     <div class="col-12">
                         <div class="custom-form-group ms-3 mx-3">
-                            <label for="prize_no">ထွက်ဂဏန်း</label>
-                            <input type="text" name="prize_no" id="player_name" class="form-control" placeholder="ထွက်ဂဏန်းထဲ့ပါ">
+                            <label for="prize_no">Prize Number</label>
+                            <input type="text" name="prize_no" id="player_name" class="form-control" placeholder="Player Name">
                         </div>
                         {{-- <input type="hidden" name="session" value="evening"> --}}
                     </div>
@@ -156,12 +156,12 @@
         <div class="card mt-3">
             <div class="card-header pb-0">
                 <div>
-                    <h5 class="mb-0">2D ညနေပိုင်းထွက်ဂဏန်းများ</h5>
+                    <h5 class="mb-0">2D Prize Digit Create Dashboards</h5>
                 </div>
                 <div class="d-lg-flex mt-2">
                     <div class="ms-auto my-auto mt-lg-0">
                         <div class="ms-auto my-auto">
-                            {{-- <a href="{{ route('admin.users.create') }}" class="btn bg-gradient-primary btn-sm mb-0">+&nbsp; Create New</a> --}}
+                            <a href="{{ route('admin.users.create') }}" class="btn bg-gradient-primary btn-sm mb-0">+&nbsp; Create New</a>
                             <button class="btn btn-outline-primary btn-sm export mb-0 mt-sm-0 mt-1" data-type="csv" type="button" name="button">Export</button>
                         </div>
                     </div>

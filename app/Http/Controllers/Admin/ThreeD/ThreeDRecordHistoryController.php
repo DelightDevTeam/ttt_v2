@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin\ThreeD;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\ThreeDDLimit;
 use App\Models\ThreeDigit\Lotto;
 use App\Models\ThreeDigit\ThreeWinner;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ThreeDRecordHistoryController extends Controller
 {
@@ -33,7 +33,7 @@ class ThreeDRecordHistoryController extends Controller
         $lotteries = Lotto::with(['threedDigits', 'lotteryMatch.threedMatchTime'])->orderBy('id', 'desc')->get();
         $prize_no = ThreeWinner::whereDate('created_at', Carbon::today())->orderBy('id', 'desc')->first();
 
-        return view('admin.three_d.v_1_three_d_history', compact('lotteries', 'prize_no', 'matchTime'));
+        return view('admin.three_d.three_d_history', compact('lotteries', 'prize_no', 'matchTime'));
     }
 
     public function show(string $id)
@@ -58,5 +58,29 @@ class ThreeDRecordHistoryController extends Controller
             ->first();
 
         return view('admin.three_d.three_d_history_show', compact('lottery', 'prize_no', 'matchTime'));
+    }
+
+    public function OnceWeekThreedigitHistoryConclude()
+    {
+        $userId = auth()->id(); // Get logged in user's ID
+        $displayJackpotDigit = User::getAdminthreeDigitsHistory();
+        $three_limits = ThreeDDLimit::orderBy('id', 'desc')->first();
+
+        return view('admin.three_d.one_week_conclude', [
+            'displayThreeDigits' => $displayJackpotDigit,
+            'three_limits' => $three_limits,
+        ]);
+    }
+
+    public function OnceMonthThreedigitHistoryConclude()
+    {
+        $userId = auth()->id(); // Get logged in user's ID
+        $displayJackpotDigit = User::getAdminthreeDigitsOneMonthHistory();
+        $three_limits = ThreeDDLimit::orderBy('id', 'desc')->first();
+
+        return view('admin.three_d.one_month_conclude', [
+            'displayThreeDigits' => $displayJackpotDigit,
+            'three_limits' => $three_limits,
+        ]);
     }
 }

@@ -26,9 +26,8 @@
                         </div>
                         <div class="ms-auto my-auto mt-lg-0 mt-4">
                             <div class="ms-auto my-auto">
-                                {{-- <a href="{{ route('admin.users.create') }}"
-                                    class="btn bg-gradient-primary btn-sm mb-0">+&nbsp; Create New
-                                    User</a> --}}
+                                <a href="{{ url('/admin/twod-daily-evening-history') }}"
+                                    class="btn bg-gradient-primary btn-sm mb-0"> > &nbsp; 4:30 စာရင်း ပေါင်းချုပ် </a>
                                 <button class="btn btn-outline-primary btn-sm export mb-0 mt-sm-0 mt-1" data-type="csv"
                                     type="button" name="button">Export</button>
                             </div>
@@ -60,14 +59,7 @@
                                         <ul>
                                             @foreach ($lottery->twoDigits as $twoDigit)
                                                 <li>
-                                                    {{-- {{ $twoDigit->two_digit }} Amount: {{ $twoDigit->pivot->sub_amount }} - --}}
-                                                    <span class="badge bg-secondary">
-                                                   {{ $twoDigit->two_digit }}
-                                                 </span>
-                                                    Amount:
-                                                    <span class="badge bg-secondary">
-                                                        {{ $twoDigit->pivot->sub_amount }}
-                                                    </span> - 
+                                                    {{ $twoDigit->two_digit }} Amount: {{ $twoDigit->pivot->sub_amount }} -
                                                     {{ $twoDigit->pivot->created_at->format('d M Y (l) (h:i a)') }}
                                                 </li>
                                             @endforeach
@@ -122,7 +114,7 @@
                     };
 
                     if (type === "csv") {
-                        data.columnDelimiter = "|";
+                        data.columnDelimiter = ",";
                     }
 
                     dataTableSearch.export(data);

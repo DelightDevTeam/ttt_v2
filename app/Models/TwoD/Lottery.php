@@ -2,13 +2,13 @@
 
 namespace App\Models\TwoD;
 
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\TwoD\TwoDigit;
 use App\Models\Admin\LotteryMatch;
 use App\Models\Admin\PrizeSentTwoDigit;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\TwoD\TwoDigit;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Lottery extends Model
 {

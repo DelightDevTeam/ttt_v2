@@ -38,7 +38,6 @@
                     <table class="table table-flush">
                         <thead>
                             <tr>
-                                <th>#</th>
                                 <th>2D</th>
                                 <th>Sub Amount</th>
                                 <th>Date</th>
@@ -46,10 +45,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($lottery->twoDigits as $index => $twoDigit)
+                            @foreach ($lottery->twoDigits as $twoDigit)
                                 <tr>
-                                    <td>{{ $index+1 }}</td>
-                                    <td>{{ $twoDigit->two_digit }}</td>
+                                    <td>{{ $twoDigit->id }}</td>
                                     <td>{{ $twoDigit->pivot->sub_amount }}</td>
                                     <td class="text-sm font-weight-normal">
                                         <span

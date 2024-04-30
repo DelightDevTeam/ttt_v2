@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Admin\TwoD;
 
 use App\Http\Controllers\Controller;
-use App\Models\TwoD\TwoDigit;
 use App\Services\TwoDigitDataService;
-use Illuminate\Http\Request;
 
 class DataLejarController extends Controller
 {

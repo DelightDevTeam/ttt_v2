@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\TwoD;
 
 use App\Http\Controllers\Controller;
 use App\Services\TwoDLagarService;
-use Illuminate\Http\Request;
 
 class TwoDLagarController extends Controller
 {

@@ -21,34 +21,13 @@
                 <div class="card-header pb-0">
                     <div class="d-lg-flex">
                         <div>
-                            <h5 class="mb-0">3D History Dashboards
-                                <span>
-                                     <h6>Thai 3D Lottery Match Times for {{ Carbon\Carbon::now()->format('F Y') }}</h6>
-                                </span>
+                            <h5 class="mb-0">3D All History Dashboards
+                                {{-- <span>
+                                    <a class="btn btn-outline-primary btn-sm export mb-0 mt-sm-0 mt-1"
+                                    href="{{ url('/admin/three-digit-one-month-history-conclude') }}">တလအတွင်းပေါင်းချုပ်ကြည့်ရန်</a>
+                                </span> --}}
                             </h5>
 
-                        </div>
-                        <div class="card-header">
-                         <div class="d-lg-flex">
-                          <div>
-                           @php
-                        if ($matchTime) {
-                            // Assuming the format is "Number: Time" and you want to get the "Number" part
-                            $timeParts = explode(':', $matchTime->open_time); // Split the string by the colon
-                            $timeNumber = intval($timeParts[0]); // Convert the first part to an integer
-                            $openTime = $timeNumber - 1; // Now it's safe to subtract
-                        }
-                        @endphp
-
-                        @if ($matchTime)
-                            <p>Open Time: {{ $openTime }}</p>
-                            <p>Match Time: {{ $matchTime->match_time ?? '' }}</p>
-                        @else
-                            <p>No match time found for the current period.</p>
-                        @endif
-
-                          </div>
-                         </div>
                         </div>
                         <div class="ms-auto my-auto mt-lg-0 mt-4">
                             <div class="ms-auto my-auto">
@@ -61,81 +40,53 @@
                         </div>
                     </div>
                 </div>
-   <div class="table-responsive">
-       <table class="table table-flush" id="twod-search">
-           <thead class="thead-light">
-               <th>#</th>
-               {{-- <th>Lottery ID</th> --}}
-               <th>PlayerName</th>
-               <th>Open</th>
-               <th>Three Digits</th>
-               <th>Total Amount</th>
-               <th>Date</th>
-               <th>Action</th>
-           </thead>
-           <tbody>
-     @foreach ($lotteries as $lottery)
-         <tr>
-             <td class="text-sm font-weight-normal">{{ $lottery->id }}</td>
-             <td class="text-sm font-weight-normal">
-                 <span class="badge badge-secondary">{{ $lottery->user->name }}</span>
-             </td>
-             <td class="text-sm font-weight-normal">
-                 <span class="badge badge-secondary">
-                  {{-- {{ optional($lottery->lotteryMatch->threedMatchTime)->match_time }} --}}
-                  {{-- <p>Match Time: {{ $matchTime->match_time }}</p> --}}
-                  @php
-                    if ($matchTime) {
-                        // Assuming the format is "Number: Time" and you want to get the "Number" part
-                        $timeParts = explode(':', $matchTime->open_time); // Split the string by the colon
-                        $timeNumber = intval($timeParts[0]); // Convert the first part to an integer
-                        $openTime = $timeNumber - 1; // Now it's safe to subtract
-                    }
-                    @endphp
-
-                    @if ($matchTime)
-                        <p>Open Time: {{ $openTime }}</p>
-                        <p>Match Time: {{ $matchTime->match_time ?? '' }}</p>
-                    @else
-                        <p>No match time found for the current period.</p>
-                    @endif
-
-                 </span>
-             </td>
-             <td class="text-sm font-weight-normal">
-                 <ul class="navbar-nav">
-                     @foreach ($lottery->threedDigits as $threeDigit)
-                         <li class="nav-item">
-                             <button type="button" class="btn btn btn-primary">
-                                 <span>{{ $threeDigit->three_digit }}</span>
-                                 <span class="badge badge-pill badge-lg bg-gradient-success">
-                                     {{ $threeDigit->pivot->sub_amount }}</span>
-                             </button>
-                         </li>
-                     @endforeach
-                 </ul>
-             </td>
-             <td class="text-sm font-weight-normal">
-                 <button type="button" class="btn btn-success">
-                     <span>{{ $lottery->total_amount }} </span>
-                     {{-- <span
-                         class="badge badge-sm badge-circle badge-danger border border-white border-2"></span> --}}
-                 </button>
-             </td>
-             {{-- <td>{{ $lottery->created_at->format('d M Y (l) h:i:s A') }}</td> --}}
-             <td class="text-sm font-weight-normal">
-
-                 <span
-                     class="badge bg-gradient-info">{{ $lottery->created_at->format('d-m-Y (l) (h:i a)') }}</span>
-             </td>
-             <td class="text-sm font-weight-normal">
-                 <a href="{{ route('admin.three-d-list-show', $lottery->id )}}" class="btn btn-warning btn-sm">Show</a>
-             </td>
-         </tr>
-     @endforeach
-           </tbody>
+                <div class="table-responsive">
+                    <table class="table table-flush" id="twod-search">
+            <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Phone</th>
+                <th>Bet Digit</th>
+                <th>Result Date</th>
+                <th>Result Time</th>
+                <th>Sub Amount</th>
+                <th>Prize Sent</th>
+                <th>Match Status</th>
+                <th>Match Start Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($results as $result)
+                <tr>
+                    <td>{{ $result->user_name }}</td>
+                    <td>{{ $result->user_phone }}</td>
+                    <td>{{ $result->bet_digit }}</td>
+                    <td>{{ $result->res_date }}</td>
+                    <td>{{ $result->res_time }}</td>
+                    <td>{{ $result->sub_amount }}</td>
+                    <td>{{ $result->prize_sent ? 'Yes' : 'No' }}</td>
+                    <td>{{ $result->match_status }}</td>
+                    <td>{{ $result->match_start_date ?? 'N/A' }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="9">No data found.</td>
+                </tr>
+            @endforelse
+        </tbody>
        </table>
-   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <p class="text-center">
+                        Total Sub Amount: {{ $totalSubAmount }}
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -166,7 +117,7 @@
                     };
 
                     if (type === "csv") {
-                        data.columnDelimiter = "|";
+                        data.columnDelimiter = ",";
                     }
 
                     dataTableSearch.export(data);

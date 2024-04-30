@@ -3,8 +3,8 @@
 namespace App\Models\ThreeDigit;
 
 use App\Models\Admin\ThreedLottery;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ThreedMatchTime extends Model
 {
@@ -14,6 +14,4 @@ class ThreedMatchTime extends Model
         'open_time',
         'match_time',
     ];
-
-  
 }

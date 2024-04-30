@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ThreeD\ThreeDLimit;
+use App\Models\ThreeDigit\ThreeDLimit;
 use App\Models\TwoD\TwoDLimit;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

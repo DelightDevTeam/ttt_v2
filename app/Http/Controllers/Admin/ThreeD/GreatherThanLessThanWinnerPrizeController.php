@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\ThreeD;
 
 use App\Http\Controllers\Controller;
 use App\Models\ThreeDigit\Prize;
+use App\Services\ThirdPrizeOneWeekWinnerService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,31 @@ class GreatherThanLessThanWinnerPrizeController extends Controller
     /**
      * Display a listing of the resource.
      */
+    protected $userLotteryDataService;
+
+    public function __construct(ThirdPrizeOneWeekWinnerService $userLotteryDataService)
+    {
+        $this->userLotteryDataService = $userLotteryDataService;
+    }
+
+    public function ThirdPrizeWinner()
+    {
+        try {
+            // Retrieve data for all users
+            $data = $this->userLotteryDataService->OneWeekThirdPrizeWinner();
+
+            // Pass the results to the Blade view
+            return view('admin.three_d.prize_winner_history', [
+                'results' => $data['results'],
+                'totalSubAmount' => $data['totalSubAmount'],
+                'totalPrizeAmount' => $data['totalPrizeAmount'],
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to retrieve data: '.$e->getMessage());
+        }
+    }
+
+    // three_d.prize_winner_history
     public function index()
     {
 

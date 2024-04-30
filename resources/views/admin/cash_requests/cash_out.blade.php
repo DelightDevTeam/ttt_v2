@@ -52,14 +52,14 @@
                 @if($cash->status == 0)
                 <div>
                   <a class="badge text-bg-success text-white" href="#" onclick="event.preventDefault(); document.getElementById('accept{{ $cash->id }}').submit();"><i class="fas fa-check"></i></a>
-                  <a class="badge text-bg-danger text-white" href="#" onclick="event.preventDefault(); document.getElementById('reject{{ $cash->id }}').submit();"><i class="fas fa-trash"></i></a>
+                  <a class="badge text-bg-danger text-white" href="#" onclick="event.preventDefault(); document.getElementById('reject{{ $cash->id }}').submit();"><i class="fas fa-xmark"></i></a>
                 </div>
                 @endif
                 
-                <form id="accept{{ $cash->id }}" action="{{ url('/admin/withdraw/accept/'.$cash->id) }}" method="post" style="display: none;">
+                <form id="accept{{ $cash->id }}" action="{{ url('/admin/cashOut/accept/'.$cash->id) }}" method="post" style="display: none;">
                   @csrf
                 </form>
-                <form id="reject{{ $cash->id }}" action="{{ url('/admin/withdraw/reject/'.$cash->id) }}" method="post" style="display: none;">
+                <form id="reject{{ $cash->id }}" action="{{ url('/admin/cashOut/reject/'.$cash->id) }}" method="post" style="display: none;">
                   @csrf
                 </form>
               </td>      

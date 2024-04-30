@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\ThreeD;
 
 use App\Http\Controllers\Controller;
 use App\Models\ThreeDigit\Lotto;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DailyThreeDIncomeOutComeController extends Controller

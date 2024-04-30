@@ -33,7 +33,7 @@
       <th>Phone</th>
       <th>Amount</th>
       <th>Method</th>
-      <th>နောက်ဆုံးနံပါတ်၆လုံး</th>
+      <th>Transaction No</th>
       <th>Status</th>
       <th>Created_at</th>
       {{-- <th>Action</th>  --}}
@@ -54,14 +54,14 @@
             @if($cash->status == 0)
             <div>
               <a class="badge text-bg-success text-white" href="#" onclick="event.preventDefault(); document.getElementById('accept{{ $cash->id }}').submit();"><i class="fas fa-check"></i></a>
-              <a class="badge text-bg-danger text-white" href="#" onclick="event.preventDefault(); document.getElementById('reject{{ $cash->id }}').submit();"><i class="fas fa-trash text-white"></i></a>
+              <a class="badge text-bg-danger text-white" href="#" onclick="event.preventDefault(); document.getElementById('reject{{ $cash->id }}').submit();"><i class="fas fa-xmark"></i></a>
             </div>
             @endif
             
-            <form id="accept{{ $cash->id }}" action="{{ url('/admin/deposit/accept/'.$cash->id) }}" method="post" style="display: none;">
+            <form id="accept{{ $cash->id }}" action="{{ url('/admin/cashIn/accept/'.$cash->id) }}" method="post" style="display: none;">
               @csrf
             </form>
-            <form id="reject{{ $cash->id }}" action="{{ url('/admin/deposit/reject/'.$cash->id) }}" method="post" style="display: none;">
+            <form id="reject{{ $cash->id }}" action="{{ url('/admin/cashIn/reject/'.$cash->id) }}" method="post" style="display: none;">
               @csrf
             </form>
           </td>      

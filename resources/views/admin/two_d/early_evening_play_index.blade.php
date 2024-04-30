@@ -56,14 +56,7 @@
                                         <ul>
                                             @foreach ($lottery->twoDigits as $twoDigit)
                                                 <li>
-                                                    <span class="badge bg-secondary">
-                                                   {{ $twoDigit->two_digit }}
-                                                 </span>
-                                                    Amount:
-                                                    <span class="badge bg-secondary">
-                                                        {{ $twoDigit->pivot->sub_amount }}
-                                                    </span> -
-                                                    {{-- {{ $twoDigit->two_digit }} Amount: {{ $twoDigit->pivot->sub_amount }} - --}}
+                                                    {{ $twoDigit->two_digit }} Amount: {{ $twoDigit->pivot->sub_amount }} -
                                                     {{ $twoDigit->pivot->created_at->format('d M Y (l) (h:i a)') }}
                                                 </li>
                                             @endforeach
@@ -118,7 +111,7 @@
                     };
 
                     if (type === "csv") {
-                        data.columnDelimiter = "|";
+                        data.columnDelimiter = ",";
                     }
 
                     dataTableSearch.export(data);

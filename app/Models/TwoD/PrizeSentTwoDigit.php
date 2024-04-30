@@ -3,8 +3,8 @@
 namespace App\Models\TwoD;
 
 use App\Models\TwoD\Lottery;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PrizeSentTwoDigit extends Model
 {

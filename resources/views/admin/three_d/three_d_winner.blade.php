@@ -23,7 +23,7 @@
                         <div>
                             <h5 class="mb-0">3D Winner Dashboards
                                 <span>
-                                    <button type="button" class="btn btn-primary">
+                                    <button type="button" class="btn btn-info">
                                         @if ($prize_no_morning)
                                             <span>{{ $prize_no->created_at->format('d-m-Y (l) (h:i a)') }}</span>
                                             <span class="badge badge-warning"
@@ -37,13 +37,24 @@
                         </div>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <span>
+                                <a href="{{ url('/admin/three-d-winners-history') }}" class="btn btn-primary">
+                                   တလအတွင်း 3D ပေါက်သူများစာရင်းကြည့်ရန်
+                                </a>
+                            </span>
+                        </h5>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-flush" id="users-search">
                         <thead class="thead-light">
                             <th>PlayerName</th>
                             <th>Winning Three Digits</th>
                             <th>Bet Amount</th>
-                            <th>3:30 PM</th>
+                            <th>Date</th>
                             <th>Prize Amount</th>
                             <th>SendToAccBalance</th>
                         </thead>
@@ -59,7 +70,7 @@
                 <td>{{ $threeDigit->three_digit }}</td>
                 <td>{{ $threeDigit->pivot->sub_amount }}</td>
                 <td><span class="badge badge-success">WINNER</span></td>
-                <td>{{ $threeDigit->pivot->sub_amount * 700 }}</td>
+                <td>{{ $threeDigit->pivot->sub_amount * 600 }}</td>
                 <td>
                  @if ($threeDigit->pivot->prize_sent == 1)
                 <button type="button" class="btn btn-success" disabled>Sent - လျော်ပြီး</button>
@@ -70,7 +81,7 @@
                 </td>
             </tr>
                 @endif
-            
+
     @endforeach
 @endforeach
 
@@ -107,7 +118,7 @@
                     };
 
                     if (type === "csv") {
-                        data.columnDelimiter = "|";
+                        data.columnDelimiter = ",";
                     }
 
                     dataTableSearch.export(data);

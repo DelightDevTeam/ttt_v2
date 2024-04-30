@@ -21,18 +21,8 @@
                 <div class="card-header pb-0">
                     <div class="d-lg-flex">
                         <div>
-                            <h5 class="mb-0">3D သွပ်ရရှိသူများသူများစာရင်း
-                                <span>
-                                    {{-- <button type="button" class="btn btn-primary mt-2 ms-2">
-                                        @if ($prize_no_morning)
-                                            <span>{{ $prize_no->created_at->format('d-m-Y (l) (h:i a)') }}</span>
-                                            <span class="badge badge-warning"
-                                                style="font-size: 15px; color:white">{{ $prize_no->prize_no }}</span>
-                                        @else
-                                            <span>No Prize Number Yet</span>
-                                        @endif
-                                    </button> --}}
-                                </span>
+                            <h5 class="mb-0">
+                                3D သွပ်ထီပေါက်သူများစာရင်း Dashboards
                             </h5>
 
                         </div>
@@ -48,92 +38,59 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    @php 
-                    $totalPrizeAmount = 0; // Initialize the variable here
-                    @endphp
-                    @if($winners->isEmpty())
-   <p style="color: #f5bd02">No winners found for the past month.</p>
-   @else
-   <table class="table table-flush" id="users-search">
-    
-    @foreach($winners as $index => $winner)
-    <tr>
-     {{-- <td class="mt-2">1.</td> --}}
-     <td>
-      {{ $index + 1 }}
-     </td>
-     <td>
-      @if($winner->profile)
-      <img src="{{ $winner->profile }}" width="50px" height="50px" style="border-radius: 50%" alt="" />
-      @else
-      <i class="fa-regular fa-circle-user" style="font-size: 50px;"></i>
-      @endif
-     </td>
-     <td><span style="font-size: 10px">{{ $winner->name }}</span>
-      <p style="font-size: 10px">{{ $winner->phone }}</p>
-     </td>
-     {{-- <td><span>Session</span>
-            <p>{{ ucfirst($winner->session) }}</p>
-     </td> --}}
-     <td><span>ပေါက်ဂဏန်း</span>
-      <p class="text-primary">{{ $winner->prize_one }}</p>
-     </td>
-     
-     <td><span>ထိုးငွေ</span>
-      <p>{{ $winner->sub_amount }}</p>
-     </td>
-     <td><span>ထီပေါက်ငွေ</span>
-      <p class="text-primary">{{ $winner->prize_amount }}</p>
-     </td>
-     <td><span>ပေါက်ဂဏန်း</span>
-      <p class="text-primary">{{ $winner->prize_two }}</p>
-     </td>
-      <td><span>ထိုးငွေ</span>
-      <p>{{ $winner->sub_amount }}</p>
-     </td>
-     <td><span>ထီပေါက်ငွေ</span>
-      <p class="text-primary">{{ $winner->prize_amount }}</p>
-     </td>
-     
-    
-     <td>
-      <span>ရက်စွဲ</span>
-      <p>
-       {{-- date with format --}}
-       {{ \Carbon\Carbon::parse($winner->created_at)->format('d-m-Y (l) (h:i a)') }}
-      </p>
-     </td>
-     {{-- <td>
-        @if($winner->prize_sent == 1)
-            <span>
-                <p class="text-primary">
-                    လျော်ပြီး
-                </p>
-            </span>
-        @else
-            <span>
-                <p class="text-primary">
-                    မလျော်ရသေးပါ
-                </p>
-            </span> 
-        @endif
+                   
+                     @if (isset($error))
+        <div class="alert alert-danger">
+            {{ $error }}
+        </div>
+    @else
+        <div>
+            {{-- <p class="text-center">Total Sub Amount: {{ $totalSubAmount }}</p> --}}
+            <p class="text-center">Total Prize Amount: {{ $totalPrizeAmount }}</p>
+        </div>
 
-     </td> --}}
-    </tr>
-    @php 
-    $totalPrizeAmount += $winner->prize_amount;
-    @endphp
-    @endforeach
-
-   </table>
-   @endif
+        <table class="table table-flush" id="users-search">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User Name</th>
+                    <th>User Phone</th>
+                    <th>Bet Digit</th>
+                    <th>Res Date</th>
+                    <th>Res Time</th>
+                    <th>Sub Amount</th>
+                    <th>WinAmount</th>
+                    <th>Prize Sent</th>
+                    <th>Match Status</th>
+                    <th>Match Start Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($results as $index => $result)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $result->user_name }}</td>
+                        <td>{{ $result->user_phone }}</td>
+                        <td>{{ $result->bet_digit }}</td>
+                        <td>{{ $result->res_date }}</td>
+                        <td>{{ $result->res_time }}</td>
+                        <td>{{ $result->sub_amount }}</td>
+                        <td>{{ $result->sub_amount * 10 }}</td>
+                        <td>{{ $result->prize_sent ? 'Yes' : 'No' }}</td>
+                        <td>{{ $result->match_status }}</td>
+                        <td>{{ $result->match_start_date ?? 'N/A' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
                 </div>
             </div>
         <div class="mt-4">
         <div class="card">
             <div class="card-header">
                 <p class="mb-0 text-center">
-            <span style="font-size: 20px">ထီပေါက်ငွေစုစုပေါင်း</span>
+            <span style="font-size: 20px">သွပ်ထီပေါက်ငွေစုစုပေါင်း</span>
             <span style="font-size: 20px" class="text-primary">{{ $totalPrizeAmount }}</span>
         </p>
         </div>

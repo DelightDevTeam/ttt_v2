@@ -2,7 +2,7 @@
 @section('content')
 
 @if ($lottery_matches->is_active == 1)
-          <form action="{{ route('user.twod-play-index-4pm.store') }}" method="POST" class="p-1">
+          <form action="{{ route('user.twod-playing-4pm.store') }}" method="POST" class="p-1">
             @csrf
 <div class="row">
     <div
@@ -29,10 +29,7 @@
               </div>
 
               <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-      {{-- <div class="d-flex justify-content-around text-white">
-       <p>စုစုပေါင်းငွေပမာဏ</p>
-       <p>200 ကျပ်</p>
-      </div> --}}
+      
       <hr />
       <div class="text-center text-white py-2" style="background: #c50408; border-radius: 5px">
         @if (session('SuccessRequest'))

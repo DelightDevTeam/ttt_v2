@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\TwodWiner;
-use App\Models\Lottery;
 use Carbon\Carbon;
+use App\Models\TwoD\Lottery;
 use Illuminate\Http\Request;
+use App\Models\Admin\TwodWiner;
+use App\Models\TwoD\TwodGameResult;
+use App\Http\Controllers\Controller;
+use App\Models\TwoD\LotteryTwoDigitPivot;
 
 class TwoDLotteryController extends Controller
 {
@@ -14,12 +16,34 @@ class TwoDLotteryController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $lotteries = Lottery::with('twoDigits')->orderBy('id', 'desc')->get();
-        $prize_no = TwodWiner::whereDate('created_at', Carbon::today())->orderBy('id', 'desc')->first();
+{
+    // Get all lotteries with related user data
+    $lotteries = LotteryTwoDigitPivot::with('user')->orderBy('id', 'desc')->get();
+    
+    // Calculate the total sub_amount grouped by session (morning and evening)
+    $totalSubAmountBySession = LotteryTwoDigitPivot::selectRaw('session, SUM(sub_amount) as total_sub_amount')
+        ->groupBy('session') // Group results by session
+        ->get();
 
-        return view('admin.two_d.two_d_history', compact('lotteries', 'prize_no'));
+      // Calculate the total win amounts, grouped by session
+    $totalWinAmountBySession = LotteryTwoDigitPivot::where('prize_sent', true)
+        ->selectRaw('session, SUM(sub_amount * 85) as total_win_amount') // Calculate total win amount
+        ->groupBy('session') // Group results by session
+        ->get();
+
+    // Create an associative array for win amounts
+    $winAmounts = [];
+    foreach ($totalWinAmountBySession as $item) {
+        $winAmounts[$item->session] = $item->total_win_amount;
     }
+
+    // Prepare a simple associative array for easier use in the view
+    $sessionTotals = $totalSubAmountBySession->pluck('total_sub_amount', 'session');
+
+    // Pass the required data to the view
+    return view('admin.two_d.two_d_history', compact('lotteries', 'sessionTotals', 'winAmounts'));
+}
+
 
     /**
      * Show the form for creating a new resource.

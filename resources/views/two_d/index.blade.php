@@ -189,14 +189,14 @@
 
         <div class="modal-btn mt-2">
             @if ($currentTime->between($start9Time, $end12Time))
-            <a href="{{ url('/user/two-d-play-index-12pm') }}" class="text-decoration-none btn">12:01 PM</a>
+            <a href="{{ url('/user/two-d-play-session') }}" class="text-decoration-none btn">12:01 PM</a>
             @else
             <a href="#" class="text-decoration-none btn">12:01 PM</a>
             @endif
         </div>
         <div class="modal-btn mt-2 mb-4">
             @if ($currentTime->between($start12Time, $end4Time))
-            <a href="{{ url('/user/two-d-play-index-4pm') }}" class="text-decoration-none btn">04:30 PM</a>
+            <a href="{{ url('/user/two-d-play-session') }}" class="text-decoration-none btn">04:30 PM</a>
             @else
             <a href="#" class="text-decoration-none btn">04:30 PM</a>
             {{-- <span class="btn w-100 text-center">04:30 PM</span> --}}

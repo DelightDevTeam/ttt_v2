@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('result_date_id')->nullable();
             $table->unsignedBigInteger('lotto_id');
+            $table->unsignedBigInteger('three_digit_id');
             $table->unsignedBigInteger('user_id');
             $table->string('bet_digit');
             $table->integer('sub_amount')->default(0);

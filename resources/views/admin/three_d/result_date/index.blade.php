@@ -44,7 +44,7 @@
     <table class="table table-flush" id="permission-search">
      <thead class="thead-light">
       <tr>
-       <th>အကြိမ်ရေ</th>
+       <th>StartDate</th>
        <th>OpenDate</th>
        <th>OpenTime</th>
        <th>ResNumber</th>
@@ -58,10 +58,16 @@
       @foreach($results as $key => $result)
       <tr>
        {{-- <td class="text-sm font-weight-normal">{{ ++$key }}</td> --}}
-       <td>{{ $result->id }}</td>
+       <td>{{ $result->match_start_date }}</td>
        <td class="text-sm font-weight-normal">{{ $result->result_date }}</td>
        <td class="text-sm font-weight-normal">{{ $result->result_time }}</td>
-        <td class="text-sm font-weight-normal">{{ $result->result_number ?? 'Pending' }}</td>
+        <td class="text-sm font-weight-normal">
+            @if(isset($result->result_number))
+            {{ $result->result_number }}
+            @else
+            <p>Pending</p>
+            @endif
+        </td>
        {{-- <td id="status-{{ $result->id }}">{{ $result->status }}</td> --}}
        <td>
             <form method="POST" action="{{ route('admin.UpdateResult_number', ['id' => $result->id]) }}">
@@ -114,7 +120,14 @@
             ပတ်လယ်ထွက်ဂဏန်း
         </p>
         <p class="text-center">
-            3D First Prize Number : {{ $lasted_prizes->result_number }}
+            3D First Prize Number : 
+            @if(isset($lasted_prizes->result_number))
+            {{ $lasted_prizes->result_number }}
+            @else
+            <p class="text-center">
+                Pending
+            </p>
+            @endif
         </p>
     </div>
     <div class="card-body">

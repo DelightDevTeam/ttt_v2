@@ -2,14 +2,14 @@
 
 namespace App\Jobs;
 
-use App\Models\Lotto;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use App\Models\ThreeDigit\Lotto;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
 
 class ThreeDPermutationPrizeSent implements ShouldQueue
 {

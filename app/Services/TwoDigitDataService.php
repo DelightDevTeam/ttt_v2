@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Admin\TwoDigit;
+use App\Models\TwoD\TwoDigit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 

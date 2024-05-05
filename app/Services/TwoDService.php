@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Admin\HeadDigit;
-use App\Models\Admin\TwoDigit;
-use App\Models\Admin\TwoDLimit;
-use App\Models\Lottery;
-use App\Models\LotteryTwoDigitPivot;
+use App\Models\TwoD\Lottery;
+use App\Models\TwoD\LotteryTwoDigitPivot;
+use App\Models\TwoD\TwodGameResult;
+use App\Models\TwoD\TwoDLimit;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,113 +16,203 @@ class TwoDService
 {
     public function play($totalAmount, array $amounts)
     {
-        DB::beginTransaction();
+        // Check for authentication
+        if (! Auth::check()) {
+            return 'User not authenticated';
+        }
+
+        $user = Auth::user();
+        $break = TwoDLimit::latest()->first()->two_d_limit;
+
+        if ($user->balance < $totalAmount) {
+            return 'Insufficient funds.';
+        }
+
+        DB::beginTransaction(); // Begin transaction for data storage
 
         try {
-            $user = Auth::user();
-
-            if ($user->balance < $totalAmount) {
-                // throw new \Exception('Insufficient funds.');
-                // return response()->json(['message' => 'လက်ကျန်ငွေ မလုံလောက်ပါ။'], 401);
-                return 'Insufficient funds.';
-            }
-
+            // Check for pre-process conditions
             $preOver = [];
-            foreach ($amounts as $amount) {
+            foreach ($amounts as $key => $amount) {
+                if (! is_array($amount) || ! isset($amount['num']) || ! isset($amount['amount'])) {
+                    Log::error('Invalid data format for amount: '.json_encode($amount));
+
+                    continue; // Skip this iteration if invalid data
+                }
+
                 $preCheck = $this->preProcessAmountCheck($amount);
                 if (is_array($preCheck)) {
                     $preOver[] = $preCheck[0];
                 }
             }
+
             if (! empty($preOver)) {
+                DB::rollback(); // Rollback the transaction
+
                 return $preOver;
             }
 
-            // Fetch all head digits not allowed
-            // $headDigitsNotAllowed = HeadDigit::pluck('digit_one', 'digit_two', 'digit_three')->flatten()->unique()->toArray();
-
-            // Check if any selected digit starts with the head digits not allowed
-            $headDigitsNotAllowed = HeadDigit::pluck('digit_one', 'digit_two', 'digit_three')->toArray();
-            foreach ($amounts as $amount) {
-                $headDigitOfSelected = substr(sprintf('%02d', $amount['num']), 0, 1);
-                if (in_array($headDigitOfSelected, $headDigitsNotAllowed)) {
-                    return "Bets on numbers starting with '{$headDigitOfSelected}' are not allowed.";
-                }
-            }
-
+            // Create a new lottery entry
             $lottery = Lottery::create([
                 'pay_amount' => $totalAmount,
                 'total_amount' => $totalAmount,
                 'user_id' => $user->id,
-                'session' => $this->determineSession(),
             ]);
 
+            // Process each amount
             $over = [];
             foreach ($amounts as $amount) {
+                if (! is_array($amount) || ! isset($amount['num']) || ! isset($amount['amount'])) {
+                    Log::error('Invalid data format for amount: '.json_encode($amount));
+
+                    continue; // Skip this iteration if invalid data
+                }
+
                 $check = $this->processAmount($amount, $lottery->id);
                 if (is_array($check)) {
                     $over[] = $check[0];
                 }
             }
+
             if (! empty($over)) {
+                DB::rollback(); // Rollback the transaction if over-limit
+
                 return $over;
             }
 
-            /** @var \App\Models\User $user */
+            // Deduct the balance
             $user->balance -= $totalAmount;
             $user->save();
 
+            // Commit the transaction
             DB::commit();
 
-            // return ['message' => 'Bet placed successfully'];
+            return 'Bet placed successfully.';
+
+        } catch (ModelNotFoundException $e) {
+            DB::rollback(); // Rollback in case of error
+            Log::error('Model not found in TwoDService play method: '.$e->getMessage());
+
+            return 'Resource not found.';
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollback(); // Rollback in case of error
             Log::error('Error in TwoDService play method: '.$e->getMessage());
 
-            //return ['error' => $e->getMessage()];
-            // Rethrow the exception to be handled by the global exception handler
-            // 401 is the status code for Unauthorized
-            return response()->json(['message' => $e->getMessage()], 401);
+            return 'An error occurred while placing the bet. Please try again later.'; // Handle general exceptions
+        }
+    }
+
+    protected function getCurrentSession()
+    {
+        $currentTime = Carbon::now()->format('H:i:s');
+
+        if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
+            return 'morning';
+        } elseif ($currentTime >= '12:01:00' && $currentTime <= '15:45:00') {
+            return 'evening';
+        } else {
+            return 'closed'; // If outside known session times
+        }
+    }
+
+    protected function getCurrentSessionTime()
+    {
+        $currentTime = Carbon::now()->format('H:i:s');
+
+        if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
+            return '12:01:00';
+        } elseif ($currentTime >= '12:01:00' && $currentTime <= '15:45:00') {
+            return '16:30:00';
+        } else {
+            return 'closed'; // If outside known session times
         }
     }
 
     protected function preProcessAmountCheck($amount)
     {
-        $twoDigit = TwoDigit::where('two_digit', sprintf('%02d', $amount['num']))->firstOrFail();
+        if (! is_array($amount) || ! isset($amount['num']) || ! isset($amount['amount'])) {
+            Log::error('Invalid data format for amount: '.json_encode($amount));
+
+            return; // Return null or handle the error as needed
+        }
+
+        $twoDigit = str_pad($amount['num'], 2, '0', STR_PAD_LEFT); // Ensure two-digit format
         $break = TwoDLimit::latest()->first()->two_d_limit;
-        $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
-            ->where('two_digit_id', $twoDigit->id)
+
+        Log::info("User's commission limit: {$break}");
+        Log::info("Checking bet_digit: {$twoDigit}");
+
+        // Get the total bet amount for the given two-digit
+        $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
+            ->where('bet_digit', $twoDigit)
             ->sum('sub_amount');
+
+        Log::info("Total bet amount for {$twoDigit}: {$totalBetAmountForTwoDigit}");
+
         $subAmount = $amount['amount'];
 
+        // Check if the total bet exceeds the break limit
         if ($totalBetAmountForTwoDigit + $subAmount > $break) {
-            return [$amount['num']];
-            // throw new \Exception('The bet amount exceeds the limit for two-digit number ' . $twoDigit->two_digit);
+            Log::warning("Bet on {$twoDigit} exceeds limit.");
+
+            return [$amount['num']]; // Indicates over-limit
         }
+
+        // Indicates no over-limit
     }
 
     protected function processAmount($amount, $lotteryId)
     {
-        $twoDigit = TwoDigit::where('two_digit', sprintf('%02d', $amount['num']))->firstOrFail();
+        if (! is_array($amount) || ! isset($amount['num']) || ! isset($amount['amount'])) {
+            Log::error('Invalid data format for amount: '.json_encode($amount));
 
+            return; // Return null or handle the error as needed
+        }
+
+        $twoDigit = str_pad($amount['num'], 2, '0', STR_PAD_LEFT); // Ensure two-digit format
         $break = TwoDLimit::latest()->first()->two_d_limit;
-        $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
-            ->where('two_digit_id', $twoDigit->id)
+
+        $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
+            ->where('bet_digit', $twoDigit)
             ->sum('sub_amount');
+
         $subAmount = $amount['amount'];
         $betDigit = $amount['num'];
 
         if ($totalBetAmountForTwoDigit + $subAmount <= $break) {
-            LotteryTwoDigitPivot::create([
-                'lottery_id' => $lotteryId,
-                'two_digit_id' => $twoDigit->id,
-                'bet_digit' => $betDigit,
-                'sub_amount' => $subAmount,
-            ]);
+            $user = Auth::user();
+            $today = Carbon::now()->format('Y-m-d');
+            $currentSession = $this->getCurrentSession();
+            $currentSessionTime = $this->getCurrentSessionTime();
+
+            // Retrieve results for today where status is 'open'
+            $results = TwodGameResult::where('result_date', $today)
+                ->where('status', 'open')
+                ->first();
+
+            if ($results) { // Check if results are valid
+                LotteryTwoDigitPivot::create([
+                    'lottery_id' => $lotteryId,
+                    'twod_game_result_id' => $results->id,
+                    'user_id' => $user->id,
+                    'bet_digit' => $betDigit,
+                    'sub_amount' => $subAmount,
+                    'prize_sent' => false,
+                    'match_status' => $results->status,
+                    'res_date' => $results->result_date,
+                    'res_time' => $currentSessionTime,
+                    'session' => $currentSession,
+                    'admin_log' => $results->admin_log,
+                    'user_log' => $results->user_log,
+                ]);
+            } else {
+                Log::error("No open TwodGameResult found for today's date.");
+
+                return; // Handle missing results
+            }
         } else {
-            // Handle the case where the bet exceeds the limit
-            return [$amount['num']];
-            // throw new \Exception('The bet amount exceeds the limit for two-digit number ' . $twoDigit->two_digit);
+            // Handle over-limit cases
+            return [$betDigit]; // Return the digit that exceeded the limit
         }
     }
 

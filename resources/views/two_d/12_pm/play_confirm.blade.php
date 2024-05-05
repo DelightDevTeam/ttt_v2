@@ -2,7 +2,7 @@
 @section('content')
 
 @if ($lottery_matches->is_active == 1)
-          <form action="{{ route('user.twod-play-index-12pm.store') }}" method="POST" class="p-1">
+          <form action="{{ route('user.twod-playing-4pm.store') }}" method="POST" class="p-1">
             @csrf
 <div class="row">
     <div
@@ -29,10 +29,7 @@
               </div>
 
               <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-      {{-- <div class="d-flex justify-content-around text-white">
-       <p>စုစုပေါင်းငွေပမာဏ</p>
-       <p>200 ကျပ်</p>
-      </div> --}}
+      
       <hr />
       <div class="text-center text-white py-2" style="background: #c50408; border-radius: 5px">
         @if (session('SuccessRequest'))
@@ -64,6 +61,19 @@
             <h3>Sorry, you can't play now. Please wait for the next round.</h3>
           </div>
           @endif
+
+          <div class="row mt-4">
+            <div class="card">
+              <div class="card-header">
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+              </div>
+            </div>
+          </div>
 
 
 <!-- Bootstrap Modal -->
@@ -100,12 +110,9 @@
 @section('script')
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
-<script>
-
-</script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+ document.addEventListener('DOMContentLoaded', function() {
     @if(session('SuccessRequest'))
     Swal.fire({
       icon: 'success',

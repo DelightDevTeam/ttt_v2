@@ -56,17 +56,69 @@
                     </a>
             </span>
             </p>
-            @if(isset($morningDigits['two_digits']) && count($morningDigits['two_digits']) == 0)
-            <p class="text-center text-white px-3 py-2 mt-3" style="background-color: #c50408">
+             {{-- @if($morning_results->isNotEmpty()) --}}
+            {{-- <p class="text-center text-white px-3 py-2 mt-3" style="background-color: #c50408">
                 ကံစမ်းထားသော ထီဂဏန်းများ မရှိသေးပါ
                 <span>
                     <a href="{{ url('/user/two-d-play-index')}}" style="color:#f5bd02; text-decoration:none">
                         <strong>ထီးထိုးရန် နိုပ်ပါ</strong></a>
                 </span>
-            </p>
-            @endif
+            </p> --}}
+            {{-- @endif --}}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <p class="text-center">တနေ့တာ 2D ပေါက်မှတ်တမ်း</p>
+                </div>
+                <div class="card-body">
+                     <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow">
+            <div class="lottery-winner-display">
+    <!-- Table to display winner details -->
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>စဉ်</th>
+                <th>ဂဏန်း</th>
+                <th>ထိုးကြေး</th>
+                <th>ရက်စွဲ</th>
+                <th>ထွက်မည့်အချိန်</th>
+                <th>Session</th>
+                <th>W/L</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($lottery_winner as $index => $prize)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $prize->bet_digit }}</td>
+                    <td>{{ $prize->sub_amount }}</td>
+                    <td>{{ \Carbon\Carbon::parse($prize->res_date)->format('d-m-Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($prize->res_time)->format('h:i A') }}</td>
+                    <td>{{ $prize->session }}</td>
+                    <td>
+                        @if($prize->prize_sent)
+                            <span class="text-success">Win</span>
+                        @else
+                            <span class="text-danger">Lose</span>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-            <div class="d-flex justify-content-between text-success">
+    <!-- Section to display the total prize amount -->
+   <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow" style="background: #c50408;">
+            <p class="text-right" style="color: #f5bd02;">
+                Total Win Amount|| &nbsp; &nbsp; စုစုပေါင်း 2D ပေါက်ငွေ - {{ number_format($totalPrizeAmount, 2) }} MMK
+            </p>
+        </div>
+</div>
+
+
+        </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between text-success mt-2">
                 
                 <div id="morning" class="text-center w-100 rounded pt-3" style="background:#c50408;cursor: pointer;">
                     <i class="fas fa-list d-block fa-2x"></i>
@@ -94,92 +146,109 @@
                 </div>
             </div>
 
-            
-
-            {{-- 12:00 PM Start --}}
-
-        <div class="morning d-none my-4">
-            @if ($morningDigits)
-                <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow">
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th>စဉ်</th>
-                                <th>ဂဏန်း</th>
-                                <th>ထိုးကြေး</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($morningDigits['two_digits'] as $index => $digit)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $digit->two_digit }}</td>
-                                <td>{{ $digit->pivot->sub_amount }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
-
-            <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow" style="background: #c50408">
-                    <p class="text-right pt-1" style="color: #f5bd02">Total Amount for 12:00PM: ||&nbsp; &nbsp; စုစုပေါင်းထိုးကြေး
-                        <strong>{{ $morningDigits['total_amount'] }} MMK</strong>
-                    </p>
-            </div>
+            <!-- Morning Section -->
+<div class="morning my-4 {{ $morning_results->isEmpty() ? 'd-none' : '' }}">
+    @if($morning_results->isNotEmpty())
+        <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th>စဉ်</th>
+                        <th>ဂဏန်း</th>
+                        <th>ထိုးကြေး</th>
+                        <th>ရက်စွဲ</th>
+                        <th>ထွက်မည့်အချိန်</th>
+                         <th>W/L</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach($morning_results as $index => $result)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $result->bet_digit }}</td>
+                    <td>{{ $result->sub_amount }}</td>
+                    <td>{{ $result->res_date }}</td>
+                    <td>{{ $result->res_time }}</td>
+                    <td>
+                        @if($result->prize_sent == 1)
+                        <span>
+                            win
+                        </span>
+                        @else
+                        <p>
+                            pending
+                        </p>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
         </div>
 
-        {{-- 12:00 PM End --}}
+        <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow" style="background: #c50408;">
+            <p class="text-right pt-1" style="color: #f5bd02">
+                Total Amount for 12:00PM: || &nbsp; &nbsp; စုစုပေါင်းထိုးကြေး <strong>{{ number_format($morning_total, 2) }} MMK</strong>
+            </p>
+        </div>
+    @else
+        <p>No morning results found.</p>
+    @endif
+</div>
 
-
-        {{-- 4:30 PM Start --}}
-
-        <div class="evening d-none my-4">
-            @if(isset($eveningDigits['two_digits']) && count($eveningDigits['two_digits']) == 0)
-                <p class="text-center text-white px-3 py-2 mt-3" style="background-color: #c50408">
-                    ညနေပိုင်း ကံစမ်းထားသော ထီဂဏန်းများ မရှိသေးပါ
-                    <span>
-                        <a href="{{ route('admin.GetTwoDigit')}}" style="color: #f5bd02; text-decoration:none">
-                            <strong>ထီးထိုးရန် နှိပ်ပါ</strong></a>
-                    </span>
-                </p>
-            @endif
-
-            <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow">
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th>စဉ်</th>
-                            <th>ဂဏန်း</th>
-                            <th>ထိုးကြေး</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($eveningDigits['two_digits'] as $index => $digit)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $digit->two_digit }}</td>
-                            <td>{{ $digit->pivot->sub_amount }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow" style="background:#c50408;">
-                <p class="text-right" style="color: #f5bd02">Total Amount for 04:30PM : ||&nbsp; &nbsp; စုစုပေါင်းထိုးကြေး
-                    <strong>{{ $eveningDigits['total_amount'] }} MMK</strong>
-                </p>
-            </div>
-
+<!-- Evening Section -->
+<div class="evening my-4 {{ $evening_results->isEmpty() ? 'd-none' : '' }}">
+    @if($evening_results->isNotEmpty())
+        <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th>စဉ်</th>
+                        <th>ဂဏန်း</th>
+                        <th>ထိုးကြေး</th>
+                        <th>ရက်စွဲ</th>
+                        <th>ထွက်မည့်အချိန်</th>
+                        <th>W/L</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach($evening_results as $index => $result)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $result->bet_digit }}</td>
+                    <td>{{ $result->sub_amount }}</td>
+                    <td>{{ $result->res_date }}</td>
+                    <td>{{ $result->res_time }}</td>
+                    <td>
+                        @if($result->prize_sent == 1)
+                        <span>
+                            win
+                        </span>
+                        @else
+                        <p>
+                            pending
+                        </p>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
         </div>
 
-        {{-- 4:30 PM End --}}
-
-    </div>
+        <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow" style="background: #c50408;">
+            <p class="text-right" style="color: #f5bd02;">
+                Total Amount for 04:30PM: || &nbsp; &nbsp; စုစုပေါင်းထိုးကြေး - {{ number_format($evening_total, 2) }} MMK
+            </p>
+        </div>
+    @else
+        <p>No evening results found.</p>
+    @endif
 </div>
 
 
+    </div>
+</div>
 <div class="modal" tabindex="-1" id="updateProfile">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -228,8 +297,6 @@
                         <label for="address" class="form-label">Address</label>
                         <input type="text" id="address" class="form-control" name="address" placeholder="Enter Address" value="{{ Auth::user()->address }}">
                     </div>
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -293,34 +360,21 @@
 
 <script>
     $('#morning').click(function() {
-        $('#morning').addClass('shadow-sm');
-        $('#morning').addClass('border');
-        $('#morning').addClass('border-1');
-        $('#morning').addClass('border-warning');
-        $('#evening').removeClass('shadow-sm');
-        $('#evening').removeClass('border');
-        $('#evening').removeClass('border-1');
-        $('#evening').removeClass('border-warning');
+        $('#morning').addClass('shadow-sm border border-1 border-warning');
+        $('#evening').removeClass('shadow-sm border border-1 border-warning');
 
         $('.morning').removeClass('d-none');
         $('.evening').addClass('d-none');
     });
 
-
-
     $('#evening').click(function() {
-        $('#evening').addClass('shadow-sm');
-        $('#evening').addClass('border');
-        $('#evening').addClass('border-1');
-        $('#evening').addClass('border-warning');
-        $('#morning').removeClass('shadow-sm');
-        $('#morning').removeClass('border');
-        $('#morning').removeClass('border-1');
-        $('#morning').removeClass('border-warning');
+        $('#evening').addClass('shadow-sm border border-1 border-warning');
+        $('#morning').removeClass('shadow-sm border border-1 border-warning');
+
         $('.evening').removeClass('d-none');
         $('.morning').addClass('d-none');
-
     });
 </script>
+
 @endsection
 

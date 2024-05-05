@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin\Lottery;
-use App\Models\Admin\LotteryMatch;
-use App\Models\ThreeDigit\Lotto;
 use App\Models\User;
+use App\Models\TwoD\Lottery;
 use Illuminate\Http\Request;
+use App\Models\ThreeDigit\Lotto;
+use App\Models\Admin\LotteryMatch;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Services\EveningLotteryService;
+use App\Services\MorningLotteryService;
+use App\Services\AuthWinLotteryPrizeService;
 
 class HomeController extends Controller
 {
@@ -15,56 +20,47 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $eveningLotteryService;
+
+    protected $morningLotteryService;
+    protected $winnerSevice;
+    public function __construct(EveningLotteryService $eveningLotteryService, MorningLotteryService $morningLotteryService, AuthWinLotteryPrizeService $winnerSevice)
     {
         $this->middleware('auth');
+
+        $this->eveningLotteryService = $eveningLotteryService;
+        $this->morningLotteryService = $morningLotteryService;
+        $this->winnerSevice = $winnerSevice;
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-        if (auth()->user()->hasRole('Admin')) {
-            // Daily Total
-            $dailyTotal = Lottery::whereDate('created_at', '=', now()->today())->sum('total_amount');
+        $user = Auth::user(); // Get the authenticated user
 
-            // Weekly Total
+        if ($user->hasRole('Admin')) {
+            // Retrieve total amounts for different time frames
+            $today = now()->today();
             $startOfWeek = now()->startOfWeek();
             $endOfWeek = now()->endOfWeek();
-            $weeklyTotal = Lottery::whereBetween('created_at', [$startOfWeek, $endOfWeek])->sum('total_amount');
 
-            // Monthly Total
+            $dailyTotal = Lottery::whereDate('created_at', $today)->sum('total_amount');
+            $weeklyTotal = Lottery::whereBetween('created_at', [$startOfWeek, $endOfWeek])->sum('total_amount');
             $monthlyTotal = Lottery::whereMonth('created_at', '=', now()->month)
                 ->whereYear('created_at', '=', now()->year)
                 ->sum('total_amount');
-
-            // Yearly Total
             $yearlyTotal = Lottery::whereYear('created_at', '=', now()->year)->sum('total_amount');
 
-            // 3D Daily Total
-            $three_d_dailyTotal = Lotto::whereDate('created_at', '=', now()->today())->sum('total_amount');
-
-            // 3D Weekly Total
-            $startOfWeek = now()->startOfWeek();
-            $endOfWeek = now()->endOfWeek();
+            // Totals for 3D lotteries
+            $three_d_dailyTotal = Lotto::whereDate('created_at', $today)->sum('total_amount');
             $three_d_weeklyTotal = Lotto::whereBetween('created_at', [$startOfWeek, $endOfWeek])->sum('total_amount');
-
-            // 3D Monthly Total
             $three_d_monthlyTotal = Lotto::whereMonth('created_at', '=', now()->month)
                 ->whereYear('created_at', '=', now()->year)
                 ->sum('total_amount');
-
-            // 3D Yearly Total
             $three_d_yearlyTotal = Lotto::whereYear('created_at', '=', now()->year)->sum('total_amount');
 
-            $lottery_matches = LotteryMatch::where('id', 1)->whereNotNull('is_active')->first();
+            $lottery_matches = LotteryMatch::where('is_active', true)->first();
 
-            //session()->flash('SuccessRequest', 'Successfully 2D Close and Open Session');
-
-            // Return the totals, you can adjust this part as per your needs
+            // Return data to admin dashboard
             return view('admin.dashboard', [
                 'dailyTotal' => $dailyTotal,
                 'weeklyTotal' => $weeklyTotal,
@@ -77,17 +73,27 @@ class HomeController extends Controller
                 'lottery_matches' => $lottery_matches,
             ]);
         } else {
-            $userId = auth()->id(); // Get logged in user's ID
-            $playedearlyMorningTwoDigits = User::getUserEarlyMorningTwoDigits($userId);
-            $playedMorningTwoDigits = User::getUserMorningTwoDigits($userId);
-            $playedEarlyEveningTwoDigits = User::getUserEarlyEveningTwoDigits($userId);
-            $playedEveningTwoDigits = User::getUserEveningTwoDigits($userId);
+            $evening_data = $this->eveningLotteryService->TwoDEveningHistory();
+            $morning_data = $this->morningLotteryService->MorningHistory();
+            $lottery_winner = $this->winnerSevice->LotteryWinnersPrize();
+            // Data for morning session
+            $morning_results = $morning_data['results'] ?? collect();
+            $morning_total = $morning_data['totalSubAmount'] ?? 0;
 
+            // Data for evening session
+            $evening_results = $evening_data['results'] ?? collect();
+            $evening_total = $evening_data['totalSubAmount'] ?? 0;
+            Log::info('Evening Results:', ['results' => $evening_results]);
+            Log::info('Evening Total:', ['total' => $evening_total]);
+
+            // Pass the data to the view
             return view('frontend.user-profile', [
-                'earlymorningDigits' => $playedearlyMorningTwoDigits,
-                'morningDigits' => $playedMorningTwoDigits,
-                'earlyeveningDigit' => $playedEarlyEveningTwoDigits,
-                'eveningDigits' => $playedEveningTwoDigits,
+                'morning_results' => $morning_results,
+                'morning_total' => $morning_total,
+                'evening_results' => $evening_results,
+                'evening_total' => $evening_total,
+                'lottery_winner' => $lottery_winner['results'],  // List of winners
+                'totalPrizeAmount' => $lottery_winner['totalPrizeAmount'],  // Total prize amount
             ]);
         }
     }

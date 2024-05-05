@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\LotteryMatch;
-use App\Models\Admin\TwoDigit;
-//use App\Models\Admin\Lottery;
 use App\Models\Lottery;
+//use App\Models\Admin\Lottery;
 use App\Models\LotteryTwoDigitPivot;
+use App\Models\TwoD\TwoDigit;
 use App\Models\User;
 use App\Notifications\TwoDigitPlayed;
 use App\Notifications\TwoDigitPlayedNotification;

@@ -20,7 +20,7 @@
               <span class="material-icons">
                 update
                 </span>
-              <p class="px-2">ပိတ်ရန်ကျန်ချိန်</p>
+              <p class="px-2">ညနေပိုင်း - 4:30</p>
           </div>
       </div>
 
@@ -110,8 +110,8 @@
           <div class="column">
 
             @php
-            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
-            ->where('two_digit_id', $digit->id)
+            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
+            ->where('twod_game_result_id', $digit->id)
             ->sum('sub_amount');
             @endphp
 
@@ -154,7 +154,7 @@
              @if ($lottery_matches->is_active == 1)
     <div class="d-flex justify-content-around mt-2" >
       <a href="" class="btn remove-btn me-2" style="font-size: 14px;">ဖျက်မည်</a>
-      <a href="{{ url('/user/two-d-play-4-30-evening-confirm') }}" onclick="storeSelectionsInLocalStorage()" class="btn play-btn me-1" style="font-size: 14px;">ထိုးမည်</a>
+      <a href="{{ url('/user/two-d-play-confirm') }}" onclick="storeSelectionsInLocalStorage()" class="btn play-btn me-1" style="font-size: 14px;">ထိုးမည်</a>
     </div> 
     @endif
   </div>

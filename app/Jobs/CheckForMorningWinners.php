@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\Lottery;
-use App\Models\LotteryTwoDigitPivot;
+use App\Models\TwoD\Lottery;
+use App\Models\TwoD\LotteryTwoDigitPivot;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -29,7 +29,7 @@ class CheckForMorningWinners implements ShouldQueue
         Log::info('CheckForMorningWinners job started');
 
         $today = Carbon::today();
-        $playDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        $playDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']; // 'saturday', 'sunday'
 
         if (! in_array(strtolower($today->isoFormat('dddd')), $playDays)) {
             Log::info('Today is not a play day: '.$today->isoFormat('dddd'));
@@ -45,12 +45,24 @@ class CheckForMorningWinners implements ShouldQueue
 
         // Get the correct bet digit from result number
         $result_number = $this->twodWiner->result_number;
+        $date = Carbon::now()->format('Y-m-d');
+        Log::info('Today Date is '.$date);
+
+        $currentSession = $this->getCurrentSession();
+        Log::info('Today Current Session is '.$currentSession);
+
+        $currentSessionTime = $this->getCurrentSessionTime();
+        Log::info('Current Session Time is '.$currentSessionTime);
 
         // Retrieve winning entries where bet_digit matches result_number
         $winningEntries = LotteryTwoDigitPivot::where('bet_digit', $result_number)
+            ->whereDate('res_date', $date)
+            ->whereTime('res_time', $currentSessionTime)
+            ->where('session', $currentSession)
             ->where('match_status', 'open')
-            ->whereDate('created_at', $today)
             ->get();
+
+        // ထွက်ဂဏန်းထဲ့မည့်အချိန်၌ match_status ဖွင့်ပေးရန်
 
         foreach ($winningEntries as $entry) {
             DB::transaction(function () use ($entry) {
@@ -73,5 +85,27 @@ class CheckForMorningWinners implements ShouldQueue
         }
 
         Log::info('CheckForMorningWinners job completed.');
+    }
+
+    protected function getCurrentSession()
+    {
+        $currentTime = Carbon::now()->format('H:i:s');
+
+        if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
+            return 'morning';
+        } else {
+            return 'closed'; // If outside known session times
+        }
+    }
+
+    protected function getCurrentSessionTime()
+    {
+        $currentTime = Carbon::now()->format('H:i:s');
+
+        if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
+            return '12:01:00';
+        } else {
+            return 'closed'; // If outside known session times
+        }
     }
 }

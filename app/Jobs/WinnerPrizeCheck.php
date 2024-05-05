@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Lotto;
+use App\Models\ThreeDigit\Lotto;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

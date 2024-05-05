@@ -20,7 +20,7 @@
               <span class="material-icons">
                 update
                 </span>
-              <p class="px-2">ပိတ်ရန်ကျန်ချိန်</p>
+              <p class="px-2">မနက်ပိုင်း 12:1</p>
           </div>
       </div>
 
@@ -39,13 +39,13 @@
   <div>
     <div class="d-flex justify-content-between custom-btn">
       <a href="{{ url('/user/two-d-quick-play-index') }}" class="btn h-50 text-white p-2" style="background-color: #c50408; border: 2px solid #ebc03c; box-shadow: 3px 5px 10px 0 rgba(0, 0, 0, 0.2), 3px 5px 10px 0 rgba(0, 0, 0, 0.19)">
-        အမြန်ရွေး</a>
+          အမြန်ရွေး</a>
       <a href="{{ url('/user/two-d-dream-book') }}" class="btn h-50 text-white p-2" style="background-color: #c50408; border: 2px solid #ebc03c; box-shadow: 3px 5px 10px 0 rgba(0, 0, 0, 0.2), 3px 5px 10px 0 rgba(0, 0, 0, 0.19)">
         <span class="material-icons text-white icons">menu_book</span>  အိမ်မက်</a>
         
       <select class="h-50 text-white" style="box-shadow: 3px 5px 10px 0 rgba(0, 0, 0, 0.2), 3px 5px 10px 0 rgba(0, 0, 0, 0.19)">
-        <option value="1">12:00 PM</option>
-        {{-- <option value="2">04:00 PM</option> --}}
+        {{-- <option value="1">12:00 AM</option> --}}
+        <option value="2">04:30 PM</option>
       </select>
     </div>
   </div>
@@ -110,8 +110,8 @@
           <div class="column">
 
             @php
-            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
-            ->where('two_digit_id', $digit->id)
+            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
+            ->where('twod_game_result_id', $digit->id)
             ->sum('sub_amount');
             @endphp
 
@@ -151,13 +151,12 @@
 <div class="row">
 
   <div class="col-lg-4 col-md-6 offset-lg-4 offset-md-3 py-3 submitbtns footers" style="background-color: #000;">
-       @if ($lottery_matches->is_active == 1)      
+             @if ($lottery_matches->is_active == 1)
     <div class="d-flex justify-content-around mt-2" >
       <a href="" class="btn remove-btn me-2" style="font-size: 14px;">ဖျက်မည်</a>
-      <a href="{{ url('/user/two-d-play-12-1-morning-confirm') }}" onclick="storeSelectionsInLocalStorage()" class="btn play-btn me-1" style="font-size: 14px;">ထိုးမည်</a>
+      <a href="{{ url('/user/two-d-play-confirm') }}" onclick="storeSelectionsInLocalStorage()" class="btn play-btn me-1" style="font-size: 14px;">ထိုးမည်</a>
     </div> 
     @endif
-
   </div>
 </div>
 

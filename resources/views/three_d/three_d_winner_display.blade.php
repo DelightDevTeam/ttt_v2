@@ -59,7 +59,7 @@
                     </a>
             </span>
             </p>
-            @if(isset($displayThreeDigits['three_digits']) && count($displayThreeDigits['three_digits']) == 0)
+            {{-- @if(isset($displayThreeDigits['three_digits']) && count($displayThreeDigits['three_digits']) == 0) --}}
             <p class="text-center text-white px-3 py-2 mt-3" style="background-color: #c50408">
                 ကံစမ်းထားသော ထီဂဏန်းများ မရှိသေးပါ
                 <span>
@@ -67,7 +67,7 @@
                         <strong>ထီးထိုးရန် နိုပ်ပါ</strong></a>
                 </span>
             </p>
-            @endif
+            {{-- @endif --}}
             <div class="card mt-2">
                 <div class="card-header">
                     <p class="text-center">
@@ -86,127 +86,176 @@
 
             {{-- 9:30 AM Start --}}
             <div class="morningnine my-4">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="text-center">3D ဒဲ့ပေါက်မှုမှတ်တမ်း</p>
+                    </div>
+                </div>
              
                 <div class="mb-3 d-flex justify-content-around  text-white shadow p-2 rounded">
-                     @php 
-                    $totalPrizeAmount = 0; // Initialize the variable here
-                    @endphp
-                    @if($winners->isEmpty())
-                <p style="color: #f5bd02">No winners found for the past month.</p>
-                @else
-                <table class="table table-flush" id="users-search">
-                 
-                 @foreach($winners as $index => $winner)
-                 <tr>
-                  <td>
-                   {{ $index + 1 }}
-                  </td>
-                  <td>
-                   @if($winner->profile)
-                   <img src="{{ $winner->profile }}" width="50px" height="50px" style="border-radius: 50%" alt="" />
-                   @else
-                   <i class="fa-regular fa-circle-user" style="font-size: 50px;"></i>
-                   @endif
-                  </td>
-                  <td><span style="font-size: 10px">{{ $winner->name }}</span>
-                   <p style="font-size: 10px">{{ $winner->phone }}</p>
-                  </td>
-                  <td><span>ပေါက်ဂဏန်း</span>
-                   <p class="text-primary">{{ $winner->prize_no }}</p>
-                  </td>
-                  <td><span>ထိုးငွေ</span>
-                   <p>{{ $winner->sub_amount }}</p>
-                  </td>
-                  <td><span>ထီပေါက်ငွေ</span>
-                   <p class="text-primary">{{ $winner->prize_amount }}</p>
-                  </td>
-                  <td>
-                   <span>ရက်စွဲ</span>
-                   <p>
-                    {{ \Carbon\Carbon::parse($winner->created_at)->format('d-m-Y (l) (h:i a)') }}
-                   </p>
-                  </td>
-     
-                  </tr>
-                  @php 
-                  $totalPrizeAmount += $winner->prize_amount;
-                  @endphp
-                  @endforeach
-
-                 </table>
-                 @endif
+                    
+                <table class="table table-flush" id="winners-table">
+                    @forelse($first_prizes['results'] as $index => $winner)
+                        <tr>
+                            {{-- <td>{{ $index + 1 }}</td> --}}
+                            <td>
+                                @if($winner->profile)
+                                    <img src="{{ $winner->user->profile }}" width="50px" height="25px" style="border-radius: 50%" alt=""/>
+                                @else
+                                    <i class="fa-regular fa-circle-user" style="font-size: 50px;"></i>
+                                @endif
+                            </td>
+                            <td>
+                                <span style="font-size: 10px">{{ $winner->user->name }}</span>
+                                <p style="font-size: 10px">{{ $winner->user->phone }}</p>
+                            </td>
+                            <td>
+                                <span>3D</span>
+                                <p class="text-primary">{{ $winner->bet_digit }}</p>
+                            </td>
+                            <td>
+                                <span>ထိုးကြေး</span>
+                                <p>{{ $winner->sub_amount }}</p>
+                            </td>
+                            <td>
+                                <span>Prize</span>
+                                <p class="text-primary">{{ $winner->prize_amount }}</p>
+                            </td>
+                            <td>
+                                <span>Date</span>
+                                <p>{{ \Carbon\Carbon::parse($winner->created_at)->format('d-m-Y (h:i a)') }}</p>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">No winners found.</td>
+                        </tr>
+                    @endforelse
+                </table>
                 </div>
             </div>
             </div>
-
-            <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow" style="background: #c50408;">
-                <p class="text-right pt-1" style="color: #f5bd02">Total Win Amount for 3D: ||&nbsp; &nbsp; ထီပေါက်ငွေစုစုပေါင်း
-                    <strong>{{ $totalPrizeAmount }} MMK</strong>
+            <div class="mb-3 text-right text-white p-2 rounded shadow" style="background: #c50408;">
+                <p class="text-right pt-1" style="color: #f5bd02">
+                    Total Prize Amount: <strong>{{ $first_prizes['totalPrizeAmount'] }} MMK</strong>
                 </p>
             </div>
 
+            <div class="my-4 mt-4">
+             <div class="morningnine my-4">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="text-center">3D ပါတ်လယ်ပေါက်မှုမှတ်တမ်း</p>
+                    </div>
+                </div>
+                <div class="mb-3 d-flex justify-content-around  text-white shadow p-2 rounded">
+                    
+                    <table class="table table-flush" id="winners-table">
+                    @forelse($winners['results'] as $index => $winner)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>
+                                @if($winner->profile)
+                                    <img src="{{ $winner->user->profile }}" width="50px" height="50px" style="border-radius: 50%" alt=""/>
+                                @else
+                                    <i class="fa-regular fa-circle-user" style="font-size: 50px;"></i>
+                                @endif
+                            </td>
+                            <td>
+                                <span style="font-size: 10px">{{ $winner->user->name }}</span>
+                                <p style="font-size: 10px">{{ $winner->user->phone }}</p>
+                            </td>
+                            <td>
+                                <span>3D</span>
+                                <p class="text-primary">{{ $winner->bet_digit }}</p>
+                            </td>
+                            <td>
+                                <span>ထိုးကြေး</span>
+                                <p>{{ $winner->sub_amount }}</p>
+                            </td>
+                            <td>
+                                <span>Prize</span>
+                                <p class="text-primary">{{ $winner->prize_amount }}</p>
+                            </td>
+                            <td>
+                                <span>Date</span>
+                                <p>{{ \Carbon\Carbon::parse($winner->created_at)->format('d-m-Y (h:i a)') }}</p>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">No winners found.</td>
+                        </tr>
+                    @endforelse
+                </table>
+                </div>
+            </div>
+            </div>
+             <div class="mb-3 text-right text-white p-2 rounded shadow" style="background: #c50408;">
+                <p class="text-right pt-1" style="color: #f5bd02">
+                    Total Prize Amount: <strong>{{ $winners['totalPrizeAmount'] }} MMK</strong>
+                </p>
+            </div>
             <div class="my-4">
              <div class="morningnine my-4">
-             
-                <div class="mb-3 d-flex justify-content-around  text-white shadow p-2 rounded">
-                     @php 
-                    $totalPermutationPrizeAmount = 0; // Initialize the variable here
-                    @endphp
-                    @if($permutation_winners->isEmpty())
-                <p style="color: #f5bd02">No winners found for the past month.</p>
-                @else
-                <table class="table table-flush" id="users-search">
-                 
-                 @foreach($permutation_winners as $index => $winner)
-                 <tr>
-                  <td>
-                   {{ $index + 1 }}
-                  </td>
-                  <td>
-                   @if($winner->profile)
-                   <img src="{{ $winner->profile }}" width="50px" height="50px" style="border-radius: 50%" alt="" />
-                   @else
-                   <i class="fa-regular fa-circle-user" style="font-size: 50px;"></i>
-                   @endif
-                  </td>
-                  <td><span style="font-size: 10px">{{ $winner->name }}</span>
-                   <p style="font-size: 10px">{{ $winner->phone }}</p>
-                  </td>
-                  <td><span>ပတ်လယ်ဂဏန်း</span>
-                   <p class="text-primary">{{ $winner->digit }}</p>
-                  </td>
-                  <td><span>ထိုးငွေ</span>
-                   <p>{{ $winner->sub_amount }}</p>
-                  </td>
-                  <td><span>ထီပေါက်ငွေ</span>
-                   <p class="text-primary">{{ $winner->prize_amount }}</p>
-                  </td>
-                  <td>
-                   <span>ရက်စွဲ</span>
-                   <p>
-                    {{ \Carbon\Carbon::parse($winner->created_at)->format('d-m-Y (l) (h:i a)') }}
-                   </p>
-                  </td>
-     
-                  </tr>
-                  @php 
-                  $totalPermutationPrizeAmount += $winner->prize_amount;
-                  @endphp
-                  @endforeach
-
-                 </table>
-                 @endif
+                <div class="card">
+                    <div class="card-header">
+                        <p class="text-center">3D တွဒ်ပေါက်မှုမှတ်တမ်း</p>
+                    </div>
                 </div>
-            </div>
-            </div>
-             <div class="mb-3 d-flex justify-content-around text-white p-2 rounded shadow" style="background: #c50408;">
-                <p class="text-right pt-1" style="color: #f5bd02">Total Permutation Amount for 3D: ||&nbsp; &nbsp; စုစုပေါင်းပတ်လယ်ပေါက်ငွေ
-                    <strong>{{ $totalPermutationPrizeAmount }} MMK</strong>
-                </p>
+                <div class="mb-3 d-flex justify-content-around  text-white shadow p-2 rounded">
+                    
+                    <table class="table table-flush" id="winners-table">
+                    @forelse($prise_sents['results'] as $index => $winner)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>
+                                @if($winner->profile)
+                                    <img src="{{ $winner->user->profile }}" width="50px" height="50px" style="border-radius: 50%" alt=""/>
+                                @else
+                                    <i class="fa-regular fa-circle-user" style="font-size: 50px;"></i>
+                                @endif
+                            </td>
+                            <td>
+                                <span style="font-size: 10px">{{ $winner->user->name }}</span>
+                                <p style="font-size: 10px">{{ $winner->user->phone }}</p>
+                            </td>
+                            <td>
+                                <span>3D</span>
+                                <p class="text-primary">{{ $winner->bet_digit }}</p>
+                            </td>
+                            <td>
+                                <span>ထိုးကြေး</span>
+                                <p>{{ $winner->sub_amount }}</p>
+                            </td>
+                            <td>
+                                <span>Prize</span>
+                                <p class="text-primary">{{ $winner->prize_amount }}</p>
+                            </td>
+                            <td>
+                                <span>Date</span>
+                                <p>{{ \Carbon\Carbon::parse($winner->created_at)->format('d-m-Y (h:i a)') }}</p>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">No winners found.</td>
+                        </tr>
+                    @endforelse
+                </table>
+                </div>
             </div>
 
         </div>
-        {{-- 9:30 End --}}
+
+             <div class="mb-3 text-right text-white p-2 rounded shadow" style="background: #c50408;">
+                <p class="text-right pt-1" style="color: #f5bd02">
+                    Total Prize Amount: <strong>{{ $prise_sents['totalPrizeAmount'] }} MMK</strong>
+                </p>
+            </div>
+        </div>
+
+         
     </div>
 </div>
 

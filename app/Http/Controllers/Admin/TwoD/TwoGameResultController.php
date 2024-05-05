@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\TwoD;
 
 use App\Http\Controllers\Controller;
-use App\Models\Two\TwodGameResult;
+use App\Models\TwoD\TwodGameResult;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -30,19 +30,22 @@ class TwoGameResultController extends Controller
         // Get today's date
         $today = Carbon::now()->format('Y-m-d');
 
-        // Determine the current session
-        $currentSession = $this->getCurrentSession();
-
-        if ($currentSession === 'closed') {
-            return view('admin.two_d.twod_results.index', ['results' => 'Session is closed']);
-        }
-
-        // Retrieve the data for the current day and session
-        $result = TwodGameResult::where('result_date', $today)
-            ->where('session', $currentSession) // Ensure correct session
+        // Retrieve the latest result for today's morning session
+        $morningResult = TwodGameResult::where('result_date', $today)
+            ->where('session', 'morning') // Check for morning session
+            //->orderBy('created_at', 'desc') // Get the latest record by creation time
             ->first();
 
-        return view('admin.two_d.twod_results.index', ['result' => $result]);
+        // Retrieve the latest result for today's evening session
+        $eveningResult = TwodGameResult::where('result_date', $today)
+            ->where('session', 'evening') // Check for evening session
+            //->orderBy('created_at', 'desc') // Get the latest record by creation time
+            ->first();
+
+        return view('admin.two_d.twod_results.index', [
+            'morningResult' => $morningResult,
+            'eveningResult' => $eveningResult,
+        ]);
     }
 
     public function updateStatus(Request $request, $id)
@@ -62,6 +65,25 @@ class TwoGameResultController extends Controller
             'message' => 'Status updated successfully.',
         ]);
     }
+
+    // public function updateStatus(Request $request, $id)
+    // {
+    //     // Get the new status with a fallback default
+    //     $newStatus = $request->input('status', 'closed'); // Default to 'closed' if not provided
+
+    //     // Find the existing record and update the status
+    //     $result = TwodGameResult::findOrFail($id);
+
+    //     // Ensure the status is not NULL before updating
+    //     if (is_null($newStatus)) {
+    //         return redirect()->back()->with('error', 'Status cannot be null');
+    //     }
+
+    //     $result->status = $newStatus;
+    //     $result->save();
+
+    //     return redirect()->back()->with('success', "Status changed to '{$newStatus}' successfully.");
+    // }
 
     public function updateResultNumber(Request $request, $id)
     {

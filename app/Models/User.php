@@ -6,12 +6,12 @@ namespace App\Models;
 use App\Models\Admin\BetLottery;
 use App\Models\Admin\Event;
 use App\Models\Admin\FillBalance;
-use App\Models\Admin\Lottery;
 use App\Models\Admin\LotteryTwoDigit;
 use App\Models\Admin\Permission;
 use App\Models\Admin\Role;
 use App\Models\Admin\TwodWiner;
 use App\Models\ThreeDigit\Lotto;
+use App\Models\TwoD\Lottery;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -110,11 +110,6 @@ class User extends Authenticatable
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
-    }
-
-    public function event()
-    {
-        return $this->hasOne(Event::class);
     }
 
     public function hasRole($role)
@@ -226,10 +221,6 @@ class User extends Authenticatable
     }
 
     // three d
-    public function betLotteries()
-    {
-        return $this->hasMany(BetLottery::class);
-    }
 
     public static function getUserThreeDigits($userId)
     {

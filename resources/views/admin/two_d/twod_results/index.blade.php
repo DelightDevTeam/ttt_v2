@@ -41,6 +41,13 @@
     </div>
    </div>
    <div class="table-responsive">
+    <div class="card">
+        <div class="card-header">
+            <p class="text-center">
+                Morning Session - 12:1 PM
+            </p>
+        </div>
+    </div>
     <table class="table table-flush" id="permission-search">
     <thead class="thead-light">
         <tr>
@@ -55,29 +62,29 @@
         </tr>
     </thead>
     <tbody>
-        @if ($result)
+        @if ($morningResult)
         <tr>
             <td class="text-sm font-weight-normal">1</td>
-            <td class="text-sm font-weight-normal">{{ $result->result_date }}</td>
-            <td class="text-sm font-weight-normal">{{ $result->result_time }}</td>
-            <td class="text-sm font-weight-normal">{{ $result->result_number ?? 'Pending' }}</td>
+            <td class="text-sm font-weight-normal">{{ $morningResult->result_date }}</td>
+            <td class="text-sm font-weight-normal">{{ $morningResult->result_time }}</td>
+            <td class="text-sm font-weight-normal">{{ $morningResult->result_number ?? 'Pending' }}</td>
             <td>
-                <form method="POST" action="{{ route('admin.update_result_number', ['id' => $result->id]) }}">
+                <form method="POST" action="{{ route('admin.update_result_number', ['id' => $morningResult->id]) }}">
                     @csrf
                     @method('PATCH')
                     <input type="text" name="result_number" placeholder="Enter result number" required class="form-control">
                     <button type="submit" class="btn btn-primary">Create Prize Number</button>
                 </form>
             </td>
-            <td class="text-sm font-weight-normal">{{ ucfirst($result->status) }}</td>
-            <td class="text-sm font-weight-normal">{{ ucfirst($result->session) }}</td>
+            <td class="text-sm font-weight-normal">{{ ucfirst($morningResult->status) }}</td>
+            <td class="text-sm font-weight-normal">{{ ucfirst($morningResult->session) }}</td>
             <td>
-                <!-- Toggle button to update status -->
                 <button class="toggle-status"
-                        data-id="{{ $result->id }}"
-                        data-status="{{ $result->status === 'open' ? 'closed' : 'open' }}">
+                        data-id="{{ $morningResult->id }}"
+                        data-status="{{ $morningResult->status === 'open' ? 'closed' : 'open' }}">
                     Open/Close
                 </button>
+                
             </td>
         </tr>
         @else
@@ -92,6 +99,67 @@
   </div>
  </div>
 </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <p class="text-center">
+                        Evening Session - 4:30 PM
+                    </p>
+                </div>
+            </div>
+            . <div class="table-responsive">
+    <table class="table table-flush" id="permission-search">
+    <thead class="thead-light">
+        <tr>
+            <th>#</th>
+            <th>Opening Date</th>
+            <th>Opening Time</th>
+            <th>Result Number</th>
+            <th>Prize Number</th>
+            <th>Status</th>
+            <th>Session</th>
+            <th>Update</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if ($eveningResult)
+        <tr>
+            <td class="text-sm font-weight-normal">1</td>
+            <td class="text-sm font-weight-normal">{{ $eveningResult->result_date }}</td>
+            <td class="text-sm font-weight-normal">{{ $eveningResult->result_time }}</td>
+            <td class="text-sm font-weight-normal">{{ $eveningResult->result_number ?? 'Pending' }}</td>
+            <td>
+                <form method="POST" action="{{ route('admin.update_result_number', ['id' => $eveningResult->id]) }}">
+                    @csrf
+                    @method('PATCH')
+                    <input type="text" name="result_number" placeholder="Enter result number" required class="form-control">
+                    <button type="submit" class="btn btn-primary">Create Prize Number</button>
+                </form>
+            </td>
+            <td class="text-sm font-weight-normal">{{ ucfirst($eveningResult->status) }}</td>
+            <td class="text-sm font-weight-normal">{{ ucfirst($eveningResult->session) }}</td>
+            <td>
+                <!-- Toggle button to update status -->
+                <button class="toggle-status-evening"
+                        data-id="{{ $eveningResult->id }}"
+                        data-status="{{ $eveningResult->status === 'open' ? 'closed' : 'open' }}">
+                    Open/Close
+                </button>
+            </td>
+        </tr>
+        @else
+        <tr>
+            <td colspan="8" class="text-center">No results found for today and current session.</td>
+        </tr>
+        @endif
+    </tbody>
+</table>
+
+   </div>
+        </div>
+    </div>
 @endsection
 @section('scripts')
 <script src="{{ asset('admin_app/assets/js/plugins/datatables.js') }}"></script>
@@ -128,6 +196,41 @@ $(document).ready(function() {
     });
 });
 </script>
+
+
+<script>
+$(document).ready(function() {
+    // Include CSRF token in AJAX headers
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('.toggle-status-evening').on('click', function() {
+        const resultId = $(this).data('id'); // The ID of the result
+        const newStatus = $(this).data('status'); // The new status to set
+
+        $.ajax({
+            url: '/admin/two-2-results/' + resultId + '/status', // Your route
+            method: 'PATCH',
+            data: {
+                status: newStatus,
+            },
+            success: function(response) {
+                alert(response.message);
+                // Optional: Update the status on the page
+                $('#status-' + resultId).text(newStatus);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                alert('Failed to update status.');
+            }
+        });
+    });
+});
+</script>
+
 
 
 <script>

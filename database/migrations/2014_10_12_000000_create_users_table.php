@@ -21,13 +21,13 @@ return new class extends Migration
             $table->string('profile', 2000)->nullable();
             $table->string('profile_mime')->nullable();
             $table->integer('profile_size')->nullable();
-
             $table->string('address')->nullable();
             $table->string('kpay_no')->nullable()->default('N/A');
             $table->string('cbpay_no')->nullable()->default('N/A');
             $table->string('wavepay_no')->nullable()->default('N/A');
             $table->string('ayapay_no')->nullable()->default('N/A');
             $table->integer('balance')->default(0);
+            $table->integer('prize_balance')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

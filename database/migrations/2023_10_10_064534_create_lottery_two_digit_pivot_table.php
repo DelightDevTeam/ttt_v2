@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('lottery_id');
             $table->unsignedBigInteger('twod_game_result_id')->nullable();
+            $table->unsignedBigInteger('two_digit_id');
             $table->unsignedBigInteger('user_id');
             $table->string('bet_digit');
             // sub amount
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->enum('user_log', ['open', 'closed'])->default('closed'); // New status column
             $table->foreign('twod_game_result_id')->references('id')->on('twod_game_results')->onDelete('cascade');
             $table->foreign('lottery_id')->references('id')->on('lotteries')->onDelete('cascade');
+            $table->foreign('two_digit_id')->references('id')->on('two_digits')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

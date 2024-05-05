@@ -21,14 +21,142 @@
                 <div class="card-header pb-0">
                     <div class="d-lg-flex">
                         <div>
-                            <h5 class="mb-0">User Dashboards</h5>
+                            <h5 class="mb-0">2D History Dashboard</h5>
 
                         </div>
                         <div class="ms-auto my-auto mt-lg-0 mt-4">
                             <div class="ms-auto my-auto">
-                                <a href="{{ route('admin.users.create') }}"
+                                {{-- <a href="{{ route('admin.users.create') }}"
                                     class="btn bg-gradient-primary btn-sm mb-0">+&nbsp; Create New
-                                    User</a>
+                                    User</a> --}}
+                                <button class="btn btn-outline-primary btn-sm export mb-0 mt-sm-0 mt-1" data-type="csv"
+                                    type="button" name="button">Export</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <div class="row">
+                <div class="col-md-6">
+                     <div class="card-body">
+                    @php
+                    $all_total = 0; // Default to zero
+
+                    // Ensure both 'morning' and 'evening' keys exist before accessing
+                    if (isset($sessionTotals['morning']) && isset($sessionTotals['evening'])) {
+                        $all_total = $sessionTotals['morning'] + $sessionTotals['evening'];
+                    } elseif (isset($sessionTotals['morning'])) {
+                        $all_total = $sessionTotals['morning'];
+                    } elseif (isset($sessionTotals['evening'])) {
+                        $all_total = $sessionTotals['evening'];
+                    }
+                    $user = Auth::user();
+                    $owner_balance = $user->balance;
+                    $win_withdraw = $winAmounts['morning'] ?? 0 + $winAmounts['evening'] ?? 0;
+                @endphp
+                <p class="btn btn-primary"> Owner Balance: {{ $owner_balance }}</p>
+                <p class="btn btn-secondary"> Total Income : {{ $all_total }} MMK</p>
+                <p class="btn btn-success">Morning Win Money - {{ $winAmounts['morning'] ?? 0 }} </p>
+                 <p class="btn btn-warning">Evening Win Money - {{ $winAmounts['evening'] ?? 0 }} </p>
+                </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mt-3">
+                        
+                        <div class="card-body">
+                            <!-- Form to save total income -->
+                        <form action="{{ route('admin.net-income.update') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="total_income" value="{{ $all_total }}">
+                            <button type="submit" class="btn btn-info">SaveIncomeMoney - {{ $all_total }}</button>
+                        </form>
+
+                        <!-- Form to save total win/withdraw -->
+                        <form action="{{ route('admin.net-win-withdraw.update') }}" method="POST" class="mt-2">
+                            @csrf
+                            <input type="hidden" name="total_win_withdraw" value="{{ $win_withdraw }}">
+                            <button type="submit" class="btn btn-success">SaveWinWithdraw - {{ $win_withdraw }}</button>
+                        </form>
+
+                        </div>
+                    </div>
+                </div>
+               </div>
+                <div class="table-responsive">
+                    <table class="table table-flush" id="twod-search">
+                        <thead>
+        <tr>
+            <th>စဉ်</th>
+            <th>အမည်</th>
+            <th>ဖုန်းနံပါတ်</th>
+            <th>ဂဏန်း</th>
+            <th>ထိုးကြေး</th>
+            <th>Session</th>
+            <th>ရက်စွဲ</th>
+            <th>ထွက်မည့်အချိန်</th>
+            <th>W/L</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($lotteries as $index => $lottery)
+                @if($lottery->session == 'morning')
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ optional($lottery->user)->name }}</td> <!-- Use optional in case user is null -->
+                <td>{{ optional($lottery->user)->phone }}</td> <!-- Safely accessing user details -->
+                <td>{{ $lottery->bet_digit }}</td>
+                <td>{{ $lottery->sub_amount }}</td>
+                <td>{{ $lottery->session }}</td>
+                <td>{{ \Carbon\Carbon::parse($lottery->res_date)->format('d-m-Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($lottery->res_time)->format('h:i A') }}</td>
+                <td>
+                    @if($lottery->prize_sent == 1)
+                        <span class="text-success">Win</span>
+                    @else
+                        <span class="text-danger">Lose</span>
+                    @endif
+                </td>
+            </tr>
+            @endif
+        @endforeach
+    </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-heard">
+                     <h3 class="text-center"> Morning Total Sub Amount: 
+                        @if($sessionTotals)
+                        <span>
+                         <p>Morning: {{ $sessionTotals['morning'] ?? 0 }} MMK</p>   
+                        </span>
+                        @else
+                        <p>
+                            No Data Found for this session
+                        </p>
+                        @endif
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- evening record --}}
+     <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header pb-0">
+                    <div class="d-lg-flex">
+                        <div>
+                            <h5 class="mb-0">2D Evening History Dashboard</h5>
+
+                        </div>
+                        <div class="ms-auto my-auto mt-lg-0 mt-4">
+                            <div class="ms-auto my-auto">
+                                {{-- <a href="{{ route('admin.users.create') }}"
+                                    class="btn bg-gradient-primary btn-sm mb-0">+&nbsp; Create New
+                                    User</a> --}}
                                 <button class="btn btn-outline-primary btn-sm export mb-0 mt-sm-0 mt-1" data-type="csv"
                                     type="button" name="button">Export</button>
                             </div>
@@ -36,56 +164,60 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-flush" id="twod-search">
-                        <thead class="thead-light">
-                            <th>#</th>
-                            {{-- <th>Lottery ID</th> --}}
-                            <th>PlayerName</th>
-                            <th>Two Digits</th>
-                            <th>Total Amount</th>
-                            <th>Date</th>
-                            <th>Action</th>
-                        </thead>
-                        <tbody>
-                            @foreach ($lotteries as $lottery)
-                                <tr>
-                                    <td class="text-sm font-weight-normal">{{ $lottery->id }}</td>
-                                    <td class="text-sm font-weight-normal">
-                                        <span class="badge badge-secondary">{{ $lottery->user->name }}</span>
-                                    </td>
-                                    <td class="text-sm font-weight-normal">
-                                        <ul class="navbar-nav">
-                                            @foreach ($lottery->twoDigits as $twoDigit)
-                                                <li class="nav-item">
-                                                    <button type="button" class="btn btn btn-primary">
-                                                        <span>{{ $twoDigit->two_digit }}</span>
-                                                        <span class="badge badge-pill badge-lg bg-gradient-success">
-                                                            {{ $twoDigit->pivot->sub_amount }}</span>
-                                                    </button>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </td>
-                                    <td class="text-sm font-weight-normal">
-                                        <button type="button" class="btn btn-success">
-                                            <span>{{ $lottery->total_amount }} </span>
-                                            {{-- <span
-                                                class="badge badge-sm badge-circle badge-danger border border-white border-2"></span> --}}
-                                        </button>
-                                    </td>
-                                    {{-- <td>{{ $lottery->created_at->format('d M Y (l) h:i:s A') }}</td> --}}
-                                    <td class="text-sm font-weight-normal">
-
-                                        <span
-                                            class="badge bg-gradient-info">{{ $lottery->created_at->format('d-m-Y (l) (h:i a)') }}</span>
-                                    </td>
-                                    <td class="text-sm font-weight-normal">
-                                        <a href="{{ route('admin.twod-records.show', $lottery->id )}}" class="btn btn-warning btn-sm">Show</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
+                    <table class="table table-flush" id="twod-evening">
+                        <thead>
+        <tr>
+            <th>စဉ်</th>
+            <th>အမည်</th>
+            <th>ဖုန်းနံပါတ်</th>
+            <th>ဂဏန်း</th>
+            <th>ထိုးကြေး</th>
+            <th>Session</th>
+            <th>ရက်စွဲ</th>
+            <th>ထွက်မည့်အချိန်</th>
+            <th>W/L</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($lotteries as $index => $lottery)
+                @if($lottery->session == 'evening')
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ optional($lottery->user)->name }}</td> <!-- Use optional in case user is null -->
+                <td>{{ optional($lottery->user)->phone }}</td> <!-- Safely accessing user details -->
+                <td>{{ $lottery->bet_digit }}</td>
+                <td>{{ $lottery->sub_amount }}</td>
+                <td>{{ $lottery->session }}</td>
+                <td>{{ \Carbon\Carbon::parse($lottery->res_date)->format('d-m-Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($lottery->res_time)->format('h:i A') }}</td>
+                <td>
+                    @if($lottery->prize_sent == 1)
+                        <span class="text-success">Win</span>
+                    @else
+                        <span class="text-danger">Lose</span>
+                    @endif
+                </td>
+            </tr>
+            @endif
+        @endforeach
+    </tbody>
                     </table>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-heard">
+                     <h3 class="text-center">Evening Total Sub Amount: 
+                        @if($sessionTotals)
+                        <span>
+                         <p>Evening: {{ $sessionTotals['evening'] ?? 0 }} MMK</p>   
+                        </span>
+                        @else
+                        <p>
+                            No Data Found for this session
+                        </p>
+                        @endif
+                    </h3>
                 </div>
             </div>
         </div>
@@ -93,12 +225,15 @@
 @endsection
 @section('scripts')
     <script src="{{ asset('admin_app/assets/js/plugins/datatables.js') }}"></script>
-    {{-- <script>
-    const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
-      searchable: true,
-      fixedHeight: true
+    <script>
+    if (document.getElementById('twod-evening')) {
+            const dataTableSearch = new simpleDatatables.DataTable("#twod-evening", {
+                searchable: true,
+                fixedHeight: false,
+                perPage: 7
+            });
     });
-  </script> --}}
+  </script>
     <script>
         if (document.getElementById('twod-search')) {
             const dataTableSearch = new simpleDatatables.DataTable("#twod-search", {

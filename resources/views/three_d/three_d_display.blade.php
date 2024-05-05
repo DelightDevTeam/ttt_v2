@@ -102,15 +102,28 @@
                                 <th>စဉ်</th>
                                 <th>ဂဏန်း</th>
                                 <th>ထိုးကြေး</th>
+                                <th>OpenDate</th>
+                                <th>Win/Lose</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($displayThreeDigits['threeDigit'] as $index => $digit)
+                            {{-- @if($digit->pivot->user_log == 'open') --}}
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $digit->three_digit }}</td>
-                                <td>{{ $digit->pivot->sub_amount }}</td>
+                                <td>{{ $digit->bet_digit }}</td>
+                                <td>{{ $digit->sub_amount }}</td>
+                                <td>{{ $digit->res_date }}</td>
+                                <td>
+                                    @if($digit->prize_sent == 1)
+                                    <p>Win</p>
+                                    @else
+                                    <p>Pending</p>
+                                    @endif
+                                </td>
+
                             </tr>
+                            {{-- @endif --}}
                             @endforeach
                         </tbody>
                     </table>

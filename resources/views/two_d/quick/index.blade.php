@@ -91,9 +91,9 @@
           @foreach ($twoDigits as $digit)
           <div class="column">
 
-            @php
-            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
-            ->where('two_digit_id', $digit->id)
+                        @php
+            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
+            ->where('twod_game_result_id', $digit->id)
             ->sum('sub_amount');
             @endphp
 

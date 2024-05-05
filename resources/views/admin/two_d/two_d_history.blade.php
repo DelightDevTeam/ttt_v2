@@ -51,12 +51,37 @@
                     }
                     $user = Auth::user();
                     $owner_balance = $user->balance;
-                    $win_withdraw = $winAmounts['morning'] ?? 0 + $winAmounts['evening'] ?? 0;
+
+                    $morningWin = $winAmounts['morning'] ?? 0;
+                    $eveningWin = $winAmounts['evening'] ?? 0;
+
+                    // Add the two values
+                    $win_withdraw = $morningWin + $eveningWin; 
+
                 @endphp
                 <p class="btn btn-primary"> Owner Balance: {{ $owner_balance }}</p>
                 <p class="btn btn-secondary"> Total Income : {{ $all_total }} MMK</p>
                 <p class="btn btn-success">Morning Win Money - {{ $winAmounts['morning'] ?? 0 }} </p>
                  <p class="btn btn-warning">Evening Win Money - {{ $winAmounts['evening'] ?? 0 }} </p>
+                 <div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @php 
+                                    $profit = $owner_balance - $win_withdraw;
+                                    @endphp
+                                    {{ $profit }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                 </div>
                 </div>
                 </div>
                 <div class="col-md-6">

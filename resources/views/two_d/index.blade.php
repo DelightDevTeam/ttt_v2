@@ -66,10 +66,10 @@
       </div>
 
       <div class="results">
-          <h1>71</h1>
-          <p class="text-start">
-            Updated:
-            <span>11-11-2023 4:31:59PM</span>
+          {{-- <h1>71</h1> --}}
+          <p class="text-start text-center">
+            2D ကံစမ်းရန် [ထိုးမည်] ကို နိပ်ပါ!
+            {{-- <span>11-11-2023 4:31:59PM</span> --}}
           </p>
 
           <button type="button" class="btns" data-bs-toggle="modal" data-bs-target="#exampleModal">ထိုးမည်</button>
@@ -77,7 +77,7 @@
       </div>
       <!-- content -->
 
-      <div class="container mb-4">
+      {{-- <div class="container mb-4">
           <div
             class="card text-center p-0 mt-3"
             style="background-color: #c50408; border: 2px solid #ebc03c; color: #ffffff; box-shadow: 2px 10px 8px 0 rgba(0, 0, 0, 0.2), 2px 10px 10px 0 rgba(0, 0, 0, 0.19)"
@@ -164,7 +164,7 @@
             </div>
           </div>
 
-      </div>
+      </div> --}}
     </div>
 </div>
 

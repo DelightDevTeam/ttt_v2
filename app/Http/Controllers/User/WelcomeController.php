@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\Banner;
-use App\Models\Admin\Lottery;
-use App\Models\Admin\Promotion;
-use App\Models\Admin\TwoDigit;
 use App\Models\User;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use App\Models\Admin\Banner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Admin\Lottery;
+use App\Models\Admin\TwoDigit;
+use App\Models\Admin\Promotion;
+use App\Models\Admin\BannerText;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Exception\RequestException;
 
 class WelcomeController extends Controller
 {
@@ -61,9 +62,10 @@ class WelcomeController extends Controller
     public function index()
     {
         $banners = Banner::latest()->take(3)->get();
+        $banner_text = BannerText::latest()->first();
         $client = new Client;
 
-        return view('welcome', compact('banners'));
+        return view('welcome', compact('banners', 'banner_text'));
     }
 
     public function wallet()

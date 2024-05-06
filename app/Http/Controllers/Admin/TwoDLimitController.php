@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\TwoDLimit;
 use Illuminate\Http\Request;
+use App\Models\TwoD\TwoDLimit;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class TwoDLimitController extends Controller

@@ -68,8 +68,9 @@
                     alt="..."
                 />
                 <div class="marquee">
+                    
                     <div class="marquee-text">
-                    2D 3D ကိုငွေကြေးယုံကြည်စိတ်ချစွာဖြင့် ငွေသွင်းငွေထုတ်လွယ်ကူစွာ ကံစမ်းနိုင်ပါသည်
+                        {{ $banner_text->text }}
                     </div>
                 </div>
             </div>

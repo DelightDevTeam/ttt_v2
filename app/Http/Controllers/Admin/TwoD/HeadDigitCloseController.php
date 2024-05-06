@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin\TwoD;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\HeadDigit;
 use Illuminate\Http\Request;
+use App\Models\TwoD\HeadDigit;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class HeadDigitCloseController extends Controller

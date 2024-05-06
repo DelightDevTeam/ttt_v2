@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin\TwoD;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\CloseTwoDigit;
 use Illuminate\Http\Request;
+use App\Models\TwoD\CloseTwoDigit;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class CloseTwoDigitController extends Controller

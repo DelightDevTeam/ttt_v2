@@ -11,15 +11,15 @@ class AuthWinLotteryPrizeService
     public function LotteryWinnersPrize()
     {
         try {
-            Log::info('Entering Auth user Winner Service');
+           // Log::info('Entering Auth user Winner Service');
 
             // Define the start of the time range (1 month ago)
             $oneMonthAgo = Carbon::now()->subMonth()->startOfDay();
-            Log::info('Start of date range:', ['date' => $oneMonthAgo]);
+           // Log::info('Start of date range:', ['date' => $oneMonthAgo]);
 
             // Define the end of the current month
             $endOfCurrentMonth = Carbon::now()->endOfMonth();
-            Log::info('End of date range:', ['date' => $endOfCurrentMonth]);
+            //Log::info('End of date range:', ['date' => $endOfCurrentMonth]);
 
             // Define session time ranges
             $morningStart = '04:01:00';
@@ -27,12 +27,12 @@ class AuthWinLotteryPrizeService
             $eveningStart = '12:05:00';
             $eveningEnd = '16:45:00';
 
-            Log::info('Session times:', [
-                'morningStart' => $morningStart,
-                'morningEnd' => $morningEnd,
-                'eveningStart' => $eveningStart,
-                'eveningEnd' => $eveningEnd,
-            ]);
+            // Log::info('Session times:', [
+            //     'morningStart' => $morningStart,
+            //     'morningEnd' => $morningEnd,
+            //     'eveningStart' => $eveningStart,
+            //     'eveningEnd' => $eveningEnd,
+            // ]);
 
             // Retrieve results with adjusted conditions
             $results = DB::table('lottery_two_digit_pivot')
@@ -62,7 +62,7 @@ class AuthWinLotteryPrizeService
                 ->get();
 
             // Log the query results
-            Log::info('Query results:', ['results' => $results]);
+            //Log::info('Query results:', ['results' => $results]);
 
             // Calculate the total prize amount
             $totalPrizeAmount = 0;
@@ -71,14 +71,14 @@ class AuthWinLotteryPrizeService
                 $totalPrizeAmount += $prizeAmount;
             }
 
-            Log::info('Total prize amount:', ['amount' => $totalPrizeAmount]);
+            //Log::info('Total prize amount:', ['amount' => $totalPrizeAmount]);
 
-            Log::info('Exiting AllWinPrizeSentFor Auth User successfully');
+            //Log::info('Exiting AllWinPrizeSentFor Auth User successfully');
 
             return ['results' => $results, 'totalPrizeAmount' => $totalPrizeAmount];
 
         } catch (\Exception $e) {
-            Log::error('Error retrieving prize_sent data: '.$e->getMessage());
+            //Log::error('Error retrieving prize_sent data: '.$e->getMessage());
 
             return ['results' => collect([]), 'totalPrizeAmount' => 0];
         }

@@ -19,7 +19,7 @@ class TwodGameResult extends Model
         static::updated(function ($twodWiner) {
              if ($twodWiner->session === 'morning') {
             CheckForMorningWinners::dispatch($twodWiner);
-            }elseif($twodWiner->session == 'evening') {
+            }else {
             CheckForEveningWinners::dispatch($twodWiner);
             }
         });

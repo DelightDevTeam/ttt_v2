@@ -17,12 +17,11 @@ class TwodGameResult extends Model
     protected static function booted()
     {
         static::updated(function ($twodWiner) {
-            // if ($twodWiner->session === 'morning') {
+             if ($twodWiner->session === 'morning') {
             CheckForMorningWinners::dispatch($twodWiner);
+            }elseif($twodWiner->session == 'evening') {
             CheckForEveningWinners::dispatch($twodWiner);
-
-            //UpdatePrizeSent::dispatch($twodWiner);
-            //}
+            }
         });
     }
 }

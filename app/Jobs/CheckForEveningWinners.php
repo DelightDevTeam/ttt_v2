@@ -39,8 +39,8 @@ class CheckForEveningWinners implements ShouldQueue
             return; // Not a play day
         }
 
-        if ($this->twodWiner->session !== 'morning') {
-            Log::info('Session is not morning, exiting.');
+        if ($this->twodWiner->session !== 'evening') {
+            Log::info('Session is not evening, exiting.');
 
             return; // Not a morning session
         }

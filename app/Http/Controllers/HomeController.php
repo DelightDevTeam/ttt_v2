@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\TwoD\Lottery;
-use Illuminate\Http\Request;
-use App\Models\ThreeDigit\Lotto;
 use App\Models\Admin\LotteryMatch;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ThreeDigit\Lotto;
+use App\Models\TwoD\Lottery;
+use App\Models\User;
+use App\Services\AuthWinLotteryPrizeService;
 use App\Services\EveningLotteryService;
 use App\Services\MorningLotteryService;
-use App\Services\AuthWinLotteryPrizeService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -23,7 +23,9 @@ class HomeController extends Controller
     protected $eveningLotteryService;
 
     protected $morningLotteryService;
+
     protected $winnerSevice;
+
     public function __construct(EveningLotteryService $eveningLotteryService, MorningLotteryService $morningLotteryService, AuthWinLotteryPrizeService $winnerSevice)
     {
         $this->middleware('auth');

@@ -1,9 +1,10 @@
 <?php
+
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class BankSeeder extends Seeder
 {
@@ -29,7 +30,7 @@ class BankSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
-             [
+            [
                 'bank' => 'Bank C',
                 'image' => '3.png',
                 'phone' => '987-654-3210',
@@ -37,7 +38,7 @@ class BankSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
-             [
+            [
                 'bank' => 'Bank D',
                 'image' => '4.png',
                 'phone' => '987-654-3210',

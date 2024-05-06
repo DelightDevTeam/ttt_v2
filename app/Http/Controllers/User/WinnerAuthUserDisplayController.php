@@ -2,41 +2,42 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
+use App\Services\AuthPermutationOneWeekWinnerService;
+use App\Services\OneWeekPrizeSentService;
+use App\Services\WinPrizeSentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Services\WinPrizeSentService;
-use App\Services\OneWeekPrizeSentService;
-use App\Services\AuthPermutationOneWeekWinnerService;
 
 class WinnerAuthUserDisplayController extends Controller
 {
-    protected $firstPrize;  
-    protected $winnerService; 
+    protected $firstPrize;
+
+    protected $winnerService;
+
     protected $prizeSentSevices;
 
     public function __construct(AuthPermutationOneWeekWinnerService $winnerService, OneWeekPrizeSentService $firstPrize, WinPrizeSentService $prizeSentSevices)
     {
-        $this->winnerService = $winnerService; 
+        $this->winnerService = $winnerService;
         $this->firstPrize = $firstPrize;
         $this->prizeSentSevices = $prizeSentSevices;
     }
 
-    public function displayWinners() 
+    public function displayWinners()
     {
         $prizes = $this->firstPrize->OneWeekWinner();
-        $data = $this->winnerService->OneWeekPermutationWinner(); 
+        $data = $this->winnerService->OneWeekPermutationWinner();
         $prise_sents = $this->prizeSentSevices->OneWeekWinnerPrize();
 
-        return view('three_d.three_d_winner_display', 
-        [
-            'winners' => $data,
-            'first_prizes' => $prizes,
-            'prise_sents'=> $prise_sents
-        ]); 
+        return view('three_d.three_d_winner_display',
+            [
+                'winners' => $data,
+                'first_prizes' => $prizes,
+                'prise_sents' => $prise_sents,
+            ]);
     }
-
 
     // public function getWinnersHistoryForAuthUserOnly()
     // {

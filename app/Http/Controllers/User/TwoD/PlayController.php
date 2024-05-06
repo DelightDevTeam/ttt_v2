@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\User\TwoD;
 
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\TwoD\Lottery;
-use Illuminate\Http\Request;
-use App\Models\TwoD\TwoDigit;
-use App\Services\TwoDService;
-use App\Models\TwoD\HeadDigit;
-use App\Models\TwoD\TwoDLimit;
-use App\Models\Admin\RoleLimit;
-use App\Models\Admin\LotteryMatch;
-use App\Models\TwoD\CloseTwoDigit;
-use Illuminate\Support\Facades\DB;
-use App\Models\TwoD\TwodGameResult;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TwoDPlayRequest;
+use App\Models\Admin\LotteryMatch;
+use App\Models\Admin\RoleLimit;
+use App\Models\TwoD\CloseTwoDigit;
+use App\Models\TwoD\HeadDigit;
+use App\Models\TwoD\Lottery;
 use App\Models\TwoD\LotteryTwoDigitPivot;
+use App\Models\TwoD\TwodGameResult;
+use App\Models\TwoD\TwoDigit;
+use App\Models\TwoD\TwoDLimit;
+use App\Models\User;
+use App\Services\TwoDService;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PlayController extends Controller
 {
@@ -138,7 +138,7 @@ class PlayController extends Controller
     public function store(Request $request)
     {
 
-        Log::info($request->all());
+        //Log::info($request->all());
         $validatedData = $request->validate([
             'selected_digits' => 'required|string',
             'amounts' => 'required|array',
@@ -219,11 +219,11 @@ class PlayController extends Controller
                 'user_id' => $user->id,
                 //'session' => $currentSession,
             ]);
-                $totalAmount = $request->totalAmount; // The total amount from the request
-              // Update the owner's balance (user with id = 1)
-                $owner = User::find(1);
-                $owner->balance += $totalAmount; // Add the total amount to the owner's balance
-                $owner->save(); // Save the owner's new balance
+            $totalAmount = $request->totalAmount; // The total amount from the request
+            // Update the owner's balance (user with id = 1)
+            $owner = User::find(1);
+            $owner->balance += $totalAmount; // Add the total amount to the owner's balance
+            $owner->save(); // Save the owner's new balance
             foreach ($request->amounts as $two_digit_string => $sub_amount) {
                 $this->processBet($two_digit_string, $sub_amount, $limitAmount, $lottery);
             }
@@ -308,6 +308,5 @@ class PlayController extends Controller
             'user_log' => $results->user_log,
         ]);
 
-        
     }
 }

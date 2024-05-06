@@ -38,8 +38,8 @@ class CheckForThreeDWinners implements ShouldQueue
         $result_number = $this->three_d_winner->result_number;
 
         $open_date = ResultDate::where('status', 'open')
-                     ->get();
-       // Correctly accumulate IDs into an array
+            ->get();
+        // Correctly accumulate IDs into an array
         $dates = []; // Initialize an array
         foreach ($open_date as $date) {
             $dates[] = $date->id; // Add each ID to the array
@@ -48,35 +48,32 @@ class CheckForThreeDWinners implements ShouldQueue
         //Log::info('Open result date IDs:', ['dates' => $dates]);
 
         // Check if the $dates array is empty
-        if (empty($dates) || !is_array($dates)) {
+        if (empty($dates) || ! is_array($dates)) {
             //Log::warning('No open result dates found or $dates is not an array');
             return; // Exit the function if no valid open dates
         }
-       // Retrieve winning entries where bet_digit matches result_number
+        // Retrieve winning entries where bet_digit matches result_number
         // $winningEntries = LotteryThreeDigitPivot::where('bet_digit', $result_number)
         //     ->where('prize_sent', false)
         //     ->where('lotto_three_digit_pivot.result_date_id', $dates)
         //     ->whereDate('created_at', $today)
         //     ->get();
         $winningEntries = LotteryThreeDigitPivot::whereIn('result_date_id', $dates)
-        ->where('prize_sent', false)
-        ->where('bet_digit', $result_number) // Make sure this is correct
-        ->whereDate('created_at', $today)
-        ->get(); // Fetch the results
+            ->where('prize_sent', false)
+            ->where('bet_digit', $result_number) // Make sure this is correct
+            ->whereDate('created_at', $today)
+            ->get(); // Fetch the results
 
-        
-
-    // $winningEntries = DB::table('lotto_three_digit_pivot')
-    //     ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
-    //     ->join('result_dates', 'lotto_three_digit_pivot.result_date_id', '=', 'result_dates.id')
-    //     ->where('result_dates.status', 'open')
-    //     ->where('result_dates.id', $result_number)
-    //     ->where('lotto_three_digit_pivot.bet_digit', $result_number)
-    //     ->where('lotto_three_digit_pivot.prize_sent', 0)
-    //     ->whereDate('lotto_three_digit_pivot.created_at', $today)
-    //     ->select('lotto_three_digit_pivot.*') // Select all columns from pivot table
-    //     ->get();
-
+        // $winningEntries = DB::table('lotto_three_digit_pivot')
+        //     ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
+        //     ->join('result_dates', 'lotto_three_digit_pivot.result_date_id', '=', 'result_dates.id')
+        //     ->where('result_dates.status', 'open')
+        //     ->where('result_dates.id', $result_number)
+        //     ->where('lotto_three_digit_pivot.bet_digit', $result_number)
+        //     ->where('lotto_three_digit_pivot.prize_sent', 0)
+        //     ->whereDate('lotto_three_digit_pivot.created_at', $today)
+        //     ->select('lotto_three_digit_pivot.*') // Select all columns from pivot table
+        //     ->get();
 
         foreach ($winningEntries as $entry) {
             DB::transaction(function () use ($entry) {

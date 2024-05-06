@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Services;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use App\Models\ThreeDigit\ResultDate;
 use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use App\Models\ThreeDigit\ResultDate;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LottoSessionService
 {
@@ -38,19 +39,20 @@ class LottoSessionService
 
         // Get the authenticated user's ID
         $userId = Auth::id();
-         $open_date = ResultDate::where('status', 'open')
-                     ->get();
+        $open_date = ResultDate::where('status', 'open')
+            ->get();
         $dates = []; // Initialize an array
 
-         foreach ($open_date as $date) {
+        foreach ($open_date as $date) {
             $dates[] = $date->id; // Add each ID to the array
         }
 
         Log::info('Open result date IDs:', ['dates' => $dates]);
 
         // Check if the $dates array is empty
-        if (empty($dates) || !is_array($dates)) {
+        if (empty($dates) || ! is_array($dates)) {
             Log::warning('No open result dates found or $dates is not an array');
+
             return; // Exit the function if no valid open dates
         }
         // Fetch the data from the LotteryThreeDigitPivot model

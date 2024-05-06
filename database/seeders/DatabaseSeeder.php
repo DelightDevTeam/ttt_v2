@@ -38,8 +38,7 @@ class DatabaseSeeder extends Seeder
             BankSeeder::class,
             BannerSeeder::class,
             BannerTextSeeder::class,
-            GameTableSeeder::class
-
+            GameTableSeeder::class,
 
         ]);
     }

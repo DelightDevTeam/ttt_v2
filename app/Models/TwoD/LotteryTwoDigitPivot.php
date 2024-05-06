@@ -3,8 +3,8 @@
 namespace App\Models\TwoD;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class LotteryTwoDigitPivot extends Model
 {
@@ -24,6 +24,7 @@ class LotteryTwoDigitPivot extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
     protected static function booted()
     {
         static::created(function ($pivot) {

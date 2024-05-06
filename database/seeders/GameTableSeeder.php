@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class GameTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-     public function run(): void
+    public function run(): void
     {
         $games = [
             ['name' => 'Game 1', 'image' => 'game1.png', 'link' => 'https://shwebo2d3dapi.online', 'created_at' => now(), 'updated_at' => now()],

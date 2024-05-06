@@ -180,8 +180,8 @@ class ThreeDPlayController extends Controller
                     throw new Exception('No user found.');
                 }
                 $open_date = ResultDate::where('status', 'open')
-                     ->get();
-            
+                    ->get();
+
                 $pivot = new LotteryThreeDigitPivot([
                     'result_date_id' => $result->id,
                     'lotto_id' => $lottery->id,

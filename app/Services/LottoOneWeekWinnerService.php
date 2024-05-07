@@ -96,7 +96,7 @@ class LottoOneWeekWinnerService
 
         $totalPrizeAmount = 0; // Initialize total prize amount
         foreach ($results as $result) {
-            $prizeAmount = $result->sub_amount * 600; // Prize multiplier
+            $prizeAmount = $result->sub_amount * 700; // Prize multiplier
             $result->prize_amount = $prizeAmount; // Add prize amount to each result
             $totalPrizeAmount += $prizeAmount; // Accumulate total prize amount
         }

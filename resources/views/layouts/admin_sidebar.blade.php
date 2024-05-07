@@ -189,6 +189,14 @@
           @endcan
           @can('user_access')
           <li class="nav-item ">
+            <a class="nav-link text-white " href="{{ url('admin/two-d-more-setting')}}">
+              <span class="sidenav-mini-icon"> 2D </span>
+              <span class="sidenav-normal  ms-2  ps-1"> More Setting </span>
+            </a>
+          </li>
+          @endcan
+          @can('user_access')
+          <li class="nav-item ">
             <a class="nav-link text-white " href="{{ route('admin.two-d-users-index')}}">
               <span class="sidenav-mini-icon"> 2D </span>
               <span class="sidenav-normal  ms-2  ps-1">  ထိုးသားများ </span>
@@ -386,6 +394,12 @@
       </a>
      </li>
      <li class="nav-item">
+      <a class="nav-link text-white " href="{{ url('admin/three-d-more-setting')}}">
+       <span class="sidenav-mini-icon"> 3D  </span>
+       <span class="sidenav-normal  ms-2  ps-1"> More Setting </span>
+      </a>
+     </li>
+     <li class="nav-item">
       <a class="nav-link text-white " href="{{ url('admin/three-d-history')}}">
        <span class="sidenav-mini-icon"> 3D  </span>
        <span class="sidenav-normal  ms-2  ps-1"> တပါတ်တွင်းမှတ်တမ်း </span>
@@ -441,7 +455,7 @@
       </a>
      </li> --}}
      <li class="nav-item">
-      <a class="nav-link text-white " href="{{ url('/admin/three-d-winners-history') }}">
+      <a class="nav-link text-white " href="{{ url('/admin/three-d-win-history') }}">
        <span class="sidenav-mini-icon"> 3D </span>
        <span class="sidenav-normal  ms-2  ps-1">  ပေါက်သူများ </span>
       </a>

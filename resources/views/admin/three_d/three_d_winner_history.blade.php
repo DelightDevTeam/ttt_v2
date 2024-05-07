@@ -75,7 +75,7 @@
                         <td>{{ $result->res_date }}</td>
                         <td>{{ $result->res_time }}</td>
                         <td>{{ $result->sub_amount }}</td>
-                        <td>{{ $result->sub_amount * 600 }}</td>
+                        <td>{{ $result->sub_amount * 700 }}</td>
                         <td>{{ $result->prize_sent ? 'Yes' : 'No' }}</td>
                         <td>{{ $result->match_status }}</td>
                         <td>{{ $result->match_start_date ?? 'N/A' }}</td>

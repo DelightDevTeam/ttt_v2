@@ -86,7 +86,7 @@ class CheckForThreeDWinners implements ShouldQueue
                     }
                     $user = $lottery->user;
 
-                    $prize = $entry->sub_amount * 600;
+                    $prize = $entry->sub_amount * 700;
                     $user->balance += $prize; // Correct, user is an Eloquent model
                     $user->prize_balance += $prize;
                     $user->save();

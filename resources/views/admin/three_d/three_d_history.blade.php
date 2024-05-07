@@ -22,10 +22,10 @@
                     <div class="d-lg-flex">
                         <div>
                             <h5 class="mb-0">3D History Dashboards
-                                <span>
+                                {{-- <span>
                                     <a class="btn btn-outline-primary btn-sm export mb-0 mt-sm-0 mt-1"
                                     href="{{ url('/admin/three-digit-one-month-history-conclude') }}">တလအတွင်းပေါင်းချုပ်ကြည့်ရန်</a>
-                                </span>
+                                </span> --}}
                             </h5>
 
                         </div>

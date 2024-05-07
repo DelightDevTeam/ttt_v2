@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\ThreeDDLimit;
-use App\Models\Lotto;
-use App\Models\ThreeDigit\ThreeWinner;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\ThreeDigit\Lotto;
+use App\Models\Admin\ThreeDDLimit;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\ThreeDigit\ThreeDLimit;
+use App\Models\ThreeDigit\ThreeWinner;
 use Illuminate\Support\Facades\Validator;
 
 class ThreeDLimitController extends Controller
 {
     public function index()
     {
-        $limits = ThreeDDLimit::all();
+        $limits = ThreeDLimit::all();
 
         return view('admin.three_limit.index', compact('limits'));
     }
@@ -34,7 +35,7 @@ class ThreeDLimitController extends Controller
         }
 
         // store
-        ThreeDDLimit::create([
+        ThreeDLimit::create([
             'three_d_limit' => $request->three_d_limit,
         ]);
 
@@ -44,7 +45,7 @@ class ThreeDLimitController extends Controller
 
     public function destroy($id)
     {
-        $limit = ThreeDDLimit::findOrFail($id);
+        $limit = ThreeDLimit::findOrFail($id);
         $limit->delete();
 
         return redirect()->route('admin.three-digit-limit.index')->with('toast_success', 'Limit deleted successfully.');

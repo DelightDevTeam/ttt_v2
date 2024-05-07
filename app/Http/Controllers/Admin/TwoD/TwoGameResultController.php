@@ -48,6 +48,21 @@ class TwoGameResultController extends Controller
         ]);
     }
 
+     public function getCurrentMonthResults()
+    {
+        // Get the start and end of the current month
+        $currentMonthStart = Carbon::now()->startOfMonth();
+        $currentMonthEnd = Carbon::now()->endOfMonth();
+
+        // Retrieve all records within the current month
+        $results = TwodGameResult::whereBetween('result_date', [$currentMonthStart, $currentMonthEnd])
+            ->orderBy('result_date', 'asc') // Optional: order by date
+            ->get();
+
+        // Return the data to the view or as a JSON response
+        return view('admin.two_d.twod_results.current_month_index', ['results' => $results]);
+    }
+
     public function updateStatus(Request $request, $id)
     {
         $status = $request->input('status'); // The new status

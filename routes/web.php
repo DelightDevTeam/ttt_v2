@@ -156,7 +156,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::get('/three-d-winner', [App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController::class, 'index'])->name('three-d-winner');
     Route::post('/three-d-reset', [App\Http\Controllers\Admin\ThreeD\ThreeDResetController::class, 'ThreeDReset'])->name('ThreeDReset');
     Route::resource('twod-records', TwoDLotteryController::class);
-    Route::get('/two-d-morning-winner', [App\Http\Controllers\Admin\TwoDMorningWinnerController::class, 'MorningWinHistoryForAdmin'])->name('morningWinner');
+    // Route::get('/two-d-morning-winner', [App\Http\Controllers\Admin\TwoDMorningWinnerController::class, 'MorningWinHistoryForAdmin'])->name('morningWinner');
 
     Route::get('/two-d-all-winner', [App\Http\Controllers\Admin\TwoD\AllLotteryWinPrizeSentController::class, 'TwoAllWinHistoryForAdmin']);
     Route::post('/permutation-reset', [App\Http\Controllers\Admin\ThreeD\PermutationResetController::class, 'PermutationReset'])->name('PermutationReset');
@@ -166,7 +166,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     // three digit one month history conclude
     Route::get('/three-digit-one-month-history-conclude', [App\Http\Controllers\Admin\ThreeD\ThreeDRecordHistoryController::class, 'OnceMonthThreedigitHistoryConclude'])->name('ThreeDigitOneMonthHistoryConclude');
     // three d winners history
-    Route::get('/three-d-winners-history', [App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController::class, 'FirstPrizeWinner'])->name('ThreeDWinnersHistory');
+    Route::get('/three-d-win-history', [App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController::class, 'FirstPrizeWinner'])->name('ThreeDWinnersHistory');
     // three d permutation winners history
     Route::get('/permutation-winners-history', [App\Http\Controllers\Admin\ThreeD\PermutationWinnerController::class, 'PermutationWinners'])->name('PermutationWinnersHistory');
     // greater than less than winner prize
@@ -197,6 +197,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
 
     // two d result date and result number
     Route::get('two-d-result-date', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'index']);
+     Route::get('two-d-more-setting', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'getCurrentMonthResults']);
+
     Route::patch('/two-2-results/{id}/status', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'updateStatus'])
         ->name('twoDResults.ResultupdateStatus');
     Route::patch('/two-d-results/{id}/status', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'updateResultNumber'])
@@ -204,6 +206,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
 
     // get three d result date
     Route::get('three-d-result-date', [App\Http\Controllers\Admin\ThreeD\ResultDateController::class, 'index']);
+    Route::get('three-d-more-setting', [App\Http\Controllers\Admin\ThreeD\ResultDateController::class, 'getCurrentMonthResultsSetting']);
     // result date update
     Route::patch('/lottery-results/{id}/status', [App\Http\Controllers\Admin\ThreeD\ResultDateController::class, 'updateStatus'])
         ->name('ThreedOpenClose');

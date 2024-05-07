@@ -119,7 +119,7 @@
                             </td>
                             <td>
                                 <span>Prize</span>
-                                <p class="text-primary">{{ $winner->prize_amount }}</p>
+                                <p class="text-primary">{{ $winner->sub_amount * 700 }}</p>
                             </td>
                             <td>
                                 <span>Date</span>

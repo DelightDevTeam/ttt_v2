@@ -51,6 +51,22 @@ class ResultDateController extends Controller
         // Return the view with the required data
         return view('admin.three_d.result_date.index', compact('results', 'lasted_prizes', 'permutation_digits', 'three_digits_prize'));
     }
+
+    public function getCurrentMonthResultsSetting()
+    {
+         $currentMonthStart = Carbon::now()->startOfMonth();
+
+        // Get the end of the next month
+        $nextMonthEnd = Carbon::now()->addMonth()->endOfMonth();
+
+        // Retrieve all records within the current month and next month
+        $results = ResultDate::whereBetween('result_date', [$currentMonthStart, $nextMonthEnd])
+            ->orderBy('result_date', 'asc') // Optional: order by date
+            ->get();
+
+        // Return the data to the view or as a JSON response
+        return view('admin.three_d.result_date.current_month_index', ['results' => $results]);
+    }
     // public function index()
     // {
     //     // Get the start and end dates for the current month

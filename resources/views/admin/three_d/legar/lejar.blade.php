@@ -106,11 +106,11 @@ td{
     <tbody>
     @foreach(array_chunk($data, 10, true) as $chunk)
         <tr class="m-0 p-0">
-            @foreach($chunk as $three_digit => $sessions)
+            @foreach($chunk as $three_digit => $session_data)
                 <td class="text-dark text-center" style="background-color: #fda6a5">{{ $three_digit }}</td>
                 <td class="text-center">
-                    @if(isset($sessions['data']->total_sub_amount))
-                        {{ $sessions['data']->total_sub_amount }}
+                    @if(isset($session_data->total_sub_amount))
+                        {{ $session_data->total_sub_amount }}
                     @else
                         <p>-</p>
                     @endif
@@ -118,7 +118,8 @@ td{
             @endforeach
         </tr>
     @endforeach
-    </tbody>
+</tbody>
+
 </table>
 
                </div>

@@ -54,7 +54,7 @@ class AdminMorningPrizeSentService
                 )
                 ->where('lottery_two_digit_pivot.prize_sent', true)
                 ->where('lottery_two_digit_pivot.res_date', $today)
-                ->where('lottery_two_digit_pivot.session', 'session')
+                ->where('lottery_two_digit_pivot.session', 'morning')
                 ->get();
 
             // Calculate total prize amount

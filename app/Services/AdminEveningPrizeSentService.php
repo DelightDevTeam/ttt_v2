@@ -13,16 +13,16 @@ class AdminEveningPrizeSentService
      *
      * @return string
      */
-    protected function getCurrentSession()
-    {
-        $currentTime = Carbon::now()->format('H:i:s');
+    // protected function getCurrentSession()
+    // {
+    //     $currentTime = Carbon::now()->format('H:i:s');
 
-        if ($currentTime >= '012:01:00' && $currentTime <= '16:40:00') {
-            return 'evening';
-        } else {
-            return 'closed'; // If outside known session times
-        }
-    }
+    //     if ($currentTime >= '012:01:00' && $currentTime <= '16:40:00') {
+    //         return 'evening';
+    //     } else {
+    //         return 'closed'; // If outside known session times
+    //     }
+    // }
 
     /**
      * Retrieve all user data with prize_sent as true, filtered by session and current day.

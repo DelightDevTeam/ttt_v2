@@ -11,17 +11,30 @@ class AuthWinLotteryPrizeService
     public function LotteryWinnersPrize()
     {
         try {
-            // Define the start and end of today
-            $todayStart = Carbon::today()->startOfDay(); // Start of today
-            $tomorrowStart = Carbon::tomorrow()->startOfDay(); // Start of tomorrow (for end of today)
+           // Log::info('Entering Auth user Winner Service');
+
+            // Define the start of the time range (1 month ago)
+            $oneMonthAgo = Carbon::now()->subMonth()->startOfDay();
+           // Log::info('Start of date range:', ['date' => $oneMonthAgo]);
+
+            // Define the end of the current month
+            $endOfCurrentMonth = Carbon::now()->endOfMonth();
+            //Log::info('End of date range:', ['date' => $endOfCurrentMonth]);
 
             // Define session time ranges
             $morningStart = '04:01:00';
-            $morningEnd = '16:10:00';
-            $eveningStart = '16:05:00';
-            $eveningEnd = '2:45:00';
+            $morningEnd = '12:10:00';
+            $eveningStart = '12:05:00';
+            $eveningEnd = '16:45:00';
 
-            // Retrieve today's prize-sent results with adjusted conditions
+            // Log::info('Session times:', [
+            //     'morningStart' => $morningStart,
+            //     'morningEnd' => $morningEnd,
+            //     'eveningStart' => $eveningStart,
+            //     'eveningEnd' => $eveningEnd,
+            // ]);
+
+            // Retrieve results with adjusted conditions
             $results = DB::table('lottery_two_digit_pivot')
                 ->join('users', 'lottery_two_digit_pivot.user_id', '=', 'users.id')
                 ->select(
@@ -37,8 +50,10 @@ class AuthWinLotteryPrizeService
                 )
                 // Only include prize-sent records
                 ->where('lottery_two_digit_pivot.prize_sent', true)
-                // Ensure it's today's date
-                ->whereBetween('lottery_two_digit_pivot.res_date', [$todayStart, $tomorrowStart])
+                // Consider only weekdays (Monday to Friday)
+                ->whereRaw('WEEKDAY(lottery_two_digit_pivot.res_date) BETWEEN 0 AND 4')
+                // Consider the defined date range
+                ->whereBetween('lottery_two_digit_pivot.res_date', [$oneMonthAgo, $endOfCurrentMonth])
                 // Consider session time ranges
                 ->where(function ($query) use ($morningStart, $morningEnd, $eveningStart, $eveningEnd) {
                     $query->whereBetween('lottery_two_digit_pivot.res_time', [$morningStart, $morningEnd])
@@ -46,16 +61,24 @@ class AuthWinLotteryPrizeService
                 })
                 ->get();
 
-            // Calculate the total prize amount for today
+            // Log the query results
+            //Log::info('Query results:', ['results' => $results]);
+
+            // Calculate the total prize amount
             $totalPrizeAmount = 0;
             foreach ($results as $result) {
-                $prizeAmount = $result->sub_amount * 80; // Assuming 80x multiplier
+                $prizeAmount = $result->sub_amount * 80; // Prize multiplier
                 $totalPrizeAmount += $prizeAmount;
             }
 
+            //Log::info('Total prize amount:', ['amount' => $totalPrizeAmount]);
+
+            //Log::info('Exiting AllWinPrizeSentFor Auth User successfully');
+
             return ['results' => $results, 'totalPrizeAmount' => $totalPrizeAmount];
+
         } catch (\Exception $e) {
-            Log::error("Error in LotteryWinnersPrize: {$e->getMessage()}");
+            //Log::error('Error retrieving prize_sent data: '.$e->getMessage());
 
             return ['results' => collect([]), 'totalPrizeAmount' => 0];
         }

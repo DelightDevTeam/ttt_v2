@@ -71,8 +71,8 @@ class CheckForMorningWinners implements ShouldQueue
             $winningEntries = LotteryTwoDigitPivot::where('twod_game_result_id', $open_time->id)
                 ->where('bet_digit', $result_number)
                 ->whereDate('res_date', $date)
-                ->whereTime('res_time', $currentSessionTime)
-                ->where('session', $currentSession)
+                //->whereTime('res_time', $currentSessionTime)
+                ->where('session', 'morning')
                 ->get();
         } else {
             Log::warning('Invalid open time, cannot get ID.');

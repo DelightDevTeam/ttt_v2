@@ -59,9 +59,11 @@ class ThreeDigitDataService
         $data = [];
 
         foreach ($threeDigits as $digit) {
+            $show_digit = $digit->id;
+            $display = $show_digit - 1;
             $periodData = DB::table('lotto_three_digit_pivot')
                 ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
-                ->where('three_digit_id', $digit->id)
+                ->where('three_digit_id', $display)
                 ->whereBetween('lotto_three_digit_pivot.created_at', [$firstSessionStart, $secondSessionEnd]) // Include both sessions
                 ->select(
                     'lotto_three_digit_pivot.three_digit_id',

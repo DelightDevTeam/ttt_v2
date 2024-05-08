@@ -27,7 +27,9 @@ class AuthWinLotteryPrizeService
                     'lottery_two_digit_pivot.res_date',
                     'lottery_two_digit_pivot.sub_amount',
                     'lottery_two_digit_pivot.res_time',
-                    'lottery_two_digit_pivot.prize_sent'
+                    'lottery_two_digit_pivot.prize_sent',
+                    'lottery_two_digit_pivot.session'
+
                 )
                 // Only include prize-sent records
                 ->where('lottery_two_digit_pivot.prize_sent', true)

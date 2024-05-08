@@ -73,7 +73,7 @@ class OneWeekPrizeSentService
         // Calculate the total prize amount based on a multiplier
         $totalPrizeAmount = 0;
         foreach ($results as $result) {
-            $prizeAmount = $result->sub_amount * 600; // Assuming a multiplier
+            $prizeAmount = $result->sub_amount * 700; // Assuming a multiplier
             $result->prize_amount = $prizeAmount; // Add prize amount to the result
             $totalPrizeAmount += $prizeAmount; // Accumulate total prize amount
         }

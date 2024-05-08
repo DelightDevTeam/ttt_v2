@@ -8,82 +8,74 @@ use App\Models\ThreeDigit\ThreeDigit;
 
 class ThreeDigitDataService
 {
+    /**
+     * Get the date range for the current month.
+     *
+     * @return array
+     */
+    protected function getDateRangeMonth()
+    {
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        // Default date range for sessions
+        $firstSessionStart = Carbon::create($currentYear, $currentMonth, 3);
+        $firstSessionEnd = Carbon::create($currentYear, $currentMonth, 16);
+
+        $secondSessionStart = Carbon::create($currentYear, $currentMonth, 17);
+        $secondSessionEnd = Carbon::create($currentYear, $currentMonth + 1, 1);
+
+        // Special case for May
+        if ($currentMonth == 5) {
+            $firstSessionStart = Carbon::create($currentYear, 5, 3);
+            $firstSessionEnd = Carbon::create($currentYear, 5, 16);
+
+            $secondSessionStart = Carbon::create($currentYear, 5, 17);
+            $secondSessionEnd = Carbon::create($currentYear, 6, 1);
+        }
+
+        // Special case for December
+        if ($currentMonth == 12) {
+            $firstSessionStart = Carbon::create($currentYear, 12, 3);
+            $firstSessionEnd = Carbon::create($currentYear, 12, 16);
+
+            $secondSessionStart = Carbon::create($currentYear, 12, 17);
+            $secondSessionEnd = Carbon::create($currentYear, 12, 30);
+        }
+
+        return [$firstSessionStart, $firstSessionEnd, $secondSessionStart, $secondSessionEnd];
+    }
+
+    /**
+     * Get data for three-digit entries within the current month's date range.
+     *
+     * @return array
+     */
     public function getThreeDigitsData()
     {
-        $today = Carbon::now();
-        // Determine the start and end times based on the current day of the month
-        $morningStart = $today->day <= 16 ? $today->copy()->startOfMonth() : $today->copy()->day(17)->startOfDay();
-        $morningEnd = $today->day <= 16 ? $today->copy()->day(16)->endOfDay() : $today->copy()->addMonthNoOverflow()->day(1)->subSecond();
+        [$firstSessionStart, $firstSessionEnd, $secondSessionStart, $secondSessionEnd] = $this->getDateRangeMonth();
 
         $threeDigits = ThreeDigit::all();
         $data = [];
 
         foreach ($threeDigits as $digit) {
-            // Data for the current period
-            $periodData = DB::table('lotto_three_digit_copy')
-                ->join('lottos', 'lotto_three_digit_copy.lotto_id', '=', 'lottos.id')
+            $periodData = DB::table('lotto_three_digit_pivot')
+                ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
                 ->where('three_digit_id', $digit->id)
-                ->whereBetween('lotto_three_digit_copy.created_at', [$morningStart, $morningEnd])
+                ->whereBetween('lotto_three_digit_pivot.created_at', [$firstSessionStart, $secondSessionEnd]) // Include both sessions
                 ->select(
-                    'lotto_three_digit_copy.three_digit_id',
-                    DB::raw('SUM(lotto_three_digit_copy.sub_amount) as total_sub_amount'),
-                    DB::raw('GROUP_CONCAT(DISTINCT lotto_three_digit_copy.bet_digit) as bet_digits'),
+                    'lotto_three_digit_pivot.three_digit_id',
+                    DB::raw('SUM(lotto_three_digit_pivot.sub_amount) as total_sub_amount'),
+                    DB::raw('GROUP_CONCAT(DISTINCT lotto_three_digit_pivot.bet_digit) as bet_digits'),
                     DB::raw('COUNT(*) as total_bets'),
-                    DB::raw('MAX(lotto_three_digit_copy.created_at) as latest_bet_time')
+                    DB::raw('MAX(lotto_three_digit_pivot.created_at) as latest_bet_time')
                 )
-                ->groupBy('lotto_three_digit_copy.three_digit_id')
+                ->groupBy('lotto_three_digit_pivot.three_digit_id')
                 ->first();
 
-            // Store the fetched data
-            $data[$digit->three_digit] = [
-                'data' => $periodData,
-            ];
+            $data[$digit->three_digit] = $periodData; // Store fetched data in an array
         }
 
         return $data;
     }
-
-    //    public function getThreeDigitsData() {
-    //     $today = Carbon::now();
-    //     $monthStart = $today->copy()->startOfMonth();
-    //     $midMonth = $today->copy()->startOfMonth()->addDays(16);
-    //     $monthEnd = $today->copy()->endOfMonth();
-    //     $nextMonthStart = $today->copy()->addMonthNoOverflow()->startOfMonth();
-
-    //     // Define your time periods
-    //     if ($today->day <= 16) {
-    //         $morningStart = $monthStart;
-    //         $morningEnd = $midMonth->subSecond(); // Just before the mid of the month
-    //     } else {
-    //         $morningStart = $midMonth;
-    //         $morningEnd = $nextMonthStart->subSecond(); // Just before the start of next month
-    //     }
-
-    //     $twoDigits = ThreeDigit::all();
-    //     $data = [];
-
-    //     foreach ($twoDigits as $digit) {
-    //         // Adjust queries to use Carbon instances for time comparison
-    //         $morningData = DB::table('lotto_three_digit_copy')
-    //                         ->join('lottos', 'lotto_three_digit_copy.lotto_id', '=', 'lottos.id')
-    //                         ->where('three_digit_id', $digit->id)
-    //                         ->whereBetween('lotto_three_digit_copy.created_at', [$morningStart, $morningEnd])
-    //                         ->select(
-    //                             'lotto_three_digit_copy.three_digit_id',
-    //                             DB::raw('SUM(lotto_three_digit_copy.sub_amount) as total_sub_amount'),
-    //                             DB::raw('GROUP_CONCAT(DISTINCT lotto_three_digit_copy.bet_digit) as bet_digits'),
-    //                             DB::raw('COUNT(*) as total_bets'),
-    //                             DB::raw('MAX(lotto_three_digit_copy.created_at) as latest_bet_time')
-    //                         )
-    //                         ->groupBy('lotto_three_digit_copy.three_digit_id')
-    //                         ->first();
-
-    //         $data[$digit->two_digit] = [
-    //             'morning' => $morningData,
-    //         ];
-    //     }
-
-    //     return $data;
-    // }
-
 }

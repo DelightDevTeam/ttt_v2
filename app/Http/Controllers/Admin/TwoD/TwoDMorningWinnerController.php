@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin\TwoD;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\Lottery;
-use App\Models\Admin\TwodWiner;
-use App\Services\AdminMorningPrizeSentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Admin\Lottery;
+use App\Models\Admin\TwodWiner;
+use App\Http\Controllers\Controller;
+use App\Services\AdminEveningPrizeSentService;
+use App\Services\AdminMorningPrizeSentService;
 
 class TwoDMorningWinnerController extends Controller
 {
@@ -16,10 +17,12 @@ class TwoDMorningWinnerController extends Controller
      */
     // for two digit early morning
     protected $prizeSentService;
-
-    public function __construct(AdminMorningPrizeSentService $prizeSentService)
+    protected $adminEveningPrizeSentService;
+    
+    public function __construct(AdminMorningPrizeSentService $prizeSentService, AdminEveningPrizeSentService $adminEveningPrizeSentService)
     {
         $this->prizeSentService = $prizeSentService;
+        $this->adminEveningPrizeSentService = $adminEveningPrizeSentService;
     }
 
     public function MorningWinHistoryForAdmin()
@@ -28,6 +31,23 @@ class TwoDMorningWinnerController extends Controller
             $data = $this->prizeSentService->MorningPrizeSentForAdmin();
 
             return view('admin.two_d.morining_winner', [
+                'results' => $data['results'],
+                'totalPrizeAmount' => $data['totalPrizeAmount'],
+            ]);
+
+        } catch (\Exception $e) {
+            return view('admin.two_d.winner_history', [
+                'error' => 'Failed to retrieve data. Please try again later.',
+            ]);
+        }
+    }
+
+    public function EveningWinHistoryForAdmin()
+    {
+        try {
+            $data = $this->adminEveningPrizeSentService->EveningPrizeForAdmin();
+
+            return view('admin.two_d.evening_winner', [
                 'results' => $data['results'],
                 'totalPrizeAmount' => $data['totalPrizeAmount'],
             ]);

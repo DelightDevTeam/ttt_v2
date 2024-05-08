@@ -174,7 +174,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     // three d permutation winner prize
     Route::get('/prize-winners', [App\Http\Controllers\Admin\ThreeD\GreatherThanLessThanWinnerPrizeController::class, 'ThirdPrizeWinner'])->name('getPrizeWinnersHistory');
     // two d winner history
-    Route::get('/admin-two-d-winners-history', [App\Http\Controllers\Admin\TwoDWinnerHistoryController::class, 'getWinnersHistoryForAdmin'])->name('winnerHistoryForAdmin');
+    Route::get('/evening-two-d-win-history', [App\Http\Controllers\Admin\TwoD\TwoDMorningWinnerController::class, 'EveningWinHistoryForAdmin'])->name('Eveninig_winHistory');
     Route::get('/admin-two-d-winners-history-group-by-session', [App\Http\Controllers\Admin\TwoDWinnerHistoryController::class, 'getWinnersHistoryForAdminGroupBySession'])->name('winnerHistoryForAdminSession');
 
     // two d commission route

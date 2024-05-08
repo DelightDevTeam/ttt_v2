@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\ThreeDigit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\ThreeDigit\ThreeDigit;
 
 class ThreeDigitDataService
 {

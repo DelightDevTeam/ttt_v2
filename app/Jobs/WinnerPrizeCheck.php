@@ -2,14 +2,17 @@
 
 namespace App\Jobs;
 
-use App\Models\ThreeDigit\Lotto;
 use Carbon\Carbon;
+use App\Models\ThreeDigit\Lotto;
+use App\Models\ThreeDigit\ResultDate;
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WinnerPrizeCheck implements ShouldQueue
 {
@@ -24,45 +27,66 @@ class WinnerPrizeCheck implements ShouldQueue
 
     public function handle(): void
     {
-        if (! $this->isPlayingDay()) {
+        Log::info('WinnerPrizeCheck job started');
+
+        // Ensure prize object is valid and has the required attributes
+        if (! isset($this->prize->prize_one) || ! isset($this->prize->prize_two)) {
+           // Log::warning('Invalid prize object provided. Exiting job.');
             return;
         }
 
-        // Process winning entries directly for prize_one
-        $this->processWinningEntries((string) $this->prize->prize_one);
+        $open_dates = ResultDate::where('status', 'open')->get();
+        if ($open_dates->isEmpty()) {
+            Log::warning('No open result dates found.');
+            return;
+        }
 
-        // Process winning entries directly for prize_two
-        $this->processWinningEntries((string) $this->prize->prize_two);
+        // Collect open date IDs
+        $date_ids = $open_dates->pluck('id')->toArray();
+
+        // Process winning entries for prize_one and prize_two
+        $this->processWinningEntries($this->prize->prize_one, $date_ids);
+        $this->processWinningEntries($this->prize->prize_two, $date_ids);
+
+        Log::info('WinnerPrizeCheck job completed.');
     }
 
-    protected function isPlayingDay(): bool
+    protected function processWinningEntries($prize_digit, array $date_ids)
     {
-        $playDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        if (empty($prize_digit)) {
+            //Log::warning('Empty prize_digit provided. Skipping processing.');
+            return;
+        }
 
-        return in_array(Carbon::now()->englishDayOfWeek, $playDays);
-    }
-
-    protected function processWinningEntries($prizeNumber)
-    {
-        $today = Carbon::today();
-
-        $winningEntries = DB::table('lotto_three_digit_copy')
-            ->join('lottos', 'lotto_three_digit_copy.lotto_id', '=', 'lottos.id')
-            ->where('lotto_three_digit_copy.bet_digit', $prizeNumber)
-            ->where('lotto_three_digit_copy.prize_sent', 0)
-            ->whereDate('lotto_three_digit_copy.created_at', $today)
-            ->select('lotto_three_digit_copy.*')
+        $today = Carbon::today(); // Current date
+        $winningEntries = LotteryThreeDigitPivot::whereIn('result_date_id', $date_ids)
+            ->where('bet_digit', $prize_digit)
+            ->whereDate('created_at', $today)
             ->get();
+
+        if ($winningEntries->isEmpty()) {
+           // Log::info("No winning entries found for bet_digit: {$prize_digit} on date: {$today->toDateString()}");
+            return;
+        }
 
         foreach ($winningEntries as $entry) {
             DB::transaction(function () use ($entry) {
-                $lottery = Lotto::findOrFail($entry->lotto_id);
-                $user = $lottery->user;
-                $user->balance += $entry->sub_amount * 10; // Adjust based on your prize calculation
-                $user->save();
+                try {
+                    $lottery = Lotto::findOrFail($entry->lotto_id);
+                    $user = $lottery->user;
 
-                // Update the `prize_sent` flag
-                $lottery->threedDigits()->updateExistingPivot($entry->three_digit_id, ['prize_sent' => 3]);
+                    $prize = $entry->sub_amount * 10; // Calculate the prize amount
+                    $user->balance += $prize; // Update user balance
+                    $user->save(); // Save updated user balance
+
+                    $entry->prize_sent = 3; // Mark as prize sent
+                    $entry->save();
+
+                    //Log::info("Prize awarded and prize_sent set to 3 for entry ID {$entry->id}.");
+                } catch (\Exception $e) {
+                    Log::error("Error during transaction for entry ID {$entry->id}: {$e->getMessage()}");
+                    throw $e; // Ensure rollback if needed
+                }
             });
         }
     }

@@ -40,7 +40,7 @@ class CheckForEveningWinners implements ShouldQueue
         }
 
         if ($this->twodWiner->session !== 'evening') {
-            Log::info('Session is not evening, exiting.');
+           // Log::info('Session is not evening, exiting.');
 
             return; // Not a morning session
         }
@@ -59,7 +59,7 @@ class CheckForEveningWinners implements ShouldQueue
         $open_time = TwodGameResult::where('status', 'open')->first();
 
         if (! $open_time || ! is_object($open_time)) {
-            Log::warning('No valid open time found or invalid data structure.');
+            //Log::warning('No valid open time found or invalid data structure.');
 
             return; // Exit early if no valid open time
         }
@@ -75,7 +75,7 @@ class CheckForEveningWinners implements ShouldQueue
                 ->where('session', $currentSession)
                 ->get();
         } else {
-            Log::warning('Invalid open time, cannot get ID.');
+           // Log::warning('Invalid open time, cannot get ID.');
 
             return; // Exit if no valid ID
         }

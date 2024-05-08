@@ -18,7 +18,7 @@ class ResultDate extends Model
         static::updated(function ($three_d_winner) {
 
             CheckForThreeDWinners::dispatch($three_d_winner);
-            //CheckForThreeDWinnersWithPermutations::dispatch($three_d_winner);
+            CheckForThreeDWinnersWithPermutations::dispatch($three_d_winner);
 
         });
     }

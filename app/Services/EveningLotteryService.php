@@ -23,9 +23,9 @@ class EveningLotteryService
     public function TwoDEveningHistory()
     {
         // Log current session and user ID for verification
-        Log::info('Current time:', ['time' => Carbon::now()->format('H:i:s')]);
-        Log::info('User ID:', ['user_id' => Auth::id()]);
-
+        //Log::info('Current time:', ['time' => Carbon::now()->format('H:i:s')]);
+        //Log::info('User ID:', ['user_id' => Auth::id()]);
+        $today = Carbon::today()->toDateString(); // Get today's date
         $currentSession = $this->getCurrentSession();
         $userId = Auth::id();
 
@@ -70,7 +70,9 @@ class EveningLotteryService
                 'lottery_two_digit_pivot.prize_sent',
                 'lottery_two_digit_pivot.match_status'
             )
+            ->where('lottery_two_digit_pivot.res_date', $today) 
             ->whereIn('lottery_two_digit_pivot.lottery_id', $lotteryIds)
+            ->orderBy('res_date', 'desc')
             ->get();
 
         // Calculate the total sub_amount for this session and user

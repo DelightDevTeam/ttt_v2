@@ -36,7 +36,7 @@ class PlayController extends Controller
         $remainingAmounts = [];
         foreach ($twoDigits as $digit) {
             $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
-                ->where('twod_game_result_id', $digit->id)
+                ->where('two_digit_id', $digit->id)
                 ->sum('sub_amount');
             $defaultLimitAmount = TwoDLimit::latest()->first()->two_d_limit;
             $remainingAmounts[$digit->id] = $defaultLimitAmount - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
@@ -90,7 +90,7 @@ class PlayController extends Controller
         $remainingAmounts = [];
         foreach ($twoDigits as $digit) {
             $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
-                ->where('twod_game_result_id', $digit->id)
+                ->where('two_digit_id', $digit->id)
                 ->sum('sub_amount');
             $defaultLimitAmount = TwoDLimit::latest()->first()->two_d_limit;
             $remainingAmounts[$digit->id] = $defaultLimitAmount - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
@@ -117,7 +117,7 @@ class PlayController extends Controller
         $remainingAmounts = [];
         foreach ($twoDigits as $digit) {
             $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
-                ->where('twod_game_result_id', $digit->id)
+                ->where('two_digit_id', $digit->id)
                 ->sum('sub_amount');
             $defaultLimitAmount = TwoDLimit::latest()->first()->two_d_limit;
             $remainingAmounts[$digit->id] = $defaultLimitAmount - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
@@ -276,7 +276,7 @@ class PlayController extends Controller
             throw new \Exception("Invalid bet digit: {$betDigit}");
         }
 
-        $totalBetAmount = DB::table('lottery_two_digit_pivot')->where('twod_game_result_id', $twoDigit->id)->sum('sub_amount');
+        $totalBetAmount = DB::table('lottery_two_digit_pivot')->where('two_digit_id', $twoDigit->id)->sum('sub_amount');
 
         if ($totalBetAmount + $subAmount > $limitAmount) {
             throw new \Exception('သတ်မှတ်ဘရိတ်ကျော်လွန်နေသောကြောင့် ကံစမ်း၍မနိုင်တော့ပါ။ ကျေးဇူးတင်ပါတယ်!');

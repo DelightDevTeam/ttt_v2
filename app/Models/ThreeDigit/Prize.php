@@ -20,7 +20,7 @@ class Prize extends Model
     {
         static::created(function ($prize) {
             WinnerPrizeCheck::dispatch($prize);
-            WinnerPrizeCheckUpdate::dispatch($prize);
+            //WinnerPrizeCheckUpdate::dispatch($prize);
         });
     }
 }

@@ -36,7 +36,7 @@ class MorningLotteryService
         $currentSession = $this->getCurrentSession(); // Get the current session
         $userId = Auth::id(); // Get the authenticated user's ID
 
-        Log::info("Retrieving data for user ID: $userId, for the current session");
+        //Log::info("Retrieving data for user ID: $userId, for the current session");
 
         // Fetch lottery IDs for the authenticated user within the current session
         $lotteryIds = DB::table('lottery_two_digit_pivot')
@@ -68,7 +68,9 @@ class MorningLotteryService
                 'lottery_two_digit_pivot.prize_sent',
                 'lottery_two_digit_pivot.match_status'
             )
-            ->whereIn('lottery_two_digit_pivot.lottery_id', $lotteryIds) // Filter by the user's lottery IDs
+            ->where('lottery_two_digit_pivot.res_date', $today) 
+            ->whereIn('lottery_two_digit_pivot.lottery_id', $lotteryIds) 
+            ->orderBy('res_date', 'desc')
             ->get();
 
         // Calculate the total sub_amount for this session and user

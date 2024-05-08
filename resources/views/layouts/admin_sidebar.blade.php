@@ -349,7 +349,7 @@
           @endcan --}}
           @can('user_access')
           <li class="nav-item ">
-            <a class="nav-link text-white " href="{{ route('admin.winnerHistoryForAdmin') }}">
+            <a class="nav-link text-white " href="{{ url('admin/evening-two-d-win-history') }}">
               <span class="sidenav-mini-icon"> 2D </span>
               <span class="sidenav-normal  ms-2  ps-1">(4:30) ပေါက်သူများ </span>
             </a>

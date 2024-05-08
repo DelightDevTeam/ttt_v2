@@ -30,7 +30,7 @@ class CheckForThreeDWinners implements ShouldQueue
 
     public function handle()
     {
-        Log::info('CheckFor3DWinners job started');
+        //Log::info('CheckFor3DWinners job started');
 
         $today = Carbon::today();
 
@@ -101,6 +101,6 @@ class CheckForThreeDWinners implements ShouldQueue
             });
         }
 
-        Log::info('CheckFor3DWinners job completed.');
+        //Log::info('CheckFor3DWinners job completed.');
     }
 }

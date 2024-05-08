@@ -32,12 +32,12 @@ class AdminEveningPrizeSentService
     public function EveningPrizeForAdmin()
     {
         $today = Carbon::today()->toDateString();
-        $currentSession = $this->getCurrentSession();
+        // $currentSession = $this->getCurrentSession();
 
-        // If session is closed, return an empty collection
-        if ($currentSession === 'closed') {
-            return ['results' => collect([]), 'totalPrizeAmount' => 0];
-        }
+        // // If session is closed, return an empty collection
+        // if ($currentSession === 'closed') {
+        //     return ['results' => collect([]), 'totalPrizeAmount' => 0];
+        // }
 
         try {
             $results = DB::table('lottery_two_digit_pivot')
@@ -54,7 +54,7 @@ class AdminEveningPrizeSentService
                 )
                 ->where('lottery_two_digit_pivot.prize_sent', true)
                 ->where('lottery_two_digit_pivot.res_date', $today)
-                ->where('lottery_two_digit_pivot.session', $currentSession)
+                ->where('lottery_two_digit_pivot.session', 'evening')
                 ->get();
 
             // Calculate total prize amount

@@ -44,7 +44,7 @@ class EveningLotteryService
         // Retrieve lottery IDs for the authenticated user in the current session
         $lotteryIds = DB::table('lottery_two_digit_pivot')
             ->where('user_id', $userId)
-            ->where('session', $currentSession)
+            ->where('session', 'evening')
             ->pluck('lottery_id');
 
         if ($lotteryIds->isEmpty()) {
@@ -78,7 +78,7 @@ class EveningLotteryService
         // Calculate the total sub_amount for this session and user
         $totalSubAmount = DB::table('lottery_two_digit_pivot')
             ->whereIn('lottery_two_digit_pivot.lottery_id', $lotteryIds)
-            ->where('session', $currentSession)
+            ->where('session', 'evening')
             ->sum('sub_amount');
 
         return [

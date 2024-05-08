@@ -33,7 +33,7 @@ class MorningLotteryService
     public function MorningHistory()
     {
         $today = Carbon::today()->toDateString(); // Get today's date
-        $currentSession = $this->getCurrentSession(); // Get the current session
+        //$currentSession = $this->getCurrentSession(); // Get the current session
         $userId = Auth::id(); // Get the authenticated user's ID
 
         //Log::info("Retrieving data for user ID: $userId, for the current session");
@@ -41,7 +41,7 @@ class MorningLotteryService
         // Fetch lottery IDs for the authenticated user within the current session
         $lotteryIds = DB::table('lottery_two_digit_pivot')
             ->where('user_id', $userId) // Filter by the authenticated user's ID
-            ->where('session', $currentSession) // Filter by session
+            ->where('session', 'morning') // Filter by session
             //->where('user_log', 'open') // Ensure user log is open
             ->pluck('lottery_id'); // Get unique lottery IDs
 
@@ -77,7 +77,7 @@ class MorningLotteryService
         $totalSubAmount = DB::table('lottery_two_digit_pivot')
             ->whereIn('lottery_two_digit_pivot.lottery_id', $lotteryIds) // Filter by the user's lottery IDs
             //->where('user_log', 'open') // Ensure user log is open
-            ->where('session', $currentSession) // Filter by session
+            ->where('session', 'morning') // Filter by session
 
             ->sum('sub_amount');
 

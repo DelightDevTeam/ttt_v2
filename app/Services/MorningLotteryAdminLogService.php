@@ -16,7 +16,7 @@ class MorningLotteryAdminLogService
     {
         $currentTime = Carbon::now()->format('H:i:s');
 
-        if ($currentTime >= '04:00:00' && $currentTime <= '12:01:00') {
+        if ($currentTime >= '04:00:00' && $currentTime <= '13:01:00') {
             return 'morning'; // Morning session
         } else {
             return 'closed'; // Default to closed if outside known session times
@@ -34,7 +34,7 @@ class MorningLotteryAdminLogService
         $today = Carbon::today()->toDateString(); // Format 'YYYY-MM-DD'
 
         // Determine the current session
-        $currentSession = $this->getCurrentSession();
+        //$currentSession = $this->getCurrentSession();
 
         // Query to retrieve the required data
         $results = DB::table('lottery_two_digit_pivot')
@@ -53,14 +53,14 @@ class MorningLotteryAdminLogService
             )
             //->where('lottery_two_digit_pivot.admin_log', 'open') // Admin log is open
             ->where('lottery_two_digit_pivot.res_date', $today) // Today's results
-            ->where('lottery_two_digit_pivot.session', $currentSession) // Current session
+            ->where('lottery_two_digit_pivot.session', 'morning') // Current session
             ->get();
 
         // Calculate the total sub_amount for today's open admin log and current session
         $totalSubAmount = DB::table('lottery_two_digit_pivot')
             ->where('admin_log', 'open') // Admin log is open
             ->where('res_date', $today) // Today's results
-            ->where('session', $currentSession) // Current session
+            ->where('session', 'morning') // Current session
             ->sum('sub_amount');
 
         return [

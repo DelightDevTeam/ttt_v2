@@ -58,7 +58,7 @@ class MorningLotteryAdminLogService
 
         // Calculate the total sub_amount for today's open admin log and current session
         $totalSubAmount = DB::table('lottery_two_digit_pivot')
-            ->where('admin_log', 'open') // Admin log is open
+            //->where('admin_log', 'open') // Admin log is open
             ->where('res_date', $today) // Today's results
             ->where('session', 'morning') // Current session
             ->sum('sub_amount');

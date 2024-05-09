@@ -31,6 +31,7 @@ class PlayController extends Controller
     public function index()
     {
         $twoDigits = TwoDigit::all();
+        $limits = TwoDLimit::latest()->first()->two_d_limit;
 
         // Calculate remaining amounts for each two-digit
         $remainingAmounts = [];
@@ -46,9 +47,9 @@ class PlayController extends Controller
         $currentTime = Carbon::now()->format('H:i:s');
 
         if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
-            return view('two_d.12_pm.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+            return view('two_d.12_pm.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches', 'limits'));
         } elseif ($currentTime >= '12:01:00' && $currentTime <= '15:45:00') {
-            return view('two_d.4_pm.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+            return view('two_d.4_pm.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches', 'limits'));
         } else {
             return 'closed'; // If outside known session times
         }
@@ -58,6 +59,7 @@ class PlayController extends Controller
     public function Quickindex()
     {
         $twoDigits = TwoDigit::all();
+        $limits = TwoDLimit::latest()->first()->two_d_limit;
 
         // Calculate remaining amounts for each two-digit
         $remainingAmounts = [];
@@ -73,9 +75,9 @@ class PlayController extends Controller
         $currentTime = Carbon::now()->format('H:i:s');
 
         if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
-            return view('two_d.quick.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+            return view('two_d.quick.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches', 'limits'));
         } elseif ($currentTime >= '12:01:00' && $currentTime <= '15:45:00') {
-            return view('two_d.quick.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+            return view('two_d.quick.index', compact('twoDigits', 'remainingAmounts', 'lottery_matches', 'limits'));
         } else {
             return 'closed'; // If outside known session times
         }
@@ -85,6 +87,7 @@ class PlayController extends Controller
     public function play_confirm()
     {
         $twoDigits = TwoDigit::all();
+        $limits = TwoDLimit::latest()->first()->two_d_limit;
 
         // Calculate remaining amounts for each two-digit
         $remainingAmounts = [];
@@ -100,9 +103,9 @@ class PlayController extends Controller
         $currentTime = Carbon::now()->format('H:i:s');
 
         if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
-            return view('two_d.12_pm.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+            return view('two_d.12_pm.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches', 'limits'));
         } elseif ($currentTime >= '12:01:00' && $currentTime <= '15:45:00') {
-            return view('two_d.4_pm.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+            return view('two_d.4_pm.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches', 'limits'));
         } else {
             return 'closed'; // If outside known session times
         }
@@ -112,6 +115,7 @@ class PlayController extends Controller
     public function quick_play_confirm()
     {
         $twoDigits = TwoDigit::all();
+        $limits = TwoDLimit::latest()->first()->two_d_limit;
 
         // Calculate remaining amounts for each two-digit
         $remainingAmounts = [];
@@ -127,9 +131,9 @@ class PlayController extends Controller
         $currentTime = Carbon::now()->format('H:i:s');
 
         if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
-            return view('two_d.quick.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+            return view('two_d.quick.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches', 'limits'));
         } elseif ($currentTime >= '12:01:00' && $currentTime <= '15:45:00') {
-            return view('two_d.quick.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches'));
+            return view('two_d.quick.play_confirm', compact('twoDigits', 'remainingAmounts', 'lottery_matches', 'limits'));
         } else {
             return 'closed'; // If outside known session times
         }

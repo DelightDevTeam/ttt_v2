@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\LotteryOverLimitCopy;
-use App\Models\LotteryTwoDigitCopy;
-use Illuminate\Http\Request;
+use App\Models\TwoD\LotteryTwoDigitCopy;
 
 class SessionResetControlller extends Controller
 {
@@ -23,11 +23,5 @@ class SessionResetControlller extends Controller
         return redirect()->back()->with('message', 'Data reset successfully!');
     }
 
-    public function OverAmountLimitSessionReset()
-    {
-        LotteryOverLimitCopy::truncate();
-        session()->flash('SuccessRequest', 'Successfully 2D Over Amount Limit Reset.');
-
-        return redirect()->back()->with('message', 'Data reset successfully!');
-    }
+    
 }

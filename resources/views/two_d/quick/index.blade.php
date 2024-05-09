@@ -91,13 +91,13 @@
           @foreach ($twoDigits as $digit)
           <div class="column">
 
-                        @php
-            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_pivot')
+            @php
+            $totalBetAmountForTwoDigit = DB::table('lottery_two_digit_copy')
             ->where('twod_game_result_id', $digit->id)
             ->sum('sub_amount');
             @endphp
 
-            @if ($totalBetAmountForTwoDigit < 50000) 
+            @if ($totalBetAmountForTwoDigit < $limits) 
             <div class="text-center digit digit-button" style="background-color: javascript:getRandomColor();" data-digit="{{ $digit->two_digit }}" onclick="selectDigit('{{ $digit->two_digit }}', this)">
              <p style="font-size: 20px">
                {{ $digit->two_digit }}
@@ -105,7 +105,7 @@
               {{-- <small class="d-none" style="font-size: 10px">{{ $remainingAmounts[$digit->id] }}</small> --}}
               <div class="progress">
                 @php
-                $totalAmount = 50000;
+                $totalAmount = $limits;
                 $betAmount = $totalBetAmountForTwoDigit; // the amount already bet
                 $remainAmount = $totalAmount - $betAmount; // the amount remaining that can be bet
                 $percentage = ($betAmount / $totalAmount) * 100;

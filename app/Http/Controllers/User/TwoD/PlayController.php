@@ -280,7 +280,7 @@ class PlayController extends Controller
             throw new \Exception("Invalid bet digit: {$betDigit}");
         }
 
-        $totalBetAmount = DB::table('lottery_two_digit_pivot')->where('two_digit_id', $twoDigit->id)->sum('sub_amount');
+        $totalBetAmount = DB::table('lottery_two_digit_copy')->where('two_digit_id', $twoDigit->id)->sum('sub_amount');
 
         if ($totalBetAmount + $subAmount > $limitAmount) {
             throw new \Exception('သတ်မှတ်ဘရိတ်ကျော်လွန်နေသောကြောင့် ကံစမ်း၍မနိုင်တော့ပါ။ ကျေးဇူးတင်ပါတယ်!');

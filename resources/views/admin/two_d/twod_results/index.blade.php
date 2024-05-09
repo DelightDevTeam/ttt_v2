@@ -1,5 +1,6 @@
 @extends('layouts.admin_app')
 @section('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
 .transparent-btn {
  background: none;
@@ -164,6 +165,8 @@
 @section('scripts')
 <script src="{{ asset('admin_app/assets/js/plugins/datatables.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 $(document).ready(function() {
     // Include CSRF token in AJAX headers
@@ -177,20 +180,88 @@ $(document).ready(function() {
         const resultId = $(this).data('id'); // The ID of the result
         const newStatus = $(this).data('status'); // The new status to set
 
-        $.ajax({
-            url: '/admin/two-2-results/' + resultId + '/status', // Your route
-            method: 'PATCH',
-            data: {
-                status: newStatus,
-            },
-            success: function(response) {
-                alert(response.message);
-                // Optional: Update the status on the page
-                $('#status-' + resultId).text(newStatus);
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-                alert('Failed to update status.');
+        // Ask for confirmation before changing the status
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to change the status?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, change it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/admin/two-2-results/' + resultId + '/status', // Your route
+                    method: 'PATCH',
+                    data: {
+                        status: newStatus,
+                    },
+                    success: function(response) {
+                        // Display success message with SweetAlert
+                        Swal.fire('Updated!', response.message, 'success');
+                        // Optional: Update the status on the page
+                        $('#status-' + resultId).text(newStatus);
+                        // Auto-reload the page after a brief delay
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500); // 1500 milliseconds = 1.5 seconds
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        Swal.fire('Error', 'Failed to update status.', 'error');
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+    // Include CSRF token in AJAX headers
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('.toggle-status-evening').on('click', function() {
+        const resultId = $(this).data('id'); // The ID of the result
+        const newStatus = $(this).data('status'); // The new status to set
+
+        // Ask for confirmation before changing the status
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to change the status?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, change it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/admin/two-2-results/' + resultId + '/status', // Your route
+                    method: 'PATCH',
+                    data: {
+                        status: newStatus,
+                    },
+                    success: function(response) {
+                        // Display success message with SweetAlert
+                        Swal.fire('Updated!', response.message, 'success');
+                        // Optional: Update the status on the page
+                        $('#status-' + resultId).text(newStatus);
+                        // Auto-reload the page after a brief delay
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500); // 1500 milliseconds = 1.5 seconds
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        Swal.fire('Error', 'Failed to update status.', 'error');
+                    }
+                });
             }
         });
     });

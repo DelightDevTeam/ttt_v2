@@ -1,5 +1,7 @@
 @extends('layouts.admin_app')
 @section('styles')
+ {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"> --}}
+
 <style>
 .transparent-btn {
  background: none;
@@ -11,6 +13,11 @@
  appearance: none;
  /* For some browsers */
 }
+/* Bootstrap modals have a high z-index by default */
+.modal {
+  z-index: 1050; /* Default for Bootstrap 5 modals */
+}
+
 </style>
 @endsection
 @section('content')
@@ -20,7 +27,7 @@
             <div class="card">
                 <div class="card-header">
                     <p class="text-center">
-                        Evening Session - 4:30 PM
+                        2D More Setting
                     </p>
                 </div>
             </div>
@@ -37,6 +44,9 @@
         </tr>
     </thead>
     <tbody>
+        @php 
+        $status = '';
+        @endphp
         @foreach ($results as $result)
             <tr>
                 <td>{{ $result->result_date }}</td>
@@ -45,14 +55,46 @@
                 <td>{{ ucfirst($result->session) }}</td>
                 <td>{{ ucfirst($result->status) }}</td>
                 <td>
-                <button class="toggle-status"
+                {{-- <button class="toggle-status"
                         data-id="{{ $result->id }}"
                         data-status="{{ $result->status === 'open' ? 'closed' : 'open' }}">
                     Open/Close
-                </button>
+                </button> --}}
+
+                <form action="{{ route('admin.twodStatusOpenCloseEvening', ['id' => $result->id]) }}" method="post">
+                @csrf
+                @method('PATCH')
+                
+                <!-- Switch for toggling status -->
+                <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="statusSwitchEvening-{{ $result->id }}"
+            name="status" value="{{ $result->status == 'open' ? 'closed' : 'open' }}"
+            {{ $result->status == 'open' ? 'checked' : '' }}>
+
+             <input class="form-check-input" type="checkbox" id="statusSwitchEvening-{{ $result->id }}"
+            name="status" value="{{ $result->status == 'closed' ? 'open' : 'closed' }}"
+            {{ $result->status == 'closed' ? 'checked' : '' }}>
+
+        <label class="form-check-label" for="statusSwitchEvening-{{ $result->id }}">
+            {{ $result->status == 'open' ? 'Open' : 'Closed' }}
+        </label>
+    </div>
+
+    <div class="form-check form-switch">
+             <input type="hidden" class="form-check-input" type="checkbox" id="statusSwitchEvening-{{ $result->id }}"
+            name="status" value="{{ $result->status == 'closed' ? 'open' : 'closed' }}"
+            {{ $result->status == 'closed' ? 'checked' : '' }}>
+    </div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary mt-2" onclick="confirmStatusUpdateEvening()">{{ $result->status == 'open' ? 'closed' : 'open' }}"
+                        {{ $result->status == 'open' ? 'checked' : '' }}</button>
+            </form>
                 
             </td>
             </tr>
+            @php 
+            $status = $result->id;
+            @endphp
         @endforeach
     </tbody>
 </table>
@@ -63,10 +105,55 @@
 @endsection
 @section('scripts')
 <script src="{{ asset('admin_app/assets/js/plugins/datatables.js') }}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
 
 <script>
+    function confirmStatusUpdateEvening() {
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to change the status. Proceed?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            // If confirmed, submit the form
+            if (result.isConfirmed) {
+                // Set the value of 'status' to 'closed' if the checkbox is unchecked
+                document.getElementById('statusSwitchEvening-{{ $status }}').value = 
+                    document.getElementById('statusSwitchEvening-{{ $status }}').checked ? 'open' : 'closed';
+                document.getElementById('statusFormEvening').submit();
+            }
+        });
+    }
+
+    // Function to show success Sweet Alert after form submission
+    function showSuccessAlert() {
+        Swal.fire({
+            title: 'Success!',
+            text: 'Status updated successfully.',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    }
+
+     // Call the showSuccessAlert function when the page loads
+    window.onload = function() {
+        // Check if the success message is present in the session
+        let successMessage = "{{ session('SuccessRequestEvening') }}";
+        if (successMessage) {
+            showSuccessAlert();
+        }
+    };
+        
+</script>
+
+{{-- <script>
 $(document).ready(function() {
     // Include CSRF token in AJAX headers
     $.ajaxSetup({
@@ -114,10 +201,9 @@ $(document).ready(function() {
         });
     });
 });
-</script>
+</script> --}}
 
-
-<script>
+{{-- <script>
 $(document).ready(function() {
     // Include CSRF token in AJAX headers
     $.ajaxSetup({
@@ -165,7 +251,7 @@ $(document).ready(function() {
         });
     });
 });
-</script>
+</script> --}}
 
 
 

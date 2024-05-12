@@ -1,35 +1,36 @@
 <?php
 
-use App\Http\Controllers\Admin\BankController;
-use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\BannerTextController;
-use App\Http\Controllers\Admin\CommissionController;
-use App\Http\Controllers\Admin\FillBalanceController;
-use App\Http\Controllers\Admin\FillBalanceReplyController;
-use App\Http\Controllers\Admin\GameController;
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Admin\ThreeD\ThreeDCloseController;
-use App\Http\Controllers\Admin\ThreeD\ThreeDLegarController;
-use App\Http\Controllers\Admin\ThreeD\ThreeDOpenCloseController;
-use App\Http\Controllers\Admin\ThreeDLimitController;
-use App\Http\Controllers\Admin\TwoD\CloseTwoDigitController;
-use App\Http\Controllers\Admin\TwoD\DataLejarController;
-use App\Http\Controllers\Admin\TwoD\HeadDigitCloseController;
-use App\Http\Controllers\Admin\TwoD\NetComeIncomeController;
-use App\Http\Controllers\Admin\TwoD\TwoDLagarController;
-use App\Http\Controllers\Admin\TwoDLimitController;
-use App\Http\Controllers\Admin\TwoDLotteryController;
-use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\Home\CashInRequestController;
-use App\Http\Controllers\Home\CashOutRequestController;
-use App\Http\Controllers\Home\TransferLogController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\User\Threed\ThreeDPlayController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\Admin\BankController;
+use App\Http\Controllers\Admin\GameController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\TwoDLimitController;
+use App\Http\Controllers\Admin\BannerTextController;
+use App\Http\Controllers\Admin\CommissionController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Home\TransferLogController;
+use App\Http\Controllers\Admin\FillBalanceController;
+use App\Http\Controllers\Admin\ThreeDLimitController;
+use App\Http\Controllers\Admin\TwoDLotteryController;
+use App\Http\Controllers\Home\CashInRequestController;
+use App\Http\Controllers\Home\CashOutRequestController;
+use App\Http\Controllers\Admin\TwoD\DataLejarController;
+use App\Http\Controllers\Admin\TwoD\TwoDLagarController;
+use App\Http\Controllers\Admin\FillBalanceReplyController;
+use App\Http\Controllers\User\Threed\ThreeDPlayController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDCloseController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDLegarController;
+use App\Http\Controllers\Admin\TwoD\CloseTwoDigitController;
+use App\Http\Controllers\Admin\TwoD\NetComeIncomeController;
+use App\Http\Controllers\Admin\TwoD\TwoGameResultController;
+use App\Http\Controllers\Admin\TwoD\HeadDigitCloseController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDOpenCloseController;
 
 Auth::routes();
 
@@ -200,7 +201,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
      Route::get('two-d-more-setting', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'getCurrentMonthResults']);
 
     Route::patch('/two-2-results/{id}/status', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'updateStatus'])
-        ->name('twoDResults.ResultupdateStatus');
+        ->name('twodStatusOpenClose');
+    Route::patch('/two-2-status/{id}/evening', [TwoGameResultController::class, 'updateStatusEvening'])->name('twodStatusOpenCloseEvening');
+
     Route::patch('/two-d-results/{id}/status', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'updateResultNumber'])
         ->name('update_result_number');
 

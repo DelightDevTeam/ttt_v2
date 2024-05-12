@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 @section('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+ 
 <style>
 .transparent-btn {
  background: none;
@@ -63,28 +63,55 @@
         </tr>
     </thead>
     <tbody>
-        @if ($morningResult)
+        @if ($morningSession)
         <tr>
             <td class="text-sm font-weight-normal">1</td>
-            <td class="text-sm font-weight-normal">{{ $morningResult->result_date }}</td>
-            <td class="text-sm font-weight-normal">{{ $morningResult->result_time }}</td>
-            <td class="text-sm font-weight-normal">{{ $morningResult->result_number ?? 'Pending' }}</td>
+            <td class="text-sm font-weight-normal">{{ $morningSession->result_date }}</td>
+            <td class="text-sm font-weight-normal">{{ $morningSession->result_time }}</td>
+            <td class="text-sm font-weight-normal">{{ $morningSession->result_number ?? 'Pending' }}</td>
             <td>
-                <form method="POST" action="{{ route('admin.update_result_number', ['id' => $morningResult->id]) }}">
+                <form method="POST" action="{{ route('admin.update_result_number', ['id' => $morningSession->id]) }}">
                     @csrf
                     @method('PATCH')
                     <input type="text" name="result_number" placeholder="Enter result number" required class="form-control">
                     <button type="submit" class="btn btn-primary">Create Prize Number</button>
                 </form>
             </td>
-            <td class="text-sm font-weight-normal">{{ ucfirst($morningResult->status) }}</td>
-            <td class="text-sm font-weight-normal">{{ ucfirst($morningResult->session) }}</td>
+            <td class="text-sm font-weight-normal">{{ ucfirst($morningSession->status) }}</td>
+            <td class="text-sm font-weight-normal">{{ ucfirst($morningSession->session) }}</td>
             <td>
-                <button class="toggle-status"
-                        data-id="{{ $morningResult->id }}"
-                        data-status="{{ $morningResult->status === 'open' ? 'closed' : 'open' }}">
-                    Open/Close
-                </button>
+                
+            <form id="statusForm" action="{{ route('admin.twodStatusOpenClose', ['id' => $morningSession->id]) }}" method="post">
+            @csrf
+            @method('PATCH')
+
+            <!-- Switch for toggling status -->
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="statusSwitch-{{ $morningSession->id }}"
+                    name="status" value="{{ $morningSession->status == 'open' ? 'closed' : 'open' }}"
+                    {{ $morningSession->status == 'open' ? 'checked' : '' }}>
+
+                    <input class="form-check-input" type="checkbox" id="statusSwitch-{{ $morningSession->id }}"
+                    name="status" value="{{ $morningSession->status == 'closed' ? 'open' : 'closed' }}"
+                    {{ $morningSession->status == 'closed' ? 'checked' : '' }}>
+
+                <label class="form-check-label" for="statusSwitch-{{ $morningSession->id }}">
+                    {{ $morningSession->status == 'open' ? 'Open' : 'Closed' }}
+                </label>
+            </div>
+
+            <div class="form-check form-switch">
+                    <input type="hidden" class="form-check-input" type="checkbox" id="statusSwitch-{{ $morningSession->id }}"
+                    name="status" value="{{ $morningSession->status == 'closed' ? 'open' : 'closed' }}"
+                    {{ $morningSession->status == 'closed' ? 'checked' : '' }}>
+            </div>
+
+
+            <!-- Submit button -->
+             <button type="button" class="btn btn-primary mt-2" onclick="confirmStatusUpdate()">
+        {{ $morningSession->status == 'open' ? 'Close' : 'Open' }}
+    </button>
+        </form>
                 
             </td>
         </tr>
@@ -125,30 +152,54 @@
         </tr>
     </thead>
     <tbody>
-        @if ($eveningResult)
+        @if ($eveningSession)
         <tr>
             <td class="text-sm font-weight-normal">1</td>
-            <td class="text-sm font-weight-normal">{{ $eveningResult->result_date }}</td>
-            <td class="text-sm font-weight-normal">{{ $eveningResult->result_time }}</td>
-            <td class="text-sm font-weight-normal">{{ $eveningResult->result_number ?? 'Pending' }}</td>
+            <td class="text-sm font-weight-normal">{{ $eveningSession->result_date }}</td>
+            <td class="text-sm font-weight-normal">{{ $eveningSession->result_time }}</td>
+            <td class="text-sm font-weight-normal">{{ $eveningSession->result_number ?? 'Pending' }}</td>
             <td>
-                <form method="POST" action="{{ route('admin.update_result_number', ['id' => $eveningResult->id]) }}">
+                <form id="statusFormEvening" method="POST" action="{{ route('admin.update_result_number', ['id' => $eveningSession->id]) }}">
                     @csrf
                     @method('PATCH')
                     <input type="text" name="result_number" placeholder="Enter result number" required class="form-control">
                     <button type="submit" class="btn btn-primary">Create Prize Number</button>
                 </form>
             </td>
-            <td class="text-sm font-weight-normal">{{ ucfirst($eveningResult->status) }}</td>
-            <td class="text-sm font-weight-normal">{{ ucfirst($eveningResult->session) }}</td>
+            <td class="text-sm font-weight-normal">{{ ucfirst($eveningSession->status) }}</td>
+            <td class="text-sm font-weight-normal">{{ ucfirst($eveningSession->session) }}</td>
             <td>
-                <!-- Toggle button to update status -->
-                <button class="toggle-status-evening"
-                        data-id="{{ $eveningResult->id }}"
-                        data-status="{{ $eveningResult->status === 'open' ? 'closed' : 'open' }}">
-                    Open/Close
-                </button>
+              
+                <form action="{{ route('admin.twodStatusOpenCloseEvening', ['id' => $eveningSession->id]) }}" method="post">
+                @csrf
+                @method('PATCH')
+                
+                <!-- Switch for toggling status -->
+                <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="statusSwitchEvening-{{ $eveningSession->id }}"
+            name="status" value="{{ $eveningSession->status == 'open' ? 'closed' : 'open' }}"
+            {{ $eveningSession->status == 'open' ? 'checked' : '' }}>
+
+             <input class="form-check-input" type="checkbox" id="statusSwitchEvening-{{ $eveningSession->id }}"
+            name="status" value="{{ $eveningSession->status == 'closed' ? 'open' : 'closed' }}"
+            {{ $eveningSession->status == 'closed' ? 'checked' : '' }}>
+
+        <label class="form-check-label" for="statusSwitchEvening-{{ $eveningSession->id }}">
+            {{ $eveningSession->status == 'open' ? 'Open' : 'Closed' }}
+        </label>
+    </div>
+
+    <div class="form-check form-switch">
+             <input type="hidden" class="form-check-input" type="checkbox" id="statusSwitchEvening-{{ $eveningSession->id }}"
+            name="status" value="{{ $eveningSession->status == 'closed' ? 'open' : 'closed' }}"
+            {{ $eveningSession->status == 'closed' ? 'checked' : '' }}>
+    </div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary mt-2" onclick="confirmStatusUpdateEvening()">{{ $eveningSession->status == 'open' ? 'closed' : 'open' }}"
+                        {{ $eveningSession->status == 'open' ? 'checked' : '' }}</button>
+            </form>
             </td>
+
         </tr>
         @else
         <tr>
@@ -164,145 +215,95 @@
 @endsection
 @section('scripts')
 <script src="{{ asset('admin_app/assets/js/plugins/datatables.js') }}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-$(document).ready(function() {
-    // Include CSRF token in AJAX headers
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    $('.toggle-status').on('click', function() {
-        const resultId = $(this).data('id'); // The ID of the result
-        const newStatus = $(this).data('status'); // The new status to set
-
-        // Ask for confirmation before changing the status
+    <script>
+    function confirmStatusUpdate() {
+        // Show SweetAlert confirmation dialog
         Swal.fire({
             title: 'Are you sure?',
-            text: 'Do you really want to change the status?',
+            text: "You are about to change the status. Proceed?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, change it!',
-            cancelButtonText: 'No, keep it'
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed!',
+            cancelButtonText: 'Cancel'
         }).then((result) => {
+            // If confirmed, submit the form
             if (result.isConfirmed) {
-                $.ajax({
-                    url: '/admin/two-2-results/' + resultId + '/status', // Your route
-                    method: 'PATCH',
-                    data: {
-                        status: newStatus,
-                    },
-                    success: function(response) {
-                        // Display success message with SweetAlert
-                        Swal.fire('Updated!', response.message, 'success');
-                        // Optional: Update the status on the page
-                        $('#status-' + resultId).text(newStatus);
-                        // Auto-reload the page after a brief delay
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1500); // 1500 milliseconds = 1.5 seconds
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                        Swal.fire('Error', 'Failed to update status.', 'error');
-                    }
-                });
+                // Set the value of 'status' to 'closed' if the checkbox is unchecked
+                document.getElementById('statusSwitch-{{ $morningSession->id }}').value = 
+                    document.getElementById('statusSwitch-{{ $morningSession->id }}').checked ? 'open' : 'closed';
+                document.getElementById('statusForm').submit();
             }
         });
-    });
-});
+    }
+
+    // Function to show success Sweet Alert after form submission
+    function showSuccessAlert() {
+        Swal.fire({
+            title: 'Success!',
+            text: 'Status updated successfully.',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    }
+
+     // Call the showSuccessAlert function when the page loads
+    window.onload = function() {
+        // Check if the success message is present in the session
+        let successMessage = "{{ session('SuccessRequest') }}";
+        if (successMessage) {
+            showSuccessAlert();
+        }
+    };
+        
 </script>
 
-
-<script>
-$(document).ready(function() {
-    // Include CSRF token in AJAX headers
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    $('.toggle-status-evening').on('click', function() {
-        const resultId = $(this).data('id'); // The ID of the result
-        const newStatus = $(this).data('status'); // The new status to set
-
-        // Ask for confirmation before changing the status
+ <script>
+    function confirmStatusUpdateEvening() {
+        // Show SweetAlert confirmation dialog
         Swal.fire({
             title: 'Are you sure?',
-            text: 'Do you really want to change the status?',
+            text: "You are about to change the status. Proceed?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, change it!',
-            cancelButtonText: 'No, keep it'
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed!',
+            cancelButtonText: 'Cancel'
         }).then((result) => {
+            // If confirmed, submit the form
             if (result.isConfirmed) {
-                $.ajax({
-                    url: '/admin/two-2-results/' + resultId + '/status', // Your route
-                    method: 'PATCH',
-                    data: {
-                        status: newStatus,
-                    },
-                    success: function(response) {
-                        // Display success message with SweetAlert
-                        Swal.fire('Updated!', response.message, 'success');
-                        // Optional: Update the status on the page
-                        $('#status-' + resultId).text(newStatus);
-                        // Auto-reload the page after a brief delay
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1500); // 1500 milliseconds = 1.5 seconds
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                        Swal.fire('Error', 'Failed to update status.', 'error');
-                    }
-                });
+                // Set the value of 'status' to 'closed' if the checkbox is unchecked
+                document.getElementById('statusSwitchEvening-{{ $eveningSession->id }}').value = 
+                    document.getElementById('statusSwitchEvening-{{ $eveningSession->id }}').checked ? 'open' : 'closed';
+                document.getElementById('statusFormEvening').submit();
             }
         });
-    });
-});
-</script>
+    }
 
+    // Function to show success Sweet Alert after form submission
+    function showSuccessAlert() {
+        Swal.fire({
+            title: 'Success!',
+            text: 'Status updated successfully.',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    }
 
-<script>
-$(document).ready(function() {
-    // Include CSRF token in AJAX headers
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+     // Call the showSuccessAlert function when the page loads
+    window.onload = function() {
+        // Check if the success message is present in the session
+        let successMessage = "{{ session('SuccessRequestEvening') }}";
+        if (successMessage) {
+            showSuccessAlert();
         }
-    });
-
-    $('.toggle-status-evening').on('click', function() {
-        const resultId = $(this).data('id'); // The ID of the result
-        const newStatus = $(this).data('status'); // The new status to set
-
-        $.ajax({
-            url: '/admin/two-2-results/' + resultId + '/status', // Your route
-            method: 'PATCH',
-            data: {
-                status: newStatus,
-            },
-            success: function(response) {
-                alert(response.message);
-                // Optional: Update the status on the page
-                $('#status-' + resultId).text(newStatus);
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-                alert('Failed to update status.');
-            }
-        });
-    });
-});
+    };
+        
 </script>
-
-
 
 <script>
 if (document.getElementById('permission-search')) {

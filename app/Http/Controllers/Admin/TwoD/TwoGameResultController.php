@@ -25,28 +25,50 @@ class TwoGameResultController extends Controller
     /**
      * Display the current session's data for the day.
      */
+    // public function index()
+    // {
+    //     // Get today's date
+    //     $today = Carbon::now()->format('Y-m-d');
+
+    //     // Retrieve the latest result for today's morning session
+    //     $morningResult = TwodGameResult::where('result_date', $today)
+    //         ->where('session', 'morning') // Check for morning session
+    //         //->orderBy('created_at', 'desc') // Get the latest record by creation time
+    //         ->first();
+
+    //     // Retrieve the latest result for today's evening session
+    //     $eveningResult = TwodGameResult::where('result_date', $today)
+    //         ->where('session', 'evening') // Check for evening session
+    //         //->orderBy('created_at', 'desc') // Get the latest record by creation time
+    //         ->first();
+
+    //     return view('admin.two_d.twod_results.index', [
+    //         'morningResult' => $morningResult,
+    //         'eveningResult' => $eveningResult,
+    //     ]);
+    // }
+
     public function index()
     {
         // Get today's date
         $today = Carbon::now()->format('Y-m-d');
 
         // Retrieve the latest result for today's morning session
-        $morningResult = TwodGameResult::where('result_date', $today)
-            ->where('session', 'morning') // Check for morning session
-            //->orderBy('created_at', 'desc') // Get the latest record by creation time
+        $morningSession = TwodGameResult::where('result_date', $today)
+            ->where('session', 'morning')
             ->first();
 
         // Retrieve the latest result for today's evening session
-        $eveningResult = TwodGameResult::where('result_date', $today)
-            ->where('session', 'evening') // Check for evening session
-            //->orderBy('created_at', 'desc') // Get the latest record by creation time
+        $eveningSession = TwodGameResult::where('result_date', $today)
+            ->where('session', 'evening')
             ->first();
 
         return view('admin.two_d.twod_results.index', [
-            'morningResult' => $morningResult,
-            'eveningResult' => $eveningResult,
+            'morningSession' => $morningSession,
+            'eveningSession' => $eveningSession,
         ]);
     }
+
 
      public function getCurrentMonthResults()
     {
@@ -63,23 +85,58 @@ class TwoGameResultController extends Controller
         return view('admin.two_d.twod_results.current_month_index', ['results' => $results]);
     }
 
+    // public function updateStatus(Request $request, $id)
+    // {
+    //     $status = $request->input('status'); // The new status
+
+    //     // Find the result by ID
+    //     $result = TwodGameResult::findOrFail($id);
+
+    //     // Update the status
+    //     $result->status = $status;
+    //     $result->save();
+
+    //     // Return a response (like a JSON object)
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Status updated successfully.',
+    //     ]);
+    // }
+
     public function updateStatus(Request $request, $id)
     {
+        //dd($request->all());
         $status = $request->input('status'); // The new status
-
+        //dd($status);
         // Find the result by ID
         $result = TwodGameResult::findOrFail($id);
 
         // Update the status
         $result->status = $status;
         $result->save();
+        session()->flash('SuccessRequest', '2D Open/Close Status updated successfully');
 
-        // Return a response (like a JSON object)
-        return response()->json([
-            'success' => true,
-            'message' => 'Status updated successfully.',
-        ]);
+        return redirect()->back()->with('success', '2D Open/Close Status updated successfully.'); // Redirect back with success message
+
     }
+
+    public function updateStatusEvening(Request $request, $id)
+    {
+        //dd($request->all());
+        $status = $request->input('status'); // The new status
+        //dd($status);
+        // Find the result by ID
+        $result = TwodGameResult::findOrFail($id);
+
+        // Update the status
+        $result->status = $status;
+        $result->save();
+        session()->flash('SuccessRequestEvening', '2D Open/Close Status updated successfully');
+
+        return redirect()->back()->with('success', '2D Open/Close Status updated successfully.'); // Redirect back with success message
+
+    }
+
 
     // public function updateStatus(Request $request, $id)
     // {

@@ -1,4 +1,6 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('admin_app/assets/js/core/popper.min.js') }}"></script>
   <script src="{{ asset('admin_app/assets/js/core/bootstrap.min.js') }}"></script>
   <script src="{{ asset('admin_app/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>

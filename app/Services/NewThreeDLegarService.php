@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\ThreeDigit\ThreeDigit;
 use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 
@@ -16,7 +18,9 @@ class NewThreeDLegarService
     public function getThreeDigitsData()
     {
         $currentMonth = Carbon::now()->month;
+        Log::info('current month is: ' . $currentMonth);
         $currentYear = Carbon::now()->year;
+        Log::info('current year is: ' . $currentYear);
 
         $currentSession = LotteryThreeDigitPivot::whereYear('match_start_date', $currentYear)
             ->whereMonth('match_start_date', $currentMonth)
@@ -27,8 +31,13 @@ class NewThreeDLegarService
             return [];
         }
 
-        $start = $currentSession->match_start_date;
-        $end = $currentSession->res_date;
+        $firstSessionStart = $currentSession->match_start_date;
+        Log::info('first session start date is: ' . $firstSessionStart);
+
+        $firstSessionEnd = $currentSession->res_date;
+        Log::info('first session end date is: ' . $firstSessionEnd);
+
+        
 
         $threeDigits = ThreeDigit::all();
         $data = [];
@@ -37,11 +46,12 @@ class NewThreeDLegarService
             $show_digit = $digit->id;
             $display = $show_digit - 1;
 
-            // Query for the session data
-            $sessionData = DB::table('lotto_three_digit_pivot')
-                ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
-                ->where('three_digit_id', $display)
-                ->whereBetween('lotto_three_digit_pivot.created_at', [$start, $end])
+            // Query for the first session data
+            $firstSessionData = LotteryThreeDigitPivot::join('result_dates', function ($join) {
+                $join->on('lotto_three_digit_pivot.match_start_date', '=', 'result_dates.match_start_date')
+                    ->where('result_dates.status', '=', 'open');
+            })
+                ->where('lotto_three_digit_pivot.three_digit_id', $display)
                 ->select(
                     'lotto_three_digit_pivot.three_digit_id',
                     DB::raw('SUM(lotto_three_digit_pivot.sub_amount) as total_sub_amount'),
@@ -52,13 +62,17 @@ class NewThreeDLegarService
                 ->groupBy('lotto_three_digit_pivot.three_digit_id')
                 ->first();
 
-            $data[$digit->three_digit] = [
+            
+            // Combine the results from both sessions (if needed)
+            $combinedData = [
                 'three_digit_id' => $display,
-                'total_sub_amount' => $sessionData->total_sub_amount ?? 0,
-                'bet_digits' => $sessionData->bet_digits ?? '',
-                'total_bets' => $sessionData->total_bets ?? 0,
-                'latest_bet_time' => $sessionData->latest_bet_time ?? null,
+                'total_sub_amount' => $firstSessionData->total_sub_amount ?? 0,
+                'bet_digits' => $firstSessionData->bet_digits ?? '',
+                'total_bets' => $firstSessionData->total_bets ?? 0,
+                'latest_bet_time' => $firstSessionData->latest_bet_time ?? null,
             ];
+
+            $data[$digit->three_digit] = $combinedData;
         }
 
         return $data;

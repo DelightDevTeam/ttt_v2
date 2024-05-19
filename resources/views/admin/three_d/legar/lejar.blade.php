@@ -93,7 +93,7 @@ td{
                <div class="table-responsive">
                   <div class="container mb-5 mt-3" id="twoD">
                <div class="twoDCard">
-             <table class="table table-bordered">
+    <table class="table table-bordered">
     <thead style="background-color: #910503; color: #fff;">
     <tr>
         @for ($i = 0; $i < 20; $i+=2)
@@ -109,11 +109,11 @@ td{
             @foreach($chunk as $three_digit => $session_data)
                 <td class="text-dark text-center" style="background-color: #fda6a5">{{ $three_digit }}</td>
                 <td class="text-center">
-                    @if(isset($session_data->total_sub_amount))
-                        {{ $session_data->total_sub_amount }}
-                    @else
-                        <p>-</p>
-                    @endif
+                    @if(isset($session_data['total_sub_amount']))
+                {{ $session_data['total_sub_amount'] }}
+            @else
+                <p>-</p>
+            @endif
                 </td>
             @endforeach
         </tr>

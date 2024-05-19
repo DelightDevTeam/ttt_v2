@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Lotto;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ThreeDigit\Lotto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class OneWeekHistoryService
 {

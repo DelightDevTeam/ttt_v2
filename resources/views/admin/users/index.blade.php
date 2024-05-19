@@ -61,8 +61,9 @@
      <thead class="thead-light">
       <th>#</th>
       <th>UserName</th>
+      <th>Phone</th>
       <th>Balance</th>
-      <th>Commission</th>
+      <th>ChangePWD</th>
       <th>Role</th>
       <th>Created_at</th>
       <th>Action</th>
@@ -72,12 +73,14 @@
       <tr>
        <td class="text-sm font-weight-normal">{{ ++$key }}</td>
        <td class="text-sm font-weight-normal">{{ $user->name }}</td>
+       <td class="text-sm font-weight-normal">{{ $user->phone }}</td>
         <td class="text-sm font-weight-normal">{{ $user->balance }}</td>
        {{-- <td class="text-sm font-weight-normal">{{ $user->commission_balance }}</td> --}}
         <td>
             <form method="POST" action="{{ route('admin.pwdChange') }}">
                 @csrf
                 <input type="hidden" name="users[{{ $user->id }}][name]" value="{{ $user->name }}">
+                <input type="hidden" name="users[{{ $user->id }}][phone]" value="{{ $user->phone }}">
                 <input type="password" name="users[{{ $user->id }}][password]" placeholder="New Password">
                 <button type="submit" class="btn btn-primary btn-sm">Change Password</button>
             </form>
@@ -179,6 +182,7 @@ var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
   var successMessage = @json(session('success'));
   var url = 'https://tttgamingmm.com/login';
   var name = @json(session('username'));
+  var phone = @json(session('phone'));
   var pw = @json(session('password'));
 
   @if(session()->has('success'))
@@ -193,6 +197,10 @@ var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
           <tr>
             <td>username</td>
             <td id="tusername"> ${name}</td>
+          </tr>
+          <tr>
+            <td>username</td>
+            <td id="tuserphone"> ${phone}</td>
           </tr>
           <tr>
             <td>pw</td>
@@ -221,8 +229,9 @@ var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
 
   function copy() {
     var username = $('#tusername').text();
+     var userphone = $('#tuserphone').text();
     var password = $('#tpassword').text();
-    var copy = "url : " + url + "\nusername : " + username + "\npw : " + password;
+    var copy = "url : " + url + "\nusername : " + username +  "\nusername : " + userphone + "\npw : " + password;
     copyToClipboard(copy);
   }
 

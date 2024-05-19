@@ -79,6 +79,7 @@ class UsersController extends Controller
         return redirect()->route('admin.users.index')
             ->with('success', 'User password updated successfully.')
             ->with('username', $user->name)
+            ->with('phone', $user->phone)
             ->with('password', $password);
     } catch (\Exception $e) {
         return redirect()->route('admin.users.index')->with('error', 'An error occurred while updating user password: ' . $e->getMessage());

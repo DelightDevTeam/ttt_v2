@@ -53,14 +53,20 @@ class ThreeDPlayController extends Controller
     {
         $threeDigits = ThreeDigit::all();
 
+        $amount_limit = ThreeDLimit::latest()->first()->three_d_limit;
+        $draw_date = ResultDate::where('status', 'open')->first();
+        $start_date = $draw_date->match_start_date;
+        $end_date = $draw_date->result_date;
         // Calculate remaining amounts for each two-digit
         $remainingAmounts = [];
         foreach ($threeDigits as $digit) {
             $totalBetAmountForTwoDigit = DB::table('lotto_three_digit_pivot')
                 ->where('three_digit_id', $digit->id)
+                ->where('match_start_date', $start_date)
+                ->where('res_date', $end_date)
                 ->sum('sub_amount');
 
-            $remainingAmounts[$digit->id] = 50000 - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
+            $remainingAmounts[$digit->id] = $amount_limit - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
         }
         $lottery_matches = LotteryMatch::where('id', 2)->whereNotNull('is_active')->first();
 
@@ -71,15 +77,20 @@ class ThreeDPlayController extends Controller
     public function confirm_play()
     {
         $threeDigits = ThreeDigit::all();
-
+        $amount_limit = ThreeDLimit::latest()->first()->three_d_limit;
+        $draw_date = ResultDate::where('status', 'open')->first();
+        $start_date = $draw_date->match_start_date;
+        $end_date = $draw_date->result_date;
         // Calculate remaining amounts for each two-digit
         $remainingAmounts = [];
         foreach ($threeDigits as $digit) {
             $totalBetAmountForTwoDigit = DB::table('lotto_three_digit_pivot')
                 ->where('three_digit_id', $digit->id)
+                ->where('match_start_date', $start_date)
+                ->where('res_date', $end_date)
                 ->sum('sub_amount');
 
-            $remainingAmounts[$digit->id] = 50000 - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
+            $remainingAmounts[$digit->id] = $amount_limit - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
         }
         $lottery_matches = LotteryMatch::where('id', 2)->whereNotNull('is_active')->first();
 
@@ -146,7 +157,7 @@ class ThreeDPlayController extends Controller
             if ($user->balance < $request->totalAmount) {
                 throw new Exception('Insufficient balance.');
             }
-
+            /** @var \App\Models\User $user */
             $user->balance -= $request->totalAmount;
             $user->save();
 
@@ -156,6 +167,9 @@ class ThreeDPlayController extends Controller
                 'user_id' => $request->user_id,
             ]);
 
+            $draw_date = ResultDate::where('status', 'open')->first();
+            $start_date = $draw_date->match_start_date;
+            $end_date = $draw_date->result_date;
             // Handle the amounts and check against the limit
             foreach ($request->amounts as $three_digit_string => $sub_amount) {
                 $three_digit_formatted = sprintf('%03d', $three_digit_string);
@@ -163,10 +177,12 @@ class ThreeDPlayController extends Controller
                 // Get the total bet amount for this digit
                 $totalBetAmountForDigit = DB::table('lotto_three_digit_pivot')
                     ->where('three_digit_id', intval($three_digit_formatted))
+                    ->where('match_start_date', $start_date)
+                    ->where('res_date', $end_date)
                     ->sum('sub_amount');
 
                 if ($totalBetAmountForDigit + $sub_amount > $limitAmount) {
-                    throw new Exception("Bet for '{$three_digit_formatted}' exceeds the limit.");
+                    throw new Exception("ကံစမ်းမှု့ '{$three_digit_formatted}' ဂဏန်းသည် သတ်မှတ် အမောင့်ထက်ကျော်လွန်နေသောကြောင့် ကံစမ်း၍မရနိုင်ပါ။ ကျေးဇူးတင်ပါသည်။.");
                 }
 
                 // Create a new pivot for within the limit

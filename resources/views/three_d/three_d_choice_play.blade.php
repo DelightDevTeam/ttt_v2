@@ -110,12 +110,18 @@
           <div class="column">
 
             @php
+            $amount_limit = App\Models\ThreeDigit\ThreeDLimit::latest()->first()->three_d_limit;
+            $draw_date = App\Models\ThreeDigit\ResultDate::where('status', 'open')->first();
+            $start_date = $draw_date->match_start_date;
+            $end_date = $draw_date->result_date;
             $totalBetAmountForTwoDigit = DB::table('lotto_three_digit_pivot')
-            ->where('three_digit_id', $digit->id)
+            ->where('bet_digit', $digit->three_digit)
+            ->where('match_start_date', $start_date)
+            ->where('res_date', $end_date)
             ->sum('sub_amount');
             @endphp
 
-            @if ($totalBetAmountForTwoDigit < 50000) 
+            @if ($totalBetAmountForTwoDigit < $amount_limit) 
             <div class="text-center fs-6 digit" style="background-color: {{ 'javascript:getRandomColor();' }};" onclick="selectDigit('{{ $digit->three_digit }}', this)">
              <p style="font-size: 20px">
                {{ $digit->three_digit }}
@@ -123,7 +129,7 @@
               {{-- <small class="d-none" style="font-size: 10px">{{ $remainingAmounts[$digit->id] }}</small> --}}
               <div class="progress">
                 @php
-                $totalAmount = 50000;
+                $totalAmount = $amount_limit;
                 $betAmount = $totalBetAmountForTwoDigit; // the amount already bet
                 $remainAmount = $totalAmount - $betAmount; // the amount remaining that can be bet
                 $percentage = ($betAmount / $totalAmount) * 100;

@@ -33,11 +33,12 @@
        <div class="container mt-3 text-center">
           <p class="text-white">အောက်ပါဖုန်းနံပါတ်သည် TTT Gaming ၏ ဝန်ဆောင်မှုဖုန်းနံပါတ်ဖြစ်သည်</p>
           <p class="text-white">နေ့စဉ်(၂၄) နာရီ ၊ ပိတ်ရက်မရှိ ဝန်ဆောင်ပေးနေပါသည်။</p>
+          <p class="text-white">ပါတ်စဝှက်မေ့နေပါက အောက်ပါဖုန်းနံပါတ်များကို ဆက်သွယ်၍ ပါတ်စဝှက်အသစ်တောင်းခံနိုင်ပါသည်။ </p>
        </div>
       <div class="second-card mt-5">
-        <p>ဝန်ဆောင်မှု ဖုန်းနံပါတ်</p>
+        <p class="text-center">ဝန်ဆောင်မှု ဖုန်းနံပါတ်များ</p>
         <div class="d-flex justify-content-between mt-4">
-          <p>+95 9 777 773 134</p>
+          <p>09777773134</p>
           <div>
             <a href="viber://chat?number=09777773134" class="bg-transparent">
               <i class="fa-brands fa-viber" style="color: #fff !important; font-size: 30px;"></i>
@@ -49,7 +50,7 @@
         </div>
 
         <div class="d-flex justify-content-between mt-4 mb-4">
-          <p>+95 9 676 767 507</p>
+          <p>09676767507</p>
           <div>
             <a href="viber://chat?number=09676767507" class="bg-transparent">
               <i class="fa-brands fa-viber" style="color: #fff !important; font-size: 30px;"></i>
@@ -59,6 +60,15 @@
             </a>
           </div>
         </div>
+
+         <div class="d-flex justify-content-between mt-4 mb-4">
+          <p>Facebook</p>
+          <div>
+            <a href="https://www.facebook.com/profile.php?id=61557990609150&mibextid=ZbWKwL" class="bg-transparent" target="_blank">
+              <i class="fa-brands fa-facebook" style="color: #fff !important; font-size: 30px;"></i>
+            </a>
+          </div>
+           
       </div>
       {{-- <div class="second-card mt-3">
         <p>ကိုယ်စားလှယ်ဝင်ဖို့ စုံစမ်းရန်</p>

@@ -36,7 +36,7 @@
 
       <div class="d-flex justify-content-end align-items-center me-3">
         <small
-          ><a href="#" style="text-decoration: none; color: #f5bd02;" class=""
+          ><a href="{{ url('/service') }}" style="text-decoration: none; color: #f5bd02;" class=""
             >လျှို့ဝှက်နံပါတ် မေ့နေပါသလား။</a
           ></small
         >

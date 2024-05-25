@@ -36,8 +36,8 @@
 
       <div class="d-flex justify-content-end align-items-center me-3">
         <small
-          ><a href="{{ url('/service') }}" style="text-decoration: none; color: #f5bd02;" class=""
-            >လျှို့ဝှက်နံပါတ် မေ့နေပါသလား။</a
+          ><a href="{{ url('/service') }}" style="text-decoration: none; color: #e3dfd1;" class="btn btn-primary btn-sm"
+            >လျှို့ဝှက်နံပါတ် မေ့နေပါသလား ! TTTGaming Service သို့ဆက်သွယ်ပါ။</a
           ></small
         >
       </div>

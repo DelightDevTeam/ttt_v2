@@ -52,12 +52,12 @@ class TwoGameResultController extends Controller
     {
         // Get today's date
         $today = Carbon::now()->format('Y-m-d');
-
+        //dd($today);
         // Retrieve the latest result for today's morning session
         $morningSession = TwodGameResult::where('result_date', $today)
             ->where('session', 'morning')
             ->first();
-
+        dd($morningSession);
         // Retrieve the latest result for today's evening session
         $eveningSession = TwodGameResult::where('result_date', $today)
             ->where('session', 'evening')

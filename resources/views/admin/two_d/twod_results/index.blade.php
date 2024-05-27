@@ -210,15 +210,16 @@
     </tbody>
 </table>
      @php 
-     $morning = '';
-        if (isset($morningSession))) {
-            $morning = $morningSession->id;
-        }
-        $evening = '';
-        if (isset($eveningSession)) {
-            $evening = $eveningSession->id;
-        }
-        @endphp
+    $morning = '';
+    if (isset($morningSession)) { 
+        $morning = $morningSession->id;
+    }
+    $evening = '';
+    if (isset($eveningSession)) {
+        $evening = $eveningSession->id;
+    }
+@endphp
+
    </div>
         </div>
     </div>

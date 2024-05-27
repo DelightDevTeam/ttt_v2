@@ -63,7 +63,8 @@
         </tr>
     </thead>
     <tbody>
-        @if ($morningSession)
+        
+        @if (isset($morningSession))
         <tr>
             <td class="text-sm font-weight-normal">1</td>
             <td class="text-sm font-weight-normal">{{ $morningSession->result_date }}</td>
@@ -152,7 +153,7 @@
         </tr>
     </thead>
     <tbody>
-        @if ($eveningSession)
+        @if (isset($eveningSession))
         <tr>
             <td class="text-sm font-weight-normal">1</td>
             <td class="text-sm font-weight-normal">{{ $eveningSession->result_date }}</td>
@@ -208,7 +209,16 @@
         @endif
     </tbody>
 </table>
-
+     @php 
+     $morning = '';
+        if (isset($morningSession))) {
+            $morning = $morningSession->id;
+        }
+        $evening = '';
+        if (isset($eveningSession)) {
+            $evening = $eveningSession->id;
+        }
+        @endphp
    </div>
         </div>
     </div>
@@ -231,8 +241,8 @@
             // If confirmed, submit the form
             if (result.isConfirmed) {
                 // Set the value of 'status' to 'closed' if the checkbox is unchecked
-                document.getElementById('statusSwitch-{{ $morningSession->id }}').value = 
-                    document.getElementById('statusSwitch-{{ $morningSession->id }}').checked ? 'open' : 'closed';
+                document.getElementById('statusSwitch-{{ $morning }}').value = 
+                    document.getElementById('statusSwitch-{{ $morning }}').checked ? 'open' : 'closed';
                 document.getElementById('statusForm').submit();
             }
         });
@@ -276,8 +286,8 @@
             // If confirmed, submit the form
             if (result.isConfirmed) {
                 // Set the value of 'status' to 'closed' if the checkbox is unchecked
-                document.getElementById('statusSwitchEvening-{{ $eveningSession->id }}').value = 
-                    document.getElementById('statusSwitchEvening-{{ $eveningSession->id }}').checked ? 'open' : 'closed';
+                document.getElementById('statusSwitchEvening-{{ $evening }}').value = 
+                    document.getElementById('statusSwitchEvening-{{ $evening }}').checked ? 'open' : 'closed';
                 document.getElementById('statusFormEvening').submit();
             }
         });

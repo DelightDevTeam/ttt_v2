@@ -57,7 +57,7 @@ class TwoGameResultController extends Controller
         $morningSession = TwodGameResult::where('result_date', $today)
             ->where('session', 'morning')
             ->first();
-        dd($morningSession);
+        //dd($morningSession);
         // Retrieve the latest result for today's evening session
         $eveningSession = TwodGameResult::where('result_date', $today)
             ->where('session', 'evening')

@@ -22,7 +22,7 @@ class LottoSessionService
         $currentYear = Carbon::now()->year;
 
         // Define the date range for the sessions
-        $firstSessionStart = Carbon::create($currentYear, $currentMonth, 3);
+        $firstSessionStart = Carbon::create($currentYear, $currentMonth, 1);
         $firstSessionEnd = Carbon::create($currentYear, $currentMonth, 16);
 
         $secondSessionStart = Carbon::create($currentYear, $currentMonth, 17);

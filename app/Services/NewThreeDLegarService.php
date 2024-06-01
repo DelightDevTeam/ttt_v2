@@ -17,18 +17,39 @@ class NewThreeDLegarService
      */
     public function getThreeDigitsData()
     {
-        $currentMonth = Carbon::now()->month;
-        Log::info('current month is: ' . $currentMonth);
         $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
+        $currentDay = Carbon::now()->day;
+
+        Log::info('current month is: ' . $currentMonth);
         Log::info('current year is: ' . $currentYear);
 
-        $currentSession = LotteryThreeDigitPivot::whereYear('match_start_date', $currentYear)
-            ->whereMonth('match_start_date', $currentMonth)
+        $currentSession = LotteryThreeDigitPivot::whereYear('res_date', $currentYear)
+            ->whereMonth('res_date', $currentMonth)
             ->first();
 
         if (!$currentSession) {
             // Handle the case where no session is found
+            Log::warning('No session found for the current month.');
             return [];
+        }
+
+        // Determine the current match time based on the current date
+        $currentMatchTime = null;
+        if ($currentDay <= 1) {
+            $currentMatchTime = $currentSession;
+        } elseif ($currentDay > 1 && $currentDay <= 16) {
+            $currentMatchTime = LotteryThreeDigitPivot::whereYear('res_date', $currentYear)
+                ->whereMonth('res_date', $currentMonth)
+                ->skip(1)
+                ->first();
+        } else {
+            $nextMonthMatchTimes = LotteryThreeDigitPivot::whereYear('res_date', $currentYear)
+                ->whereMonth('res_date', $currentMonth + 1)
+                ->orderBy('res_date', 'asc')
+                ->first();
+
+            $currentMatchTime = $nextMonthMatchTimes;
         }
 
         $firstSessionStart = $currentSession->match_start_date;
@@ -36,8 +57,6 @@ class NewThreeDLegarService
 
         $firstSessionEnd = $currentSession->res_date;
         Log::info('first session end date is: ' . $firstSessionEnd);
-
-        
 
         $threeDigits = ThreeDigit::all();
         $data = [];
@@ -62,8 +81,7 @@ class NewThreeDLegarService
                 ->groupBy('lotto_three_digit_pivot.three_digit_id')
                 ->first();
 
-            
-            // Combine the results from both sessions (if needed)
+            // Combine the results
             $combinedData = [
                 'three_digit_id' => $display,
                 'total_sub_amount' => $firstSessionData->total_sub_amount ?? 0,

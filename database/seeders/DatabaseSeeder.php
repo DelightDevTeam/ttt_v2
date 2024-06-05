@@ -34,7 +34,6 @@ class DatabaseSeeder extends Seeder
             TwoDLimitTableSeeder::class,
             ThreeDLimitTableSeeder::class,
             ThreeDResultDateSeeder::class,
-            //TwoDGameResultTableSeeder::class,
             TwodSettingTableSeeder::class,
             BankSeeder::class,
             BannerSeeder::class,

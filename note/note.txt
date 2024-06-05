@@ -21,8 +21,11 @@ Leap years are every 4 years (like 2020, 2024, 2028), except for years that are 
 
 The rhyme "Thirty days hath September, April, June, and November; all the rest have thirty-one, excepting February alone" can help you remember the number of days in each month.
 
-<?php
 
+<?php
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE twod_game_results;
+SET FOREIGN_KEY_CHECKS = 1;
 namespace App\Services;
 
 use Carbon\Carbon;

@@ -12,10 +12,10 @@ class Permutation extends Model
 
     protected $fillable = ['digit'];
 
-    //  protected static function booted()
-    // {
-    //     static::created(function ($prize) {
-    //         CheckForThreeDWinnersWithPermutations::dispatch($prize);
-    //     });
-    // }
+     protected static function booted()
+    {
+        static::created(function ($prize) {
+            CheckForThreeDWinnersWithPermutations::dispatch($prize);
+        });
+    }
 }

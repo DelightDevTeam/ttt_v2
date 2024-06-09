@@ -31,7 +31,7 @@ class CheckForMorningWinners implements ShouldQueue
         Log::info('CheckForMorningWinners job started');
 
         $today = Carbon::today();
-        $playDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']; // 'saturday', 'sunday'
+        $playDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']; // 'saturday', 'sunday'
 
         if (! in_array(strtolower($today->isoFormat('dddd')), $playDays)) {
            // Log::info('Today is not a play day: '.$today->isoFormat('dddd'));

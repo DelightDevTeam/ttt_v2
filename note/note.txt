@@ -24,7 +24,7 @@ The rhyme "Thirty days hath September, April, June, and November; all the rest h
 
 <?php
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE twod_game_results;
+TRUNCATE TABLE users;
 SET FOREIGN_KEY_CHECKS = 1;
 namespace App\Services;
 

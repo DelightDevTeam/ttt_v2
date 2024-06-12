@@ -28,7 +28,7 @@ class CheckForEveningWinners implements ShouldQueue
 
     public function handle()
     {
-        Log::info('CheckForMorningWinners job started');
+        Log::info('CheckForEveningWinners job started');
 
         $today = Carbon::today();
         $playDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']; // 'saturday', 'sunday'

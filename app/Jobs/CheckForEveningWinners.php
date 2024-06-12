@@ -61,6 +61,18 @@ class CheckForEveningWinners implements ShouldQueue
         if (isset($open_time->id)) {
             Log::info('Open result date ID:', ['id' => $open_time->id]);
 
+            if (isset($open_time->id)) {
+    Log::info('Open result date ID:', ['id' => $open_time->id]);
+
+    // Log the values being used for filtering
+    Log::info('Filtering winning entries with:', [
+        'twod_game_result_id' => $open_time->id,
+        'result_number' => $result_number,
+        'res_date' => $date,
+        'session' => 'evening'
+    ]);
+}
+
             // Retrieve winning entries using a valid `id`
             $winningEntries = LotteryTwoDigitPivot::where('twod_game_result_id', $open_time->id)
                 ->where('bet_digit', $result_number)

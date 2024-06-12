@@ -180,7 +180,7 @@
             use Carbon\Carbon;
             $currentTime = Carbon::now();
             $start9Time = Carbon::parse('4:30');
-            $end12Time = Carbon::parse('11:45'); //close time 11:45AM
+            $end12Time = Carbon::parse('11:55'); //close time 11:45AM
             $start12Time = Carbon::parse('12:00');
             $end2Time = Carbon::parse('14:00');
             $start2Time = Carbon::parse('14:00');

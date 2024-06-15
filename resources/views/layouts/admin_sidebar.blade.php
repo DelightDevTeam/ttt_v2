@@ -32,6 +32,13 @@
       <div class="collapse " id="dashboardsExamples">
         <ul class="nav ">
           @can('user_access')
+
+          <li class="nav-item ">
+            <a class="nav-link text-white " href="{{ url('admin/active-users') }}">
+              <span class="sidenav-mini-icon"> User </span>
+              <span class="sidenav-normal  ms-2  ps-1"> Active Online </span>
+            </a>
+          </li>
           <li class="nav-item ">
             <a class="nav-link text-white " href="{{ route('admin.banners.index') }}">
               <span class="sidenav-mini-icon"> B </span>
@@ -208,6 +215,30 @@
             <a class="nav-link text-white " href="{{ url('admin/two-d-all-winner')}}">
               <span class="sidenav-mini-icon"> 2D </span>
               <span class="sidenav-normal  ms-2  ps-1">  ပေါက်သူများ </span>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link text-white " href="{{ url('admin/2d-morning-slip')}}">
+              <span class="sidenav-mini-icon"> 2D </span>
+              <span class="sidenav-normal  ms-2  ps-1">  12:1-Slip </span>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link text-white " href="{{ url('admin/2d-morning-all-slip')}}">
+              <span class="sidenav-mini-icon"> 2D </span>
+              <span class="sidenav-normal  ms-2  ps-1">  12:1- All Slip </span>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link text-white " href="{{ url('admin/2d-evening-slip')}}">
+              <span class="sidenav-mini-icon"> 2D </span>
+              <span class="sidenav-normal  ms-2  ps-1">  4:30 - Slip </span>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link text-white " href="{{ url('admin/2d-evening-all-slip')}}">
+              <span class="sidenav-mini-icon"> 2D </span>
+              <span class="sidenav-normal  ms-2  ps-1">  4:30 - All Slip </span>
             </a>
           </li>
           @endcan

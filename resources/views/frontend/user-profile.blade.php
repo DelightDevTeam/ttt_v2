@@ -283,7 +283,7 @@
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" id="name" class="form-control" name="name" placeholder="Enter Name" value="{{ Auth::user()->name }}">
+                        <input type="text" id="name" class="form-control" name="name" placeholder="Enter Name" value="{{ Auth::user()->name }}" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
@@ -291,7 +291,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone</label>
-                        <input type="text" class="form-control" name="phone" placeholder="Enter Phone" value="{{ Auth::user()->phone }}">
+                        <input type="text" class="form-control" name="phone" placeholder="Enter Phone" value="{{ Auth::user()->phone }}" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Address</label>

@@ -216,12 +216,18 @@ class PlayController extends Controller
         DB::beginTransaction();
         try {
             $user->decrement('balance', $request->totalAmount);
-
+            $currentSession = $this->getCurrentSession();
+            $currentDate = Carbon::now()->format('Y-m-d'); // Format the date and time as needed
+            $currentTime = Carbon::now()->format('H:i:s');
+            $customString = 'ttt-gaming-2d';
+            $randomNumber = rand(10000000, 99999999); // Generate a random 4-digit number
+            $slipNo = $randomNumber.'-'.$customString.'-'.$currentDate.'-'.$currentTime; // Combine date, string, and random number
             $lottery = Lottery::create([
                 'pay_amount' => $request->totalAmount,
                 'total_amount' => $request->totalAmount,
                 'user_id' => $user->id,
-                //'session' => $currentSession,
+                'slip_no' => $slipNo,
+                'session' => $currentSession,
             ]);
             $totalAmount = $request->totalAmount; // The total amount from the request
             // Update the owner's balance (user with id = 1)

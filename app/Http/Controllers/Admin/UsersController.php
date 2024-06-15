@@ -23,8 +23,18 @@ class UsersController extends Controller
 
         // users data with order by id desc
         $users = User::orderBy('id', 'desc')->with('roles')->get();
+         $activeUsers = User::active()->pluck('id')->toArray();
 
-        return response()->view('admin.users.index', compact('users'));
+        return response()->view('admin.users.index', compact('users', 'activeUsers'));
+    }
+
+     public function ActiveUserindex()
+    {
+        //$users = User::all();
+        //$activeUsers = User::active()->pluck('id')->toArray();
+         $activeUsers = User::active()->get();
+
+        return view('admin.users.active_user', compact('activeUsers'));
     }
 
     /**

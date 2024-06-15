@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\TwoD\SlipController;
 use App\Http\Controllers\Admin\TwoDLimitController;
 use App\Http\Controllers\Admin\BannerTextController;
 use App\Http\Controllers\Admin\CommissionController;
@@ -55,6 +56,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     // Users
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::resource('users', UsersController::class);
+    Route::get('/active-users', [UsersController::class, 'ActiveUserindex']);
     Route::post('/user/change-pwd', [UsersController::class, 'UserPwdChange'])->name('pwdChange');
     Route::get('/two-d-users', [App\Http\Controllers\Admin\TwoUsersController::class, 'index'])->name('two-d-users-index');
     // details route
@@ -231,6 +233,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
 
     Route::get('/two-d-evening-admin-log', [App\Http\Controllers\Admin\TwoD\EveningLotteryAdminLogController::class, 'showAdminLogOpenData'])->name('towDadminLog');
 
+    Route::get('/2d-morning-slip', [SlipController::class, 'index'])->name('MorningSlipIndex');
+    Route::get('/2d-morningslip/{userId}/{slipNo}', [SlipController::class, 'show'])->name('MorningSlipShow');
+
+    Route::get('/2d-morning-all-slip', [SlipController::class, 'AllSlipForMorningindex'])->name('MorningAllSlipIndex');
+
+    Route::get('/2d-morningallslip/{userId}/{slipNo}', [SlipController::class, 'MorningAllSlipshow'])->name('MorningAllSlipShow');
+
+    Route::get('/2d-evening-slip', [SlipController::class, 'Eveningindex'])->name('EveningSlipIndex');
+    Route::get('/2d-eveningslip/{userId}/{slipNo}', [SlipController::class, 'Eveningshow'])->name('EveningSlipShow');
+
+    Route::get('/2d-evening-all-slip', [SlipController::class, 'AllSlipForEveningindex'])->name('EveningAllSlipIndex');
+    Route::get('/2d-eveningallslip/{userId}/{slipNo}', [SlipController::class, 'EveningAllSlipshow'])->name('EveningAllSlipShow');
+
 });
 
 Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'App\Http\Controllers\User', 'middleware' => ['auth']], function () {
@@ -307,6 +322,8 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'App\Http\Cont
     Route::get('/three-d-dream-book', [App\Http\Controllers\User\Threed\ThreeDreamBookController::class, 'index'])->name('three-d-dream-book-index');
     // three d winner history
     Route::get('/three-d-winners-history', [App\Http\Controllers\User\Threed\ThreedWinnerHistoryController::class, 'index'])->name('three-d-winners-history');
+
+    
 
 });
 

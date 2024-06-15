@@ -44,10 +44,11 @@ class User extends Authenticatable
         'wavepay_no',
         'ayapay_no',
         'balance',
+        'last_active_at'
 
     ];
 
-    protected $dates = ['created_at', 'updated_at'];
+    protected $dates = ['created_at', 'updated_at', 'last_active_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -68,6 +69,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    //protected $dates = ['last_active_at'];
+
+    public function scopeActive($query)
+    {
+        return $query->where('last_active_at', '>=', now()->subMinutes(5));
+    }
 
     public function getIsAdminAttribute()
     {

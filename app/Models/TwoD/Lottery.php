@@ -18,8 +18,9 @@ class Lottery extends Model
         'pay_amount',
         'total_amount',
         'user_id',
-        //'session',
+        'session',
         'lottery_match_id',
+        'slip_no'
     ];
 
     protected $dates = ['created_at', 'updated_at'];

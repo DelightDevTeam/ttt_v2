@@ -71,67 +71,26 @@
    <div class="table-responsive">
     <table class="table table-flush" id="users-search">
      <thead class="thead-light">
-      <th>#</th>
       <th>UserName</th>
       <th>Phone</th>
-      <th>Balance</th>
-      <th>ChangePWD</th>
-      <th>Role</th>
-      <th>Created_at</th>
-      <th>Active</th>
-      <th>Action</th>
+      <th>Blance</th>
+      <th>Create Date</th>
      </thead>
      <tbody>
-      @foreach ($users as $key => $user)
+      @foreach($activeUsers as $user)
       <tr>
-       <td class="text-sm font-weight-normal">{{ ++$key }}</td>
-       <td class="text-sm font-weight-normal">{{ $user->name }}</td>
-       <td class="text-sm font-weight-normal">{{ $user->phone }}</td>
-        <td class="text-sm font-weight-normal">{{ $user->balance }}</td>
-       {{-- <td class="text-sm font-weight-normal">{{ $user->commission_balance }}</td> --}}
-        <td>
-            <form method="POST" action="{{ route('admin.pwdChange') }}">
-                @csrf
-                <input type="hidden" name="users[{{ $user->id }}][name]" value="{{ $user->name }}">
-                <input type="hidden" name="users[{{ $user->id }}][phone]" value="{{ $user->phone }}">
-                <input type="password" name="users[{{ $user->id }}][password]" placeholder="New Password">
-                <button type="submit" class="btn btn-primary btn-sm">Change Password</button>
-            </form>
-        </td>
-       <td class="text-sm font-weight-normal">
-        @foreach ($user->roles as $role)
-        <span class="badge badge-info">
-         {{ $role->title }}
-        </span>
-        <br>
-        @endforeach
-       </td>
-       <td class="text-sm font-weight-normal">{{ $user->created_at->format('F j, Y') }}</td>
        <td class="user">
-                @if(in_array($user->id, $activeUsers))
-                    <div class="green-spotlight"></div>
-                @endif
+                <div class="green-spotlight"></div>
                 {{ $user->name }}
-       </td>
-       <td>
-        <a href="{{ route('admin.users.edit', $user->id) }}" data-bs-toggle="tooltip"
-         data-bs-original-title="Edit User"><i
-          class="material-icons-round text-secondary position-relative text-lg">mode_edit</i></a>
-        <a href="{{ route('admin.users.show', $user->id) }}" data-bs-toggle="tooltip"
-         data-bs-original-title="Preview User Detail">
-         <i class="material-icons text-secondary position-relative text-lg">visibility</i>
-        </a>
-        <form class="d-inline" action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
-         @csrf
-         @method('DELETE')
-         <button type="submit" class="transparent-btn" data-bs-toggle="tooltip" data-bs-original-title="Delete User">
-          <i class="material-icons text-secondary position-relative text-lg">delete</i>
-         </button>
+           </td>
+           <td>{{ $user->phone }}</td>
+           <td>{{ $user->balance }}</td>
+           <td>{{ $user->phone }}</td>
+       <td class="text-sm font-weight-normal">{{ $user->created_at->format('F j, Y') }}</td>
 
-        </form>
-       </td>
       </tr>
-      @endforeach
+            
+        @endforeach
      </tbody>
     </table>
    </div>

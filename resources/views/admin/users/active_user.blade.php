@@ -85,7 +85,7 @@
            </td>
            <td>{{ $user->phone }}</td>
            <td>{{ $user->balance }}</td>
-           <td>{{ $user->phone }}</td>
+           {{-- <td>{{ $user->phone }}</td> --}}
        <td class="text-sm font-weight-normal">{{ $user->created_at->format('F j, Y') }}</td>
 
       </tr>

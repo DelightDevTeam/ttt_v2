@@ -7,6 +7,9 @@ use App\Models\ThreeDigit\Lotto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Services\FirstWinnerService;
+use App\Services\ThirdWinnerService;
+use App\Services\SecondWinnerService;
 use App\Models\ThreeDigit\ThreeWinner;
 use App\Models\ThreeDigit\ThirdPrizeWinner;
 use App\Services\LottoOneWeekWinnerService;
@@ -14,6 +17,46 @@ use App\Models\ThreeDigit\SecondPrizeWinner;
 
 class ThreeDWinnerController extends Controller
 {
+    
+    protected $lottoService;
+
+    protected $secondWinnerService;
+
+    protected $thirdWinnerService;
+    protected $prizeSentService;
+
+    public function __construct(FirstWinnerService $lottoService, SecondWinnerService $secondWinnerService, ThirdWinnerService $thirdWinnerService, LottoOneWeekWinnerService $prizeSentService)
+    {
+        $this->lottoService = $lottoService;
+        $this->secondWinnerService = $secondWinnerService;
+        $this->thirdWinnerService = $thirdWinnerService;
+        $this->prizeSentService = $prizeSentService;
+
+    }
+
+    public function ThreeDFirstWinner()
+    {
+        $data = $this->lottoService->FirstWinnter();
+
+        return view('admin.three_d.winners.first_prize', compact('data'));
+    }
+
+    public function ThreeDSecondWinner()
+    {
+        $data = $this->secondWinnerService->SecondWinnter();
+
+        return view('admin.three_d.winners.second_prize', compact('data'));
+    }
+
+    public function ThreeDThirdWinner()
+    {
+        $data = $this->thirdWinnerService->ThirdWinnter();
+
+        return view('admin.three_d.winners.third_prize', compact('data'));
+    }
+    
+    
+    
     public function index()
     {
         $lotteries = Lotto::with('threedDigitWinner')->get();
@@ -28,12 +71,12 @@ class ThreeDWinnerController extends Controller
         return view('admin.three_d.three_d_winner', compact('lotteries', 'prize_no_morning', 'prize_no'));
     }
 
-    protected $prizeSentService;
+    // protected $prizeSentService;
 
-    public function __construct(LottoOneWeekWinnerService $prizeSentService)
-    {
-        $this->prizeSentService = $prizeSentService;
-    }
+    // public function __construct(LottoOneWeekWinnerService $prizeSentService)
+    // {
+    //     $this->prizeSentService = $prizeSentService;
+    // }
 
     public function FirstPrizeWinner()
     {

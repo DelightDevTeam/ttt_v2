@@ -30,8 +30,11 @@ use App\Http\Controllers\Admin\ThreeD\ThreeDLegarController;
 use App\Http\Controllers\Admin\TwoD\CloseTwoDigitController;
 use App\Http\Controllers\Admin\TwoD\NetComeIncomeController;
 use App\Http\Controllers\Admin\TwoD\TwoGameResultController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController;
 use App\Http\Controllers\Admin\TwoD\HeadDigitCloseController;
+use App\Http\Controllers\Admin\ThreeD\OneWeekRecordController;
 use App\Http\Controllers\Admin\ThreeD\ThreeDOpenCloseController;
+use App\Http\Controllers\Admin\ThreeD\AllWinnerHistoryController;
 
 Auth::routes();
 
@@ -152,7 +155,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::post('/three-d-prize-number-create', [App\Http\Controllers\Admin\ThreeD\ThreeDPrizeNumberCreateController::class, 'store'])->name('three-d-prize-number-create.store');
 
     // 3d history
-    Route::get('/three-d-history', [App\Http\Controllers\Admin\ThreeD\ThreeDOneWeekHistoryController::class, 'GetAllThreeDUserData'])->name('three-d-history');
+    // Route::get('/three-d-history', [App\Http\Controllers\Admin\ThreeD\ThreeDOneWeekHistoryController::class, 'GetAllThreeDUserData'])->name('three-d-history');
+    Route::get('/3d-one-week-records', [OneWeekRecordController::class, 'showRecordsForOneWeek'])->name('oneWeekRec');
+
+    Route::get('/3d-all-history', [OneWeekRecordController::class, 'showRecords'])->name('AllHistory');
+
+    Route::get('/3d-one-week-slip', [OneWeekRecordController::class, 'index'])->name('OneWeekSlipIndex');
+    Route::get('/3d-oneweek-slip-no/{userId}/{slipNo}', [OneWeekRecordController::class, 'show'])->name('OneWeekSlipDetail');
+
+    Route::get('/3d-slip-history', [OneWeekRecordController::class, 'indexAllSlip'])->name('SlipHistoryIndex');
+    Route::get('/3d-slip-no-history/{userId}/{slipNo}', [OneWeekRecordController::class, 'showAllSlip'])->name('SlipHistoryShow');
+
     // three d list index
     Route::get('/three-d-list-index', [App\Http\Controllers\Admin\ThreeD\ThreeDListController::class, 'GetAllThreeDData'])->name('threedlist-index');
 
@@ -170,7 +183,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     // three digit one month history conclude
     Route::get('/three-digit-one-month-history-conclude', [App\Http\Controllers\Admin\ThreeD\ThreeDRecordHistoryController::class, 'OnceMonthThreedigitHistoryConclude'])->name('ThreeDigitOneMonthHistoryConclude');
     // three d winners history
-    Route::get('/three-d-win-history', [App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController::class, 'FirstPrizeWinner'])->name('ThreeDWinnersHistory');
+    // Route::get('/three-d-win-history', [App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController::class, 'FirstPrizeWinner'])->name('ThreeDWinnersHistory');
+
+
+    Route::get('/3d-first-winner', [ThreeDWinnerController::class, 'ThreeDFirstWinner'])->name('WinnerFirst');
+    Route::get('/3d-second-winner', [ThreeDWinnerController::class, 'ThreeDSecondWinner'])->name('WinnerSecond');
+    Route::get('/3d-third-winner', [ThreeDWinnerController::class, 'ThreeDThirdWinner'])->name('WinnerThird');
+
+    Route::get('/3d-all-first-winner', [AllWinnerHistoryController::class, 'ThreeDFirstWinner'])->name('WinnerFirst');
+    Route::get('/3d-all-second-winner', [AllWinnerHistoryController::class, 'ThreeDSecondWinner'])->name('WinnerSecond');
+    Route::get('/3d-all-third-winner', [AllWinnerHistoryController::class, 'ThreeDThirdWinner'])->name('WinnerThird');
+
+
     // three d permutation winners history
     Route::get('/permutation-winners-history', [App\Http\Controllers\Admin\ThreeD\PermutationWinnerController::class, 'PermutationWinners'])->name('PermutationWinnersHistory');
     // greater than less than winner prize

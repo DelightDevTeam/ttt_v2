@@ -25,6 +25,7 @@ return new class extends Migration
             $table->time('res_time')->nullable();
             $table->date('match_start_date')->nullable();
             $table->string('result_number')->nullable();
+            $table->boolean('win_lose')->default(false);
             $table->enum('admin_log', ['open', 'closed'])->default('open');
             $table->enum('user_log', ['open', 'closed'])->default('open');
             $table->foreign('result_date_id')->references('id')->on('result_dates')->onDelete('cascade');

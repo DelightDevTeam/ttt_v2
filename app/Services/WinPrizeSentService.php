@@ -61,8 +61,9 @@ class WinPrizeSentService
         $results = LotteryThreeDigitPivot::with('user')
             ->where('user_id', $userId)
             ->where('prize_sent', 3)
-            ->whereBetween('created_at', [$firstSessionStart, $firstSessionEnd])
-            ->orWhereBetween('created_at', [$secondSessionStart, $secondSessionEnd])
+            ->orderBy('id', 'desc')
+            //->whereBetween('created_at', [$firstSessionStart, $firstSessionEnd])
+            //->orWhereBetween('created_at', [$secondSessionStart, $secondSessionEnd])
             ->get();
 
         // Calculate the total sub_amount

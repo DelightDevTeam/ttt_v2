@@ -18,7 +18,7 @@ class MorningLotteryService
     {
         $currentTime = Carbon::now()->format('H:i:s');
 
-        if ($currentTime >= '04:01:00' && $currentTime <= '12:01:00') {
+        if ($currentTime >= '01:01:00' && $currentTime <= '12:01:00') {
             return 'morning'; // Morning session
         } else {
             return 'closed'; // If outside session time

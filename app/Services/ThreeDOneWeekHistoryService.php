@@ -32,7 +32,7 @@ class ThreeDOneWeekHistoryService
         } else {
             // Other months have 1st to 16th and 17th to 1st of the next month
             if ($currentDay <= 16) {
-                $start = Carbon::create($today->year, $currentMonth, 1);
+                $start = Carbon::create($today->year, $currentMonth, 2);
                 $end = Carbon::create($today->year, $currentMonth, 16);
             } else {
                 $start = Carbon::create($today->year, $currentMonth, 17);

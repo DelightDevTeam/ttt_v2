@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\User\Threed;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\ThreedPlayRequest;
+use Exception;
+use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Services\LottoService;
+use App\Models\ThreeDigit\Lotto;
 use App\Models\Admin\LotteryMatch;
 use App\Models\Admin\ThreeDDLimit;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
-use App\Models\ThreeDigit\Lotto;
-use App\Models\ThreeDigit\ResultDate;
-use App\Models\ThreeDigit\ThreedClose;
-use App\Models\ThreeDigit\ThreeDigit;
-use App\Models\ThreeDigit\ThreeDigitOverLimit;
-use App\Models\ThreeDigit\ThreeDLimit;
-use App\Models\User;
-use App\Services\LottoService;
-use App\Services\LottoSessionService;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ThreeDigit\ResultDate;
+use App\Models\ThreeDigit\ThreeDigit;
+use App\Services\LottoSessionService;
+use App\Models\ThreeDigit\ThreedClose;
+use App\Models\ThreeDigit\ThreeDLimit;
+use App\Http\Requests\ThreedPlayRequest;
+use App\Models\ThreeDigit\ThreeDigitOverLimit;
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 
 class ThreeDPlayController extends Controller
 {
@@ -196,9 +197,15 @@ public function choiceplay()
             $user->save();
 
             // Create a new lottery record
+            $currentDate = Carbon::now()->format('Y-m-d'); // Format the date and time as needed
+            $currentTime = Carbon::now()->format('H:i:s');
+            $customString = 'ttt-3d';
+            $randomNumber = rand(001, 9999999); // Generate a random 4-digit number
+            $slipNo = $randomNumber.'-'.$customString.'-'.$currentDate.'-'.$currentTime; // Combine date, string, and random number
             $lottery = Lotto::create([
                 'total_amount' => $request->totalAmount,
                 'user_id' => $request->user_id,
+                'slip_no' => $slipNo
             ]);
 
             $draw_date = ResultDate::where('status', 'open')->first();

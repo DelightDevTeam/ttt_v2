@@ -26,6 +26,7 @@ return new class extends Migration
             $table->date('res_date');
             $table->time('res_time');
             $table->enum('session', ['morning', 'evening']); // Game session (morning or evening)
+            $table->boolean('win_lose')->default(false);
             $table->enum('admin_log', ['open', 'closed'])->default('closed'); // New status column
             $table->enum('user_log', ['open', 'closed'])->default('closed'); // New status column
             $table->foreign('twod_game_result_id')->references('id')->on('twod_game_results')->onDelete('cascade');

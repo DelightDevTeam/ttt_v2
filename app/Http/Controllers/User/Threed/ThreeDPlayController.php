@@ -49,30 +49,64 @@ class ThreeDPlayController extends Controller
     }
 
     // threed play
-    public function choiceplay()
-    {
-        $threeDigits = ThreeDigit::all();
+    // public function choiceplay()
+    // {
+    //     $threeDigits = ThreeDigit::all();
 
-        $amount_limit = ThreeDLimit::latest()->first()->three_d_limit;
-        $draw_date = ResultDate::where('status', 'open')->first();
-        $start_date = $draw_date->match_start_date;
-        $end_date = $draw_date->result_date;
-        // Calculate remaining amounts for each two-digit
-        $remainingAmounts = [];
-        foreach ($threeDigits as $digit) {
-            $totalBetAmountForTwoDigit = DB::table('lotto_three_digit_pivot')
-                ->where('three_digit_id', $digit->id)
-                ->where('match_start_date', $start_date)
-                ->where('res_date', $end_date)
-                ->sum('sub_amount');
+    //     $amount_limit = ThreeDLimit::latest()->first()->three_d_limit;
+    //     $draw_date = ResultDate::where('status', 'open')->first();
+    //     //$start_date = $draw_date->match_start_date;
+    //     $start_date = $draw_date->match_start_date ? $draw_date->match_start_date : null;
+    //     $end_date = $draw_date->result_date;
+    //     // Calculate remaining amounts for each two-digit
+    //     $remainingAmounts = [];
+    //     foreach ($threeDigits as $digit) {
+    //         $totalBetAmountForTwoDigit = DB::table('lotto_three_digit_pivot')
+    //             ->where('three_digit_id', $digit->id)
+    //             ->where('match_start_date', $start_date)
+    //             ->where('res_date', $end_date)
+    //             ->sum('sub_amount');
 
-            $remainingAmounts[$digit->id] = $amount_limit - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
-        }
-        $lottery_matches = LotteryMatch::where('id', 2)->whereNotNull('is_active')->first();
+    //         $remainingAmounts[$digit->id] = $amount_limit - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
+    //     }
+    //     $lottery_matches = LotteryMatch::where('id', 2)->whereNotNull('is_active')->first();
 
-        return view('three_d.three_d_choice_play', compact('threeDigits', 'remainingAmounts', 'lottery_matches'));
-        //return view('three_d.three_d_choice_play');
+    //     return view('three_d.three_d_choice_play', compact('threeDigits', 'remainingAmounts', 'lottery_matches'));
+    //     //return view('three_d.three_d_choice_play');
+    // }
+
+    // threed play
+public function choiceplay()
+{
+    $threeDigits = ThreeDigit::all();
+
+    $amount_limit = ThreeDLimit::latest()->first()->three_d_limit;
+    $draw_date = ResultDate::where('status', 'open')->first();
+
+    if (!$draw_date || !$draw_date->match_start_date) {
+        return back()->with('error', 'ယခုတပါတ်တွက် 3D ပိတ်သွားပါပြီ၊ အားပေးမှု့ကိုကျေးဇူးတင်ပါသည်.');
     }
+
+    $start_date = $draw_date->match_start_date;
+    $end_date = $draw_date->result_date;
+
+    // Calculate remaining amounts for each two-digit
+    $remainingAmounts = [];
+    foreach ($threeDigits as $digit) {
+        $totalBetAmountForTwoDigit = DB::table('lotto_three_digit_pivot')
+            ->where('three_digit_id', $digit->id)
+            ->where('match_start_date', $start_date)
+            ->where('res_date', $end_date)
+            ->sum('sub_amount');
+
+        $remainingAmounts[$digit->id] = $amount_limit - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
+    }
+
+    $lottery_matches = LotteryMatch::where('id', 2)->whereNotNull('is_active')->first();
+
+    return view('three_d.three_d_choice_play', compact('threeDigits', 'remainingAmounts', 'lottery_matches'));
+}
+
 
     public function confirm_play()
     {

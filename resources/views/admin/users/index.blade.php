@@ -199,7 +199,7 @@ var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
 <script>
   var errorMessage = @json(session('error'));
   var successMessage = @json(session('success'));
-  var url = 'https://tttgamingmm.com/login';
+  var url = 'https://tttmyanmar.com';
   var name = @json(session('username'));
   var phone = @json(session('phone'));
   var pw = @json(session('password'));

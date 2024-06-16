@@ -191,6 +191,18 @@ class ResultDateController extends Controller
         $result->result_number = $result_number;
         $result->save();
 
+        $draw_date = ResultDate::where('status', 'open')->first();
+        $start_date = $draw_date->match_start_date;
+        $end_date = $draw_date->result_date;
+        $today = Carbon::today();
+
+        $three_digits = LotteryThreeDigitPivot::whereBetween('match_start_date', [$start_date, $end_date])
+        ->whereBetween('res_date', [$start_date, $end_date])
+        ->get();
+        foreach ($three_digits as $digit) {
+            $digit->update(['win_lose' => 1]);
+        }
+
         // Return a response (like a JSON object)
         return redirect()->back()->with('success', 'Result number updated successfully.'); // Redirect back with success message
     }

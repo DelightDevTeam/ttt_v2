@@ -49,7 +49,7 @@
           </div>
         </div>
 
-        <div class="d-flex justify-content-between mt-4 mb-4">
+        {{-- <div class="d-flex justify-content-between mt-4 mb-4">
           <p>09676767507</p>
           <div>
             <a href="viber://chat?number=09676767507" class="bg-transparent">
@@ -59,7 +59,7 @@
               <i class="fa-brands fa-telegram" style="color: #fff !important; font-size: 30px;"></i>
             </a>
           </div>
-        </div>
+        </div> --}}
 
          <div class="d-flex justify-content-between mt-4 mb-4">
           <p>Facebook</p>

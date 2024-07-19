@@ -68,8 +68,8 @@ class MorningLotteryService
                 'lottery_two_digit_pivot.prize_sent',
                 'lottery_two_digit_pivot.match_status'
             )
-            ->where('lottery_two_digit_pivot.res_date', $today) 
-            ->whereIn('lottery_two_digit_pivot.lottery_id', $lotteryIds) 
+            ->where('lottery_two_digit_pivot.res_date', $today)
+            ->whereIn('lottery_two_digit_pivot.lottery_id', $lotteryIds)
             ->orderBy('res_date', 'desc')
             ->get();
 

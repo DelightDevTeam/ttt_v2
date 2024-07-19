@@ -11,11 +11,11 @@ class AuthWinLotteryPrizeService
     public function LotteryWinnersPrize()
     {
         try {
-           // Log::info('Entering Auth user Winner Service');
+            // Log::info('Entering Auth user Winner Service');
 
             // Define the start of the time range (1 month ago)
             $oneMonthAgo = Carbon::now()->subMonth()->startOfDay();
-           // Log::info('Start of date range:', ['date' => $oneMonthAgo]);
+            // Log::info('Start of date range:', ['date' => $oneMonthAgo]);
 
             // Define the end of the current month
             $endOfCurrentMonth = Carbon::now()->endOfMonth();

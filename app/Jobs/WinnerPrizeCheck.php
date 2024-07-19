@@ -2,15 +2,15 @@
 
 namespace App\Jobs;
 
-use Carbon\Carbon;
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 use App\Models\ThreeDigit\Lotto;
 use App\Models\ThreeDigit\ResultDate;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -31,13 +31,14 @@ class WinnerPrizeCheck implements ShouldQueue
 
         // Ensure prize object is valid and has the required attributes
         if (! isset($this->prize->prize_one) || ! isset($this->prize->prize_two)) {
-           // Log::warning('Invalid prize object provided. Exiting job.');
+            // Log::warning('Invalid prize object provided. Exiting job.');
             return;
         }
 
         $open_dates = ResultDate::where('status', 'open')->get();
         if ($open_dates->isEmpty()) {
             Log::warning('No open result dates found.');
+
             return;
         }
 
@@ -65,7 +66,7 @@ class WinnerPrizeCheck implements ShouldQueue
             ->get();
 
         if ($winningEntries->isEmpty()) {
-           // Log::info("No winning entries found for bet_digit: {$prize_digit} on date: {$today->toDateString()}");
+            // Log::info("No winning entries found for bet_digit: {$prize_digit} on date: {$today->toDateString()}");
             return;
         }
 

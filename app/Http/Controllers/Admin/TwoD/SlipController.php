@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\TwoD;
 
+use App\Http\Controllers\Controller;
 use App\Models\TwoD\Lottery;
+use App\Models\TwoD\LotteryTwoDigitPivot;
+use App\Models\TwoD\TwodGameResult;
 use App\Models\TwoD\TwodSetting;
 use Illuminate\Support\Facades\DB;
-use App\Models\TwoD\TwodGameResult;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Models\TwoD\LotteryTwoDigitPivot;
 
 class SlipController extends Controller
 {

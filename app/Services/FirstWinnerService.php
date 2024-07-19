@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\ThreeD\ThreedSetting;
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use App\Models\ThreeDigit\ResultDate;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use App\Models\ThreeD\ThreedSetting;
-use App\Models\ThreeDigit\ResultDate;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 
 class FirstWinnerService
 {

@@ -34,27 +34,30 @@ class CheckForEveningWinners implements ShouldQueue
         $playDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']; // 'saturday', 'sunday'
 
         if (! in_array(strtolower($today->isoFormat('dddd')), $playDays)) {
-            Log::info('Today is not a play day: ' . $today->isoFormat('dddd'));
+            Log::info('Today is not a play day: '.$today->isoFormat('dddd'));
+
             return; // Not a play day
         }
 
         if ($this->twodWiner->session !== 'evening') {
             Log::info('Session is not evening, exiting.');
+
             return; // Not an evening session
         }
 
         // Get the correct bet digit from result number
         $result_number = $this->twodWiner->result_number;
         $date = Carbon::now()->format('Y-m-d');
-        Log::info('Today Date is ' . $date);
+        Log::info('Today Date is '.$date);
 
         $currentSession = $this->getCurrentSession();
-        Log::info('Today Current Session is ' . $currentSession);
+        Log::info('Today Current Session is '.$currentSession);
 
         $open_time = TwodGameResult::where('status', 'open')->first();
 
         if (! $open_time || ! is_object($open_time)) {
             Log::warning('No valid open time found or invalid data structure.');
+
             return; // Exit early if no valid open time
         }
 
@@ -62,16 +65,16 @@ class CheckForEveningWinners implements ShouldQueue
             Log::info('Open result date ID:', ['id' => $open_time->id]);
 
             if (isset($open_time->id)) {
-    Log::info('Open result date ID:', ['id' => $open_time->id]);
+                Log::info('Open result date ID:', ['id' => $open_time->id]);
 
-    // Log the values being used for filtering
-    Log::info('Filtering winning entries with:', [
-        'twod_game_result_id' => $open_time->id,
-        'result_number' => $result_number,
-        'res_date' => $date,
-        'session' => 'evening'
-    ]);
-}
+                // Log the values being used for filtering
+                Log::info('Filtering winning entries with:', [
+                    'twod_game_result_id' => $open_time->id,
+                    'result_number' => $result_number,
+                    'res_date' => $date,
+                    'session' => 'evening',
+                ]);
+            }
 
             // Retrieve winning entries using a valid `id`
             $winningEntries = LotteryTwoDigitPivot::where('twod_game_result_id', $open_time->id)
@@ -80,9 +83,10 @@ class CheckForEveningWinners implements ShouldQueue
                 ->where('session', 'evening')
                 ->get();
 
-            Log::info('Number of winning entries found: ' . $winningEntries->count());
+            Log::info('Number of winning entries found: '.$winningEntries->count());
         } else {
             Log::warning('Invalid open time, cannot get ID.');
+
             return; // Exit if no valid ID
         }
 
@@ -106,7 +110,7 @@ class CheckForEveningWinners implements ShouldQueue
                     Log::info("Prize sent for entry ID {$entry->id}");
 
                 } catch (\Exception $e) {
-                    Log::error("Error during transaction for entry ID {$entry->id}: " . $e->getMessage());
+                    Log::error("Error during transaction for entry ID {$entry->id}: ".$e->getMessage());
                     throw $e; // Ensure rollback if needed
                 }
             });

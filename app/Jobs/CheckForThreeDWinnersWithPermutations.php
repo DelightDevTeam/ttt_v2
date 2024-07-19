@@ -2,17 +2,17 @@
 
 namespace App\Jobs;
 
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use App\Models\ThreeDigit\Lotto;
+use App\Models\ThreeDigit\ResultDate;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use App\Models\ThreeDigit\Lotto;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use App\Models\ThreeDigit\ResultDate;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CheckForThreeDWinnersWithPermutations implements ShouldQueue
 {
@@ -32,8 +32,6 @@ class CheckForThreeDWinnersWithPermutations implements ShouldQueue
     //     $today = Carbon::today();
     //     $result_number = $this->threedWinner->result_number;
 
-        
-
     //     if (! $result_number) {
     //         Log::info('No result number provided. Exiting job.');
 
@@ -50,7 +48,7 @@ class CheckForThreeDWinnersWithPermutations implements ShouldQueue
     //     Log::info('CheckForThreeDWinnersWithPermutations job completed.');
     // }
 
-     public function handle()
+    public function handle()
     {
         //Log::info('CheckForThreeDWinnersWithPermutations job started');
 
@@ -58,7 +56,7 @@ class CheckForThreeDWinnersWithPermutations implements ShouldQueue
         $result_number = $this->threedWinner->result_number ?? null;
 
         if (is_null($result_number)) {
-           // Log::info('No result number provided. Exiting job.');
+            // Log::info('No result number provided. Exiting job.');
             return;
         }
 
@@ -69,6 +67,7 @@ class CheckForThreeDWinnersWithPermutations implements ShouldQueue
         $open_dates = ResultDate::where('status', 'open')->get();
         if ($open_dates->isEmpty()) {
             Log::warning('No open result dates found.');
+
             return;
         }
 
@@ -82,7 +81,7 @@ class CheckForThreeDWinnersWithPermutations implements ShouldQueue
         //Log::info('CheckForThreeDWinnersWithPermutations job completed.');
     }
 
-     protected function processWinningEntries($permutation, array $date_ids)
+    protected function processWinningEntries($permutation, array $date_ids)
     {
         $today = Carbon::today(); // Current date
         $winningEntries = LotteryThreeDigitPivot::whereIn('result_date_id', $date_ids)
@@ -111,7 +110,6 @@ class CheckForThreeDWinnersWithPermutations implements ShouldQueue
             });
         }
     }
-
 
     // protected function processWinningEntries($permutation)
     // {

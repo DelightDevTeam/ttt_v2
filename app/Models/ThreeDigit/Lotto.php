@@ -21,7 +21,7 @@ class Lotto extends Model
         'user_id',
         //'session',
         'lottery_match_id',
-        'slip_no'
+        'slip_no',
 
     ];
 

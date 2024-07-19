@@ -1,1 +1,3 @@
 php artisan make:migration add_last_active_at_to_users_table --table=users
+
+a1yoma.online

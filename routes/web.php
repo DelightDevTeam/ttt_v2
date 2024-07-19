@@ -1,40 +1,40 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestController;
 use App\Http\Controllers\Admin\BankController;
-use App\Http\Controllers\Admin\GameController;
-use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Admin\TwoD\SlipController;
-use App\Http\Controllers\Admin\TwoDLimitController;
 use App\Http\Controllers\Admin\BannerTextController;
 use App\Http\Controllers\Admin\CommissionController;
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Home\TransferLogController;
 use App\Http\Controllers\Admin\FillBalanceController;
-use App\Http\Controllers\Admin\ThreeDLimitController;
-use App\Http\Controllers\Admin\TwoDLotteryController;
-use App\Http\Controllers\Home\CashInRequestController;
-use App\Http\Controllers\Home\CashOutRequestController;
-use App\Http\Controllers\Admin\TwoD\DataLejarController;
-use App\Http\Controllers\Admin\TwoD\TwoDLagarController;
 use App\Http\Controllers\Admin\FillBalanceReplyController;
-use App\Http\Controllers\User\Threed\ThreeDPlayController;
+use App\Http\Controllers\Admin\GameController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\ThreeD\AllWinnerHistoryController;
+use App\Http\Controllers\Admin\ThreeD\OneWeekRecordController;
 use App\Http\Controllers\Admin\ThreeD\ThreeDCloseController;
 use App\Http\Controllers\Admin\ThreeD\ThreeDLegarController;
-use App\Http\Controllers\Admin\TwoD\CloseTwoDigitController;
-use App\Http\Controllers\Admin\TwoD\NetComeIncomeController;
-use App\Http\Controllers\Admin\TwoD\TwoGameResultController;
-use App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController;
-use App\Http\Controllers\Admin\TwoD\HeadDigitCloseController;
-use App\Http\Controllers\Admin\ThreeD\OneWeekRecordController;
 use App\Http\Controllers\Admin\ThreeD\ThreeDOpenCloseController;
-use App\Http\Controllers\Admin\ThreeD\AllWinnerHistoryController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController;
+use App\Http\Controllers\Admin\ThreeDLimitController;
+use App\Http\Controllers\Admin\TwoD\CloseTwoDigitController;
+use App\Http\Controllers\Admin\TwoD\DataLejarController;
+use App\Http\Controllers\Admin\TwoD\HeadDigitCloseController;
+use App\Http\Controllers\Admin\TwoD\NetComeIncomeController;
+use App\Http\Controllers\Admin\TwoD\SlipController;
+use App\Http\Controllers\Admin\TwoD\TwoDLagarController;
+use App\Http\Controllers\Admin\TwoD\TwoGameResultController;
+use App\Http\Controllers\Admin\TwoDLimitController;
+use App\Http\Controllers\Admin\TwoDLotteryController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Home\CashInRequestController;
+use App\Http\Controllers\Home\CashOutRequestController;
+use App\Http\Controllers\Home\TransferLogController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\User\Threed\ThreeDPlayController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
@@ -185,7 +185,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     // three d winners history
     // Route::get('/three-d-win-history', [App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController::class, 'FirstPrizeWinner'])->name('ThreeDWinnersHistory');
 
-
     Route::get('/3d-first-winner', [ThreeDWinnerController::class, 'ThreeDFirstWinner'])->name('WinnerFirst');
     Route::get('/3d-second-winner', [ThreeDWinnerController::class, 'ThreeDSecondWinner'])->name('WinnerSecond');
     Route::get('/3d-third-winner', [ThreeDWinnerController::class, 'ThreeDThirdWinner'])->name('WinnerThird');
@@ -193,7 +192,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::get('/3d-all-first-winner', [AllWinnerHistoryController::class, 'ThreeDFirstWinner'])->name('WinnerFirst');
     Route::get('/3d-all-second-winner', [AllWinnerHistoryController::class, 'ThreeDSecondWinner'])->name('WinnerSecond');
     Route::get('/3d-all-third-winner', [AllWinnerHistoryController::class, 'ThreeDThirdWinner'])->name('WinnerThird');
-
 
     // three d permutation winners history
     Route::get('/permutation-winners-history', [App\Http\Controllers\Admin\ThreeD\PermutationWinnerController::class, 'PermutationWinners'])->name('PermutationWinnersHistory');
@@ -225,15 +223,24 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
 
     // two d result date and result number
     Route::get('two-d-result-date', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'index']);
-     Route::get('two-d-more-setting', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'getCurrentMonthResults']);
+    Route::get('two-d-more-setting', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'getCurrentMonthResults']);
 
     Route::patch('/two-2-results/{id}/status', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'updateStatus'])
         ->name('twodStatusOpenClose');
+
+    // prize status
+    Route::patch('/two-2-results/{id}/prizestatus', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'updatePrizeStatus'])
+        ->name('TwoDUpdatePrize');
+
+    Route::patch('/two-2-results/{id}/prizeevening', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'updatePrizeStatusEvening'])
+        ->name('TwoDUpdatePrizeEvening');
+
     Route::patch('/two-2-status/{id}/evening', [TwoGameResultController::class, 'updateStatusEvening'])->name('twodStatusOpenCloseEvening');
 
     Route::patch('/two-d-results/{id}/status', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'updateResultNumber'])
         ->name('update_result_number');
-
+    Route::patch('/two-2-close/{id}/time', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'UpdateCloseSessionTime'])->name('TwoDCloseTime');
+    Route::patch('/two-2-close/{id}/eveningtime', [App\Http\Controllers\Admin\TwoD\TwoGameResultController::class, 'UpdateEveningCloseSessionTime'])->name('TwoDEveningCloseTime');
     // get three d result date
     Route::get('three-d-result-date', [App\Http\Controllers\Admin\ThreeD\ResultDateController::class, 'index']);
     Route::get('three-d-more-setting', [App\Http\Controllers\Admin\ThreeD\ResultDateController::class, 'getCurrentMonthResultsSetting']);
@@ -346,8 +353,6 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'App\Http\Cont
     Route::get('/three-d-dream-book', [App\Http\Controllers\User\Threed\ThreeDreamBookController::class, 'index'])->name('three-d-dream-book-index');
     // three d winner history
     Route::get('/three-d-winners-history', [App\Http\Controllers\User\Threed\ThreedWinnerHistoryController::class, 'index'])->name('three-d-winners-history');
-
-    
 
 });
 

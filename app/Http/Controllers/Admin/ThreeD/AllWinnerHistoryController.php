@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin\ThreeD;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\FirstAllWinnerService;
-use App\Services\ThirdAllWinnerService;
 use App\Services\SecondAllwinnerServices;
+use App\Services\ThirdAllWinnerService;
+use Illuminate\Http\Request;
 
 class AllWinnerHistoryController extends Controller
 {
@@ -44,6 +44,4 @@ class AllWinnerHistoryController extends Controller
 
         return view('admin.three_d.winners.third_all_prize', compact('data'));
     }
-    
-   
 }

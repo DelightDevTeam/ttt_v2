@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('comission', 8, 2)->default(0);
             $table->decimal('commission_amount', 8, 2)->default(0);
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-             $table->string('slip_no')->default('ttt-3d-123456');
+            $table->string('slip_no')->default('ttt-3d-123456');
 
             $table->timestamps();
         });

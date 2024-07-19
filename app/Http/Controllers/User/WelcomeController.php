@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
+use App\Models\Admin\Banner;
+use App\Models\Admin\BannerText;
+use App\Models\Admin\Lottery;
+use App\Models\Admin\Promotion;
+use App\Models\Admin\TwoDigit;
 use App\Models\User;
 use GuzzleHttp\Client;
-use App\Models\Admin\Banner;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
-use App\Models\Admin\Lottery;
-use App\Models\Admin\TwoDigit;
-use App\Models\Admin\Promotion;
-use App\Models\Admin\BannerText;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use GuzzleHttp\Exception\RequestException;
 
 class WelcomeController extends Controller
 {

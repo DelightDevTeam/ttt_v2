@@ -48,7 +48,7 @@ class AuthWinLotteryPrizeService
 
             return ['results' => $results, 'totalPrizeAmount' => $totalPrizeAmount];
         } catch (\Exception $e) {
-            Log::error('Error retrieving prize_sent data: ' . $e->getMessage());
+            Log::error('Error retrieving prize_sent data: '.$e->getMessage());
 
             return ['results' => collect([]), 'totalPrizeAmount' => 0];
         }

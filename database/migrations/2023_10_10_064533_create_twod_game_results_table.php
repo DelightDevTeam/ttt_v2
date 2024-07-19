@@ -20,6 +20,8 @@ return new class extends Migration
             $table->enum('status', ['open', 'closed'])->default('closed'); // New status column
             $table->enum('admin_log', ['open', 'closed'])->default('closed'); // New status column
             $table->enum('user_log', ['open', 'closed'])->default('closed'); // New status column
+            $table->time('closed_time')->nullable();
+            $table->enum('prize_status', ['open', 'closed'])->default('closed'); // New status column
 
             $table->timestamps();
         });

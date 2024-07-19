@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use App\Models\ThreeDigit\ThreeDigit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\ThreeDigit\ThreeDigit;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 
 class NewThreeDLegarService
 {
@@ -21,16 +21,17 @@ class NewThreeDLegarService
         $currentMonth = Carbon::now()->month;
         $currentDay = Carbon::now()->day;
 
-        Log::info('current month is: ' . $currentMonth);
-        Log::info('current year is: ' . $currentYear);
+        Log::info('current month is: '.$currentMonth);
+        Log::info('current year is: '.$currentYear);
 
         $currentSession = LotteryThreeDigitPivot::whereYear('res_date', $currentYear)
             ->whereMonth('res_date', $currentMonth)
             ->first();
 
-        if (!$currentSession) {
+        if (! $currentSession) {
             // Handle the case where no session is found
             Log::warning('No session found for the current month.');
+
             return [];
         }
 
@@ -53,10 +54,10 @@ class NewThreeDLegarService
         }
 
         $firstSessionStart = $currentSession->match_start_date;
-        Log::info('first session start date is: ' . $firstSessionStart);
+        Log::info('first session start date is: '.$firstSessionStart);
 
         $firstSessionEnd = $currentSession->res_date;
-        Log::info('first session end date is: ' . $firstSessionEnd);
+        Log::info('first session end date is: '.$firstSessionEnd);
 
         $threeDigits = ThreeDigit::all();
         $data = [];

@@ -44,7 +44,7 @@ class User extends Authenticatable
         'wavepay_no',
         'ayapay_no',
         'balance',
-        'last_active_at'
+        'last_active_at',
 
     ];
 

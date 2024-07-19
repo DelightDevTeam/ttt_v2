@@ -54,7 +54,7 @@ class ResultDateController extends Controller
 
     public function getCurrentMonthResultsSetting()
     {
-         $currentMonthStart = Carbon::now()->startOfMonth();
+        $currentMonthStart = Carbon::now()->startOfMonth();
 
         // Get the end of the next month
         $nextMonthEnd = Carbon::now()->addMonth()->endOfMonth();
@@ -197,8 +197,8 @@ class ResultDateController extends Controller
         $today = Carbon::today();
 
         $three_digits = LotteryThreeDigitPivot::whereBetween('match_start_date', [$start_date, $end_date])
-        ->whereBetween('res_date', [$start_date, $end_date])
-        ->get();
+            ->whereBetween('res_date', [$start_date, $end_date])
+            ->get();
         foreach ($three_digits as $digit) {
             $digit->update(['win_lose' => 1]);
         }

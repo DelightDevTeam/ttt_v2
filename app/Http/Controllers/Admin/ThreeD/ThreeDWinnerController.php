@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Admin\ThreeD;
 
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 use App\Models\ThreeDigit\Lotto;
+use App\Models\ThreeDigit\SecondPrizeWinner;
+use App\Models\ThreeDigit\ThirdPrizeWinner;
+use App\Models\ThreeDigit\ThreeWinner;
+use App\Services\FirstWinnerService;
+use App\Services\LottoOneWeekWinnerService;
+use App\Services\SecondWinnerService;
+use App\Services\ThirdWinnerService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Services\FirstWinnerService;
-use App\Services\ThirdWinnerService;
-use App\Services\SecondWinnerService;
-use App\Models\ThreeDigit\ThreeWinner;
-use App\Models\ThreeDigit\ThirdPrizeWinner;
-use App\Services\LottoOneWeekWinnerService;
-use App\Models\ThreeDigit\SecondPrizeWinner;
 
 class ThreeDWinnerController extends Controller
 {
-    
     protected $lottoService;
 
     protected $secondWinnerService;
 
     protected $thirdWinnerService;
+
     protected $prizeSentService;
 
     public function __construct(FirstWinnerService $lottoService, SecondWinnerService $secondWinnerService, ThirdWinnerService $thirdWinnerService, LottoOneWeekWinnerService $prizeSentService)
@@ -54,9 +54,7 @@ class ThreeDWinnerController extends Controller
 
         return view('admin.three_d.winners.third_prize', compact('data'));
     }
-    
-    
-    
+
     public function index()
     {
         $lotteries = Lotto::with('threedDigitWinner')->get();

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin\TwoD;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Helpers\EveningSessionHelper;
+use App\Helpers\MorningSessionHelper;
 use App\Helpers\SessionHelper;
-use App\Models\TwoD\TwodGameResult;
 use App\Http\Controllers\Controller;
 use App\Models\TwoD\LotteryTwoDigitPivot;
+use App\Models\TwoD\TwodGameResult;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class TwoGameResultController extends Controller
 {
@@ -71,8 +73,7 @@ class TwoGameResultController extends Controller
         ]);
     }
 
-
-     public function getCurrentMonthResults()
+    public function getCurrentMonthResults()
     {
         // Get the start and end of the current month
         $currentMonthStart = Carbon::now()->startOfMonth();
@@ -122,6 +123,23 @@ class TwoGameResultController extends Controller
 
     }
 
+    public function updatePrizeStatus(Request $request, $id)
+    {
+        //dd($request->all());
+        $status = $request->input('prize_status'); // The new status
+        //dd($status);
+        // Find the result by ID
+        $result = TwodGameResult::findOrFail($id);
+
+        // Update the status
+        $result->prize_status = $status;
+        $result->save();
+        session()->flash('SuccessRequest', '2D Prize Status Open/Close  updated successfully');
+
+        return redirect()->back()->with('success', '2D Prize Status Open/Close  updated successfully.'); // Redirect back with success message
+
+    }
+
     public function updateStatusEvening(Request $request, $id)
     {
         //dd($request->all());
@@ -139,6 +157,22 @@ class TwoGameResultController extends Controller
 
     }
 
+    public function updatePrizeStatusEvening(Request $request, $id)
+    {
+        //dd($request->all());
+        $status = $request->input('prize_status'); // The new status
+        //dd($status);
+        // Find the result by ID
+        $result = TwodGameResult::findOrFail($id);
+
+        // Update the status
+        $result->prize_status = $status;
+        $result->save();
+        session()->flash('SuccessRequest', '2D Prize Status Open/Close  updated successfully');
+
+        return redirect()->back()->with('success', '2D Prize Status Open/Close  updated successfully.'); // Redirect back with success message
+
+    }
 
     // public function updateStatus(Request $request, $id)
     // {
@@ -180,5 +214,57 @@ class TwoGameResultController extends Controller
 
         // Return a response (like a JSON object)
         return redirect()->back()->with('success', 'Result number updated successfully.'); // Redirect back with success message
+    }
+
+    public function UpdateCloseSessionTime(Request $request, $id)
+    {
+        $closed_time = $request->input('closed_time'); // The new closed time
+
+        // Find the result by ID
+        $result = TwodGameResult::findOrFail($id);
+
+        // Update the closed time
+        $result->closed_time = $closed_time;
+        $result->save();
+
+        // Fetch today's date and current session
+        $today = Carbon::today('Asia/Yangon');
+        $session = MorningSessionHelper::getCurrentSession();
+
+        // Update closed time for all twod_data in the current session
+        $twod_data = TwodGameResult::where('session', $session)->get();
+        foreach ($twod_data as $twod) {
+            $twod->closed_time = $closed_time;
+            $twod->save();
+        }
+
+        // Return a response (like a JSON object)
+        return redirect()->back()->with('success', 'Closed time updated successfully.');
+    }
+
+    public function UpdateEveningCloseSessionTime(Request $request, $id)
+    {
+        $closed_time = $request->input('closed_time'); // The new closed time
+
+        // Find the result by ID
+        $result = TwodGameResult::findOrFail($id);
+
+        // Update the closed time
+        $result->closed_time = $closed_time;
+        $result->save();
+
+        // Fetch today's date and current session
+        $today = Carbon::today('Asia/Yangon');
+        $session = EveningSessionHelper::getCurrentSession();
+
+        // Update closed time for all twod_data in the current session
+        $twod_data = TwodGameResult::where('session', $session)->get();
+        foreach ($twod_data as $twod) {
+            $twod->closed_time = $closed_time;
+            $twod->save();
+        }
+
+        // Return a response (like a JSON object)
+        return redirect()->back()->with('success', 'Closed time updated successfully.');
     }
 }

@@ -17,6 +17,7 @@ class ThreeDLegarController extends Controller
     public function showData()
     {
         $sessionsData = $this->lotteryService->getThreeDigitsData() ?? [];
+
         return view('admin.three_d.legar.lejar', [
             'data' => $sessionsData,
         ]);

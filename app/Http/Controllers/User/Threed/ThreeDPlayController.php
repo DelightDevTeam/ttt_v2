@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\User\Threed;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Services\LottoService;
-use App\Models\ThreeDigit\Lotto;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ThreedPlayRequest;
 use App\Models\Admin\LotteryMatch;
 use App\Models\Admin\ThreeDDLimit;
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use App\Models\ThreeDigit\Lotto;
+use App\Models\ThreeDigit\ResultDate;
+use App\Models\ThreeDigit\ThreedClose;
+use App\Models\ThreeDigit\ThreeDigit;
+use App\Models\ThreeDigit\ThreeDigitOverLimit;
+use App\Models\ThreeDigit\ThreeDLimit;
+use App\Models\User;
+use App\Services\LottoService;
+use App\Services\LottoSessionService;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Models\ThreeDigit\ResultDate;
-use App\Models\ThreeDigit\ThreeDigit;
-use App\Services\LottoSessionService;
-use App\Models\ThreeDigit\ThreedClose;
-use App\Models\ThreeDigit\ThreeDLimit;
-use App\Http\Requests\ThreedPlayRequest;
-use App\Models\ThreeDigit\ThreeDigitOverLimit;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 
 class ThreeDPlayController extends Controller
 {
@@ -77,37 +77,36 @@ class ThreeDPlayController extends Controller
     // }
 
     // threed play
-public function choiceplay()
-{
-    $threeDigits = ThreeDigit::all();
+    public function choiceplay()
+    {
+        $threeDigits = ThreeDigit::all();
 
-    $amount_limit = ThreeDLimit::latest()->first()->three_d_limit;
-    $draw_date = ResultDate::where('status', 'open')->first();
+        $amount_limit = ThreeDLimit::latest()->first()->three_d_limit;
+        $draw_date = ResultDate::where('status', 'open')->first();
 
-    if (!$draw_date || !$draw_date->match_start_date) {
-        return back()->with('error', 'ယခုတပါတ်တွက် 3D ပိတ်သွားပါပြီ၊ အားပေးမှု့ကိုကျေးဇူးတင်ပါသည်.');
+        if (! $draw_date || ! $draw_date->match_start_date) {
+            return back()->with('error', 'ယခုတပါတ်တွက် 3D ပိတ်သွားပါပြီ၊ အားပေးမှု့ကိုကျေးဇူးတင်ပါသည်.');
+        }
+
+        $start_date = $draw_date->match_start_date;
+        $end_date = $draw_date->result_date;
+
+        // Calculate remaining amounts for each two-digit
+        $remainingAmounts = [];
+        foreach ($threeDigits as $digit) {
+            $totalBetAmountForTwoDigit = DB::table('lotto_three_digit_pivot')
+                ->where('three_digit_id', $digit->id)
+                ->where('match_start_date', $start_date)
+                ->where('res_date', $end_date)
+                ->sum('sub_amount');
+
+            $remainingAmounts[$digit->id] = $amount_limit - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
+        }
+
+        $lottery_matches = LotteryMatch::where('id', 2)->whereNotNull('is_active')->first();
+
+        return view('three_d.three_d_choice_play', compact('threeDigits', 'remainingAmounts', 'lottery_matches'));
     }
-
-    $start_date = $draw_date->match_start_date;
-    $end_date = $draw_date->result_date;
-
-    // Calculate remaining amounts for each two-digit
-    $remainingAmounts = [];
-    foreach ($threeDigits as $digit) {
-        $totalBetAmountForTwoDigit = DB::table('lotto_three_digit_pivot')
-            ->where('three_digit_id', $digit->id)
-            ->where('match_start_date', $start_date)
-            ->where('res_date', $end_date)
-            ->sum('sub_amount');
-
-        $remainingAmounts[$digit->id] = $amount_limit - $totalBetAmountForTwoDigit; // Assuming 5000 is the session limit
-    }
-
-    $lottery_matches = LotteryMatch::where('id', 2)->whereNotNull('is_active')->first();
-
-    return view('three_d.three_d_choice_play', compact('threeDigits', 'remainingAmounts', 'lottery_matches'));
-}
-
 
     public function confirm_play()
     {
@@ -205,7 +204,7 @@ public function choiceplay()
             $lottery = Lotto::create([
                 'total_amount' => $request->totalAmount,
                 'user_id' => $request->user_id,
-                'slip_no' => $slipNo
+                'slip_no' => $slipNo,
             ]);
 
             $draw_date = ResultDate::where('status', 'open')->first();

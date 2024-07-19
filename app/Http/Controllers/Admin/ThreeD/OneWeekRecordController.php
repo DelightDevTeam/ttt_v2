@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Admin\ThreeD;
 
-use Illuminate\Http\Request;
-use App\Models\ThreeDigit\Lotto;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\ThreeD\ThreedSetting;
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use App\Models\ThreeDigit\Lotto;
 use App\Models\ThreeDigit\ResultDate;
 use App\Services\LottoHistoryRecordService;
 use App\Services\LottoOneWeekRecordService;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OneWeekRecordController extends Controller
 {
     protected $lottoService;
+
     protected $records;
 
     public function __construct(LottoOneWeekRecordService $lottoService, LottoHistoryRecordService $records)
@@ -24,9 +25,6 @@ class OneWeekRecordController extends Controller
         $this->records = $records;
     }
 
-
-    
-
     public function showRecords()
     {
         $data = $this->records->GetRecord();
@@ -34,7 +32,6 @@ class OneWeekRecordController extends Controller
 
         return view('admin.three_d.history.all_history', compact('data'));
     }
-
 
     public function index()
     {
@@ -84,32 +81,30 @@ class OneWeekRecordController extends Controller
         return view('admin.three_d.records.one_week_rec', compact('data'));
     }
 
-
     public function indexAllSlip()
     {
         // try {
 
+        // Retrieve records with the user's name
+        $records = LotteryThreeDigitPivot::with('user')
+            ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
+            ->select('lotto_three_digit_pivot.user_id', 'lottos.slip_no', DB::raw('SUM(lotto_three_digit_pivot.sub_amount) as total_sub_amount'))
+            ->groupBy('lotto_three_digit_pivot.user_id', 'lottos.slip_no')
+            ->get();
 
-            // Retrieve records with the user's name
-            $records = LotteryThreeDigitPivot::with('user')
-                ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
-                ->select('lotto_three_digit_pivot.user_id', 'lottos.slip_no', DB::raw('SUM(lotto_three_digit_pivot.sub_amount) as total_sub_amount'))
-                ->groupBy('lotto_three_digit_pivot.user_id', 'lottos.slip_no')
-                ->get();
+        // Check if records are found
+        if ($records->isEmpty()) {
+            return response()->json(['error' => 'No records found'], 404);
+        }
 
-            // Check if records are found
-            if ($records->isEmpty()) {
-                return response()->json(['error' => 'No records found'], 404);
-            }
+        // Calculate the total amount from the lottos table
+        $total_amount = Lotto::sum('total_amount');
 
-            // Calculate the total amount from the lottos table
-            $total_amount = Lotto::sum('total_amount');
-
-            // Return the view with records and total amount
-            return view('admin.three_d.history.index', [
-                'records' => $records,
-                'total_amount' => $total_amount,
-            ]);
+        // Return the view with records and total amount
+        return view('admin.three_d.history.index', [
+            'records' => $records,
+            'total_amount' => $total_amount,
+        ]);
 
         // } catch (\Exception $e) {
         //     // Log the exception
@@ -123,7 +118,6 @@ class OneWeekRecordController extends Controller
     public function showAllSlip($user_id, $slip_no)
     {
         try {
-            
 
             // Retrieve records for a specific user_id and slip_no with the user's name
             $records = LotteryThreeDigitPivot::with('user')

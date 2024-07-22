@@ -4,16 +4,15 @@ namespace App\Console\Commands;
 
 use App\Helpers\SessionHelper;
 use App\Models\TwoD\TwodGameResult;
-use App\Models\TwoD\TwodSetting;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class MorningSessionStatus extends Command
+class EveningSessionStatus extends Command
 {
-    protected $signature = 'session:morning-status';
+    protected $signature = 'session:evening-status';
 
-    protected $description = 'Update Morning session status based on time of day';
+    protected $description = 'Update Evening session status based on time of day';
 
     public function __construct()
     {
@@ -26,18 +25,21 @@ class MorningSessionStatus extends Command
         $currentDateTime = Carbon::now()->setTimezone('Asia/Yangon');
         $currentDate = $currentDateTime->format('Y-m-d');
         $currentTime = $currentDateTime->format('H:i:s');
+
         // Get the current session
         $currentSession = SessionHelper::getCurrentSession();
         Log::info("Current Date && Time: {$currentDateTime}");
         Log::info("Current session: {$currentSession}");
         Log::info("Current date: {$currentDate}");
         Log::info("Current date: {$currentTime}");
+
         // Check if any 'open' session should be closed based on close_time
         TwodGameResult::where('result_date', $currentDate)
-            ->where('session', 'morning')
+            ->where('session', 'evening')
             ->where('status', 'open')
             ->where('closed_time', '<=', $currentTime)
             ->update(['status' => 'closed']);
+
         $this->info('Session status updated successfully for '.$currentSession.' session.');
     }
 }

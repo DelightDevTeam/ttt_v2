@@ -6,6 +6,7 @@ use App\Helpers\MorningPrizeStatusHelper;
 use App\Helpers\MorningSessionHelper;
 use App\Helpers\SessionHelper;
 use App\Models\TwoD\TwodGameResult;
+use App\Models\TwoD\TwodSetting;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;

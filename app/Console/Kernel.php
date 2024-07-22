@@ -2,63 +2,62 @@
 
 namespace App\Console;
 
-use App\Jobs\CheckForEarlyEveningWinners;
-use App\Jobs\CheckForEarlyMonringWinners;
-use App\Jobs\CheckForEveningWinners;
-use App\Jobs\CheckForMorningWinners;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 
 class Kernel extends ConsoleKernel
 {
     /**
-     * Define the application's command schedule.
+     * The Artisan commands provided by your application.
+     *
+     * @var array
      */
     protected $commands = [
         Commands\MorningSessionOpen::class,
-        Commands\MorningSessionStatus::class,
-        Commands\EveningSessionOpen::class,
-        Commands\EveningSessionStatus::class,
         Commands\MorningPrizeStatusOpen::class,
         Commands\EveningPrizeStatusOpen::class,
         Commands\MorningPrizeStatusClose::class,
-        Commands\EveningPrizeStatusClose::class
+        Commands\EveningSessionOpen::class,
+        Commands\EveningPrizeStatusClose::class,
+        Commands\CloseMorningSession::class,
+        Commands\EveningSessionClose::class,
+        // Commands\UpdateMatchStatus::class, // 3d
+        Commands\ThreeDMatchStatusOpen::class, // 3d
+        Commands\ThreeDMatchStatusClose::class, // 3d
     ];
 
+    /**
+     * Define the application's command schedule.
+     *
+     * @return void
+     */
     protected function schedule(Schedule $schedule)
     {
-        //$schedule->job(new CheckForEarlyMonringWinners)->dailyAt('9:30');
-        //$schedule->job(new CheckForMorningWinners)->dailyAt('12:00');
-        //$schedule->job(new CheckForEarlyEveningWinners)->dailyAt('2:30');
-        //$schedule->job(new CheckForEveningWinners)->dailyAt('16:30');
-        $schedule->command('session:morning-status-open')->oneDay();
-        $schedule->command('session:morning-prize-status-open')->oneDay();
-        $schedule->command('session:morning-prize-status-close')->oneDay();
-        $schedule->command('session:evening-status-open')->oneDay();
-        $schedule->command('session:morning-status')->oneDay(); // session close
-        $schedule->command('session:evening-status')->oneDay(); // session close
-        $schedule->command('session:eveing-prize-status-open')->oneDay();
-        $schedule->command('session:evening-prize-status-close')->oneDay();
-    }
 
-    // protected function schedule(Schedule $schedule): void
-    // {
-    //     // $schedule->command('inspire')->hourly();
-    // //     $schedule->call(function () {
-    // //     DB::table('lottery_two_digit_pivot')
-    // //         ->join('lotteries', 'lotteries.id', '=', 'lottery_two_digit_pivot.lottery_id')
-    // //         ->where('lotteries.session', 'morning')
-    // //         ->delete();
-    // // })->dailyAt('12:00');
-    //  $schedule->job(new CheckForMorningWinners)->dailyAt('12:00');
-    // $schedule->job(new CheckForEveningWinners)->dailyAt('16:30');
-    // }
+        $schedule->command('session:morning-status-open')->dailyAt('01:00')->timezone('Asia/Yangon'); // Assuming this is when you want it to run
+        $schedule->command('session:morning-prize-status-open')->dailyAt('12:01')->timezone('Asia/Yangon'); // Set a specific time
+        $schedule->command('session:morning-prize-status-close')->dailyAt('12:50')->timezone('Asia/Yangon'); // Set a specific time
+        $schedule->command('session:evening-status-open')->dailyAt('12:02')->timezone('Asia/Yangon'); // Assuming this is when you want it to run
+        $schedule->command('session:evening-prize-status-open')->dailyAt('16:31')->timezone('Asia/Yangon'); // Set a specific time
+        $schedule->command('session:evening-prize-status-close')->dailyAt('20:00')->timezone('Asia/Yangon'); // Set a specific time
+        $schedule->command('session:close-morning')->dailyAt('11:45')->timezone('Asia/Yangon'); // Set a specific time
+        $schedule->command('session:close-evening')->dailyAt('23:00')->timezone('Asia/Yangon'); // Set a specific time
+        //3d
+        //$schedule->command('match:update-status')->dailyAt('14:00'); // 3d
+        $schedule->command('app:three-d-match-status-open')
+            ->dailyAt('00:00')->timezone('Asia/Yangon'); //3d match status open
+        $schedule->command('app:three-d-match-status-close')
+            ->dailyAt('14:00')->timezone('Asia/Yangon'); //3d match status close
+
+    }
 
     /**
      * Register the commands for the application.
+     *
+     * @return void
      */
-    protected function commands(): void
+    protected function commands()
     {
         $this->load(__DIR__.'/Commands');
 

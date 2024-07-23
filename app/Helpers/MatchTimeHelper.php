@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Models\ThreeD\ThreedMatchTime;
+use App\Models\ThreeDigit\ThreedMatchTime;
 use Carbon\Carbon;
 
 class MatchTimeHelper

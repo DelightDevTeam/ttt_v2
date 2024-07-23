@@ -63,7 +63,7 @@
     <tbody>
         @foreach($reports as $report)
             <tr>
-                <td>{{ $report->user_name }}</td>
+                <td>{{ $report->name }}</td>
                 <td>{{ $report->phone }}</td>
                 {{-- <td>{{ $report->agent_id }}</td> --}}
                 <td>{{ $report->slip_no }}</td>

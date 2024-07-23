@@ -23,6 +23,7 @@ use App\Models\ThreeDigit\ThreeDLimit;
 use App\Http\Requests\ThreedPlayRequest;
 use App\Models\ThreeDigit\ThreeDigitOverLimit;
 use App\Models\ThreeDigit\LotteryThreeDigitPivot;
+use App\Models\ThreeDigit\LottoSlipNumberCounter;
 
 class ThreeDPlayController extends Controller
 {
@@ -199,8 +200,17 @@ class ThreeDPlayController extends Controller
             // Create a new lottery record
             $currentDate = Carbon::now()->format('Y-m-d'); // Format the date and time as needed
             $currentTime = Carbon::now()->format('H:i:s');
+            // $customString = 'ttt-3d';
+            // $randomNumber = rand(001, 9999999); // Generate a random 4-digit number
+            // $slipNo = $randomNumber.'-'.$customString.'-'.$currentDate.'-'.$currentTime; // Combine date, string, and random number
             $customString = 'ttt-3d';
-            $randomNumber = rand(001, 9999999); // Generate a random 4-digit number
+            //$randomNumber = rand(1000, 9999); // Generate a random 4-digit number
+            //$slipNo = $randomNumber.'-'.$customString.'-'.$currentDate.'-'.$currentTime; // Combine date, string, and random number
+            $counter = LottoSlipNumberCounter::firstOrCreate(['id' => 1], ['current_number' => 0]);
+            // Increment the counter
+            $counter->increment('current_number');
+            $randomNumber = sprintf('%06d', $counter->current_number); // Ensure it's a 6-digit number with leading zeros
+
             $slipNo = $randomNumber.'-'.$customString.'-'.$currentDate.'-'.$currentTime; // Combine date, string, and random number
             $lottery = Lotto::create([
                 'total_amount' => $request->totalAmount,

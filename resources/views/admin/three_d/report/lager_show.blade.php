@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin_app')
 @section('styles')
 <style>
 .transparent-btn {

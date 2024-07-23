@@ -504,9 +504,22 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link text-white " href="{{ url('admin/3d-first-prize') }}">
+                    <span class="sidenav-mini-icon">3D</span>
+                    <span class="sidenav-normal  ms-2  ps-1">V2-ဒဲ့ပေါက်</span>
+                  </a>
+                </li>
+
+                <li class="nav-item">
                   <a class="nav-link text-white " href="{{ url('admin/3d-second-winner') }}">
                     <span class="sidenav-mini-icon">3D</span>
                     <span class="sidenav-normal  ms-2  ps-1">ပတ်လယ်-SecondPrize</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white " href="{{ url('admin/3d-second-prize') }}">
+                    <span class="sidenav-mini-icon">3D</span>
+                    <span class="sidenav-normal  ms-2  ps-1">V-2 ပတ်လယ်ပေါက်</span>
                   </a>
                 </li>
                 <li class="nav-item">
@@ -515,6 +528,13 @@
                     <span class="sidenav-normal  ms-2  ps-1">သွပ်-ThirdPrize</span>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white " href="{{ url('admin/3d-third-prize') }}">
+                    <span class="sidenav-mini-icon">3D</span>
+                    <span class="sidenav-normal  ms-2  ps-1">V2-သွဋ်ပေါက်</span>
+                  </a>
+                </li>
+
 
 
                 <li class="nav-item">

@@ -1,3 +1,23 @@
+* * * * * cd /var/www/html/shweboslot && php artisan schedule:run >> /dev/null 2>&1
+
+
+tail -f /var/www/html/ttt_v2/storage/logs/laravel.log
+
+php -r "file_put_contents('/var/www/html/ttt_v2/storage/logs/laravel.log', '');"
+
+cat /var/www/html/ttt_v2/storage/logs/cron.log
+
+sudo chown -R www-data:www-data /var/www/html/ttt_v2/storage
+
+sudo chmod -R 775 /var/www/html/ttt_v2/storage
+
+sudo systemctl restart nginx
+sudo systemctl restart php8.1-fpm
+
+sudo timedatectl
+sudo timedatectl set-timezone Asia/Yangon
+
+
 The end dates for each month can vary between 28 and 31 days. Typically, the end dates for each month are as follows:
 
 January: 31

@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\User\Threed;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\ThreedPlayRequest;
+use Exception;
+use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Services\LottoService;
+use App\Helpers\MatchTimeHelper;
+use App\Models\ThreeDigit\Lotto;
 use App\Models\Admin\LotteryMatch;
 use App\Models\Admin\ThreeDDLimit;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
-use App\Models\ThreeDigit\Lotto;
-use App\Models\ThreeDigit\ResultDate;
-use App\Models\ThreeDigit\ThreedClose;
-use App\Models\ThreeDigit\ThreeDigit;
-use App\Models\ThreeDigit\ThreeDigitOverLimit;
-use App\Models\ThreeDigit\ThreeDLimit;
-use App\Models\User;
-use App\Services\LottoService;
-use App\Services\LottoSessionService;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ThreeDigit\ResultDate;
+use App\Models\ThreeDigit\ThreeDigit;
+use App\Services\LottoSessionService;
+use App\Models\ThreeDigit\ThreedClose;
+use App\Models\ThreeDigit\ThreeDLimit;
+use App\Http\Requests\ThreedPlayRequest;
+use App\Models\ThreeDigit\ThreeDigitOverLimit;
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 
 class ThreeDPlayController extends Controller
 {
@@ -237,6 +238,15 @@ class ThreeDPlayController extends Controller
                 }
                 $open_date = ResultDate::where('status', 'open')
                     ->get();
+                
+                $matchTimes = MatchTimeHelper::getCurrentYearAndMatchTimes();
+
+            if (empty($matchTimes['currentMatchTime'])) {
+                return response()->json(['message' => 'No current match time available']);
+            }
+
+            $currentMatchTime = $matchTimes['currentMatchTime'];
+            //Log::info('Running Match Time ID: ' . $currentMatchTime['id'] . ' - Time: ' . $currentMatchTime['match_time']);
 
                 $pivot = new LotteryThreeDigitPivot([
                     'result_date_id' => $result->id,
@@ -252,6 +262,8 @@ class ThreeDPlayController extends Controller
                     'match_start_date' => $result->match_start_date,
                     'admin_log' => $result->admin_log,
                     'user_log' => $result->user_log,
+                    'running_match' => $currentMatchTime['match_time'],
+
                 ]);
                 $pivot->save();
             }

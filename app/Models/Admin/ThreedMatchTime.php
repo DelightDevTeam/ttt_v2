@@ -11,12 +11,15 @@ class ThreedMatchTime extends Model
     use HasFactory;
 
     protected $fillable = [
-        'open_time',
+        'result_date',
+        'result_time',
         'match_time',
+        //'run_match',
+        'status',
     ];
 
-    public function threedLotteries()
-    {
-        return $this->belongsToMany(ThreedLottery::class, 'lottery_match_pivot', 'threed_match_time_id', 'threed_lottery_id');
-    }
+    // public function threedLotteries()
+    // {
+    //     return $this->belongsToMany(ThreedLottery::class, 'lottery_match_pivot', 'threed_match_time_id', 'threed_lottery_id');
+    // }
 }

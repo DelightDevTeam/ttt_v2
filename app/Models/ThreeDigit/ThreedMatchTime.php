@@ -11,7 +11,10 @@ class ThreedMatchTime extends Model
     use HasFactory;
 
     protected $fillable = [
-        'open_time',
+        'result_date',
+        'result_time',
         'match_time',
+        //'run_match',
+        'status',
     ];
 }

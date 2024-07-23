@@ -1,40 +1,41 @@
 <?php
 
-use App\Http\Controllers\Admin\BankController;
-use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\BannerTextController;
-use App\Http\Controllers\Admin\CommissionController;
-use App\Http\Controllers\Admin\FillBalanceController;
-use App\Http\Controllers\Admin\FillBalanceReplyController;
-use App\Http\Controllers\Admin\GameController;
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Admin\ThreeD\AllWinnerHistoryController;
-use App\Http\Controllers\Admin\ThreeD\OneWeekRecordController;
-use App\Http\Controllers\Admin\ThreeD\ThreeDCloseController;
-use App\Http\Controllers\Admin\ThreeD\ThreeDLegarController;
-use App\Http\Controllers\Admin\ThreeD\ThreeDOpenCloseController;
-use App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController;
-use App\Http\Controllers\Admin\ThreeDLimitController;
-use App\Http\Controllers\Admin\TwoD\CloseTwoDigitController;
-use App\Http\Controllers\Admin\TwoD\DataLejarController;
-use App\Http\Controllers\Admin\TwoD\HeadDigitCloseController;
-use App\Http\Controllers\Admin\TwoD\NetComeIncomeController;
-use App\Http\Controllers\Admin\TwoD\SlipController;
-use App\Http\Controllers\Admin\TwoD\TwoDLagarController;
-use App\Http\Controllers\Admin\TwoD\TwoGameResultController;
-use App\Http\Controllers\Admin\TwoDLimitController;
-use App\Http\Controllers\Admin\TwoDLotteryController;
-use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\Home\CashInRequestController;
-use App\Http\Controllers\Home\CashOutRequestController;
-use App\Http\Controllers\Home\TransferLogController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\User\Threed\ThreeDPlayController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\Admin\BankController;
+use App\Http\Controllers\Admin\GameController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\TwoD\SlipController;
+use App\Http\Controllers\Admin\TwoDLimitController;
+use App\Http\Controllers\Admin\BannerTextController;
+use App\Http\Controllers\Admin\CommissionController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Home\TransferLogController;
+use App\Http\Controllers\Admin\FillBalanceController;
+use App\Http\Controllers\Admin\ThreeDLimitController;
+use App\Http\Controllers\Admin\TwoDLotteryController;
+use App\Http\Controllers\Home\CashInRequestController;
+use App\Http\Controllers\Home\CashOutRequestController;
+use App\Http\Controllers\Admin\TwoD\DataLejarController;
+use App\Http\Controllers\Admin\TwoD\TwoDLagarController;
+use App\Http\Controllers\Admin\FillBalanceReplyController;
+use App\Http\Controllers\User\Threed\ThreeDPlayController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDCloseController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDLegarController;
+use App\Http\Controllers\Admin\TwoD\CloseTwoDigitController;
+use App\Http\Controllers\Admin\TwoD\NetComeIncomeController;
+use App\Http\Controllers\Admin\TwoD\TwoGameResultController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDWinnerController;
+use App\Http\Controllers\Admin\TwoD\HeadDigitCloseController;
+use App\Http\Controllers\Admin\ThreeD\OneWeekRecordController;
+use App\Http\Controllers\Admin\ThreeD\ThreeDOpenCloseController;
+use App\Http\Controllers\Admin\ThreeD\AllWinnerHistoryController;
+use App\Http\Controllers\Admin\ThreeD\LottoWinnerHistoryController;
 
 Auth::routes();
 
@@ -353,6 +354,19 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'App\Http\Cont
     Route::get('/three-d-dream-book', [App\Http\Controllers\User\Threed\ThreeDreamBookController::class, 'index'])->name('three-d-dream-book-index');
     // three d winner history
     Route::get('/three-d-winners-history', [App\Http\Controllers\User\Threed\ThreedWinnerHistoryController::class, 'index'])->name('three-d-winners-history');
+
+    // v2 for 3d winner
+    Route::get('/3d-first-prize', [LottoWinnerHistoryController::class, 'getGroupedByRunningMatch'])->name('WinnerFirstPrize');
+    Route::get('report/first/{running_match}', [LottoWinnerHistoryController::class, 'getFirstPrizeDetailsByRunningMatch'])->name('3dReportFirstShow');
+
+    Route::get('/3d-second-prize', [LottoWinnerHistoryController::class, 'getSecondPrizeGroupedByRunningMatch'])->name('WinnerSecondPrize');
+    Route::get('report/second/{running_match}', [LottoWinnerHistoryController::class, 'getSecondPrizeDetailsByRunningMatch'])->name('3dReportSecondShow');
+
+    Route::get('/3d-third-prize', [LottoWinnerHistoryController::class, 'getThirdPrizeGroupedByRunningMatch'])->name('WinnerThirdPrize');
+    Route::get('report/third/{running_match}', [LottoWinnerHistoryController::class, 'getThirdPrizeDetailsByRunningMatch'])->name('3dReportThirdShow');
+
+    // 3d prize v2 end
+
 
 });
 

@@ -16,9 +16,9 @@ class GetLottoDataByRunningMatchController extends Controller
             ->join('users', 'lotto_three_digit_pivot.user_id', '=', 'users.id')
             ->select(
                 'lotto_three_digit_pivot.running_match',
-                'users.user_name',
+                'users.name',
                 'users.phone',
-                'lotto_three_digit_pivot.agent_id',
+                // 'lotto_three_digit_pivot.agent_id',
                 'lotto_three_digit_pivot.bet_digit',
                 'lotto_three_digit_pivot.sub_amount',
                 'lotto_three_digit_pivot.res_date',
@@ -34,9 +34,9 @@ class GetLottoDataByRunningMatchController extends Controller
             )
             ->groupBy(
                 'lotto_three_digit_pivot.running_match',
-                'users.user_name',
+                'users.name',
                 'users.phone',
-                'lotto_three_digit_pivot.agent_id',
+                // 'lotto_three_digit_pivot.agent_id',
                 'lotto_three_digit_pivot.bet_digit',
                 'lotto_three_digit_pivot.sub_amount',
                 'lotto_three_digit_pivot.res_date',
@@ -59,9 +59,9 @@ class GetLottoDataByRunningMatchController extends Controller
             ->join('users', 'lotto_three_digit_pivot.user_id', '=', 'users.id')
             ->select(
                 'lotto_three_digit_pivot.running_match',
-                'users.user_name',
+                'users.name',
                 'users.phone',
-                'lotto_three_digit_pivot.agent_id',
+                // 'lotto_three_digit_pivot.agent_id',
                 'lotto_three_digit_pivot.bet_digit',
                 'lotto_three_digit_pivot.sub_amount',
                 'lotto_three_digit_pivot.res_date',
@@ -77,9 +77,9 @@ class GetLottoDataByRunningMatchController extends Controller
             )
             ->groupBy(
                 'lotto_three_digit_pivot.running_match',
-                'users.user_name',
+                'users.name',
                 'users.phone',
-                'lotto_three_digit_pivot.agent_id',
+                // 'lotto_three_digit_pivot.agent_id',
                 'lotto_three_digit_pivot.bet_digit',
                 'lotto_three_digit_pivot.sub_amount',
                 'lotto_three_digit_pivot.res_date',
@@ -115,9 +115,9 @@ class GetLottoDataByRunningMatchController extends Controller
             ->join('users', 'lotto_three_digit_pivot.user_id', '=', 'users.id')
             ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
             ->select(
-                'users.user_name',
+                'users.name',
                 'users.phone',
-                'lotto_three_digit_pivot.agent_id',
+                // 'lotto_three_digit_pivot.agent_id',
                 'lotto_three_digit_pivot.bet_digit',
                 'lotto_three_digit_pivot.sub_amount',
                 'lotto_three_digit_pivot.res_date',
@@ -150,9 +150,9 @@ class GetLottoDataByRunningMatchController extends Controller
             ->join('users', 'lotto_three_digit_pivot.user_id', '=', 'users.id')
             ->join('lottos', 'lotto_three_digit_pivot.lotto_id', '=', 'lottos.id')
             ->select(
-                'users.user_name',
+                'users.name',
                 'users.phone',
-                'lotto_three_digit_pivot.agent_id',
+                // 'lotto_three_digit_pivot.agent_id',
                 'lotto_three_digit_pivot.bet_digit',
                 'lotto_three_digit_pivot.sub_amount',
                 'lotto_three_digit_pivot.res_date',

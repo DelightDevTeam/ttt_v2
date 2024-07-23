@@ -46,7 +46,7 @@
         <tr>
             <th>User Name</th>
             <th>Phone</th>
-            <th>Agent ID</th>
+            {{-- <th>Agent ID</th> --}}
             <th>SlipNo</th>
             <th>Bet Digit</th>
             <th>Sub Amount</th>
@@ -63,9 +63,9 @@
     <tbody>
         @foreach($reports as $report)
             <tr>
-                <td>{{ $report->user_name }}</td>
+                <td>{{ $report->name }}</td>
                 <td>{{ $report->phone }}</td>
-                <td>{{ $report->agent_id }}</td>
+                {{-- <td>{{ $report->agent_id }}</td> --}}
                 <td>{{ $report->slip_no }}</td>
                 <td>{{ $report->bet_digit }}</td>
                 <td>{{ $report->sub_amount }}</td>

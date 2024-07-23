@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\ThreeD\OneWeekRecordController;
 use App\Http\Controllers\Admin\ThreeD\ThreeDOpenCloseController;
 use App\Http\Controllers\Admin\ThreeD\AllWinnerHistoryController;
 use App\Http\Controllers\Admin\ThreeD\LottoWinnerHistoryController;
+use App\Http\Controllers\Admin\ThreeD\GetLottoDataByRunningMatchController;
 
 Auth::routes();
 
@@ -211,6 +212,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::get('/3d-third-prize', [LottoWinnerHistoryController::class, 'getThirdPrizeGroupedByRunningMatch'])->name('WinnerThirdPrize');
     Route::get('report/third/{running_match}', [LottoWinnerHistoryController::class, 'getThirdPrizeDetailsByRunningMatch'])->name('3dReportThirdShow');
 
+    Route::get('/3d-reports', [GetLottoDataByRunningMatchController::class, 'getGroupedByRunningMatch'])->name('ReportIndex');
+    Route::get('report/details/{running_match}', [GetLottoDataByRunningMatchController::class, 'getDetailsByRunningMatch'])->name('3dReportShow');
+
+    Route::get('legar/details/{running_match}', [GetLottoDataByRunningMatchController::class, 'LottoLegar'])->name('3dLegarShow');
+
     // 3d prize v2 end
 
     
@@ -262,6 +268,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     // result date update
     Route::patch('/lottery-results/{id}/status', [App\Http\Controllers\Admin\ThreeD\ResultDateController::class, 'updateStatus'])
         ->name('ThreedOpenClose');
+
+    Route::post('/3d-default-limit-update', [App\Http\Controllers\Admin\ThreeD\ResultDateController::class, 'update'])->name('ThreedDefaultBreakupdate');
+
 
     Route::patch('/three-d-admin-log/{id}/status', [App\Http\Controllers\Admin\ThreeD\ResultDateController::class, 'AdminLogThreeDOpenClose'])
         ->name('ThreeDAdminLogOpenClose');

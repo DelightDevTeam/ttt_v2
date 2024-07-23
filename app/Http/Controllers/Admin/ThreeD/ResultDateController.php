@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin\ThreeD;
 
-use App\Http\Controllers\Controller;
-use App\Models\ThreeDigit\LotteryThreeDigitPivot;
-use App\Models\ThreeDigit\Permutation;
-use App\Models\ThreeDigit\Prize;
-use App\Models\ThreeDigit\ResultDate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\ThreeDigit\Prize;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Models\ThreeDigit\ResultDate;
+use App\Models\ThreeDigit\Permutation;
+use App\Models\ThreeDigit\ThreeDLimit;
+use App\Models\ThreeDigit\LotteryThreeDigitPivot;
 
 class ResultDateController extends Controller
 {
@@ -205,5 +206,17 @@ class ResultDateController extends Controller
 
         // Return a response (like a JSON object)
         return redirect()->back()->with('success', 'Result number updated successfully.'); // Redirect back with success message
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'three_d_limit' => 'required|numeric|min:0',
+        ]);
+
+        $defaultBreak = ThreeDLimit::latest()->first();
+        $defaultBreak->update(['three_d_limit' => $request->three_d_limit]);
+
+        return redirect()->route('admin.ReportIndex')->with('success', 'Default Break updated successfully.');
     }
 }

@@ -53,10 +53,10 @@ class CheckForEveningWinners implements ShouldQueue
         $currentSession = $this->getCurrentSession();
         Log::info('Today Current Session is '.$currentSession);
 
-        $open_time = TwodGameResult::where('status', 'open')->first();
+        $open_time = TwodGameResult::where('prize_status', 'open')->first();
 
         if (! $open_time || ! is_object($open_time)) {
-            Log::warning('No valid open time found or invalid data structure.');
+            Log::warning('No valid evening prize_status time found or invalid data structure.');
 
             return; // Exit early if no valid open time
         }

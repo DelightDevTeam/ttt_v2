@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
-        $schedule->command('session:morning-status-open')->dailyAt('09:12')->timezone('Asia/Yangon'); // Assuming this is when you want it to run
+        $schedule->command('session:morning-status-open')->dailyAt('01:02')->timezone('Asia/Yangon'); // Assuming this is when you want it to run
         $schedule->command('session:morning-prize-status-open')->dailyAt('12:01')->timezone('Asia/Yangon'); // Set a specific time
         $schedule->command('session:morning-prize-status-close')->dailyAt('12:50')->timezone('Asia/Yangon'); // Set a specific time
         $schedule->command('session:evening-status-open')->dailyAt('12:02')->timezone('Asia/Yangon'); // Assuming this is when you want it to run

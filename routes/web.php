@@ -200,6 +200,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::resource('winner-prize', App\Http\Controllers\Admin\ThreeD\GreatherThanLessThanWinnerPrizeController::class);
     // three d permutation winner prize
     Route::get('/prize-winners', [App\Http\Controllers\Admin\ThreeD\GreatherThanLessThanWinnerPrizeController::class, 'ThirdPrizeWinner'])->name('getPrizeWinnersHistory');
+
+    // v2 for 3d winner
+    Route::get('/3d-first-prize', [LottoWinnerHistoryController::class, 'getGroupedByRunningMatch'])->name('WinnerFirstPrize');
+    Route::get('report/first/{running_match}', [LottoWinnerHistoryController::class, 'getFirstPrizeDetailsByRunningMatch'])->name('3dReportFirstShow');
+
+    Route::get('/3d-second-prize', [LottoWinnerHistoryController::class, 'getSecondPrizeGroupedByRunningMatch'])->name('WinnerSecondPrize');
+    Route::get('report/second/{running_match}', [LottoWinnerHistoryController::class, 'getSecondPrizeDetailsByRunningMatch'])->name('3dReportSecondShow');
+
+    Route::get('/3d-third-prize', [LottoWinnerHistoryController::class, 'getThirdPrizeGroupedByRunningMatch'])->name('WinnerThirdPrize');
+    Route::get('report/third/{running_match}', [LottoWinnerHistoryController::class, 'getThirdPrizeDetailsByRunningMatch'])->name('3dReportThirdShow');
+
+    // 3d prize v2 end
+
+    
     // two d winner history
     Route::get('/evening-two-d-win-history', [App\Http\Controllers\Admin\TwoD\TwoDMorningWinnerController::class, 'EveningWinHistoryForAdmin'])->name('Eveninig_winHistory');
     Route::get('/admin-two-d-winners-history-group-by-session', [App\Http\Controllers\Admin\TwoDWinnerHistoryController::class, 'getWinnersHistoryForAdminGroupBySession'])->name('winnerHistoryForAdminSession');
@@ -355,18 +369,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'App\Http\Cont
     // three d winner history
     Route::get('/three-d-winners-history', [App\Http\Controllers\User\Threed\ThreedWinnerHistoryController::class, 'index'])->name('three-d-winners-history');
 
-    // v2 for 3d winner
-    Route::get('/3d-first-prize', [LottoWinnerHistoryController::class, 'getGroupedByRunningMatch'])->name('WinnerFirstPrize');
-    Route::get('report/first/{running_match}', [LottoWinnerHistoryController::class, 'getFirstPrizeDetailsByRunningMatch'])->name('3dReportFirstShow');
-
-    Route::get('/3d-second-prize', [LottoWinnerHistoryController::class, 'getSecondPrizeGroupedByRunningMatch'])->name('WinnerSecondPrize');
-    Route::get('report/second/{running_match}', [LottoWinnerHistoryController::class, 'getSecondPrizeDetailsByRunningMatch'])->name('3dReportSecondShow');
-
-    Route::get('/3d-third-prize', [LottoWinnerHistoryController::class, 'getThirdPrizeGroupedByRunningMatch'])->name('WinnerThirdPrize');
-    Route::get('report/third/{running_match}', [LottoWinnerHistoryController::class, 'getThirdPrizeDetailsByRunningMatch'])->name('3dReportThirdShow');
-
-    // 3d prize v2 end
-
+    
 
 });
 

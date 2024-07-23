@@ -247,6 +247,8 @@ class ThreeDPlayController extends Controller
 
             $currentMatchTime = $matchTimes['currentMatchTime'];
             //Log::info('Running Match Time ID: ' . $currentMatchTime['id'] . ' - Time: ' . $currentMatchTime['match_time']);
+            $play_date = Carbon::now()->setTimezone('Asia/Yangon')->format('Y-m-d');
+            $play_time = Carbon::now()->setTimezone('Asia/Yangon')->format('H:i:s');
 
                 $pivot = new LotteryThreeDigitPivot([
                     'result_date_id' => $result->id,
@@ -263,7 +265,8 @@ class ThreeDPlayController extends Controller
                     'admin_log' => $result->admin_log,
                     'user_log' => $result->user_log,
                     'running_match' => $currentMatchTime['match_time'],
-
+                    'play_date' => $play_date,
+                    'play_time' => $play_time,
                 ]);
                 $pivot->save();
             }

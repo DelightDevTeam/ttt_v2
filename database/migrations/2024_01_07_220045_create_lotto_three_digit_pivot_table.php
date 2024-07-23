@@ -31,7 +31,6 @@ return new class extends Migration
             $table->string('running_match')->default('2024-01-16');
             $table->date('play_date')->default('2024-5-20');
             $table->time('play_time')->default('15:30:00');
-            $table->string('running_match')->default('2024-01-16');
 
             $table->foreign('result_date_id')->references('id')->on('result_dates')->onDelete('cascade');
             $table->foreign('lotto_id')->references('id')->on('lottos')->onDelete('cascade');
